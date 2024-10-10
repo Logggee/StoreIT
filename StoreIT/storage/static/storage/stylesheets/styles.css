@@ -1,0 +1,53 @@
+/* Background of the body */
+body{
+    /*background-image: linear-gradient(45deg, #A1C4FD, #C2E9FB);*/
+    background: #E2AE5A;
+    background: linear-gradient(135deg, #E2AE5A, #ED6802); 
+}
+
+.accordion{
+    --bs-accordion-bg: #212529;
+    --bs-accordion-btn-focus-box-shadow: none;
+    --bs-accordion-active-bg: none;
+    --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+/*.card{
+    --bs-card-bg: #212529;
+    --bs-card-color: white;
+    --bs-card-border-width: 2px;
+    --bs-card-border-color: gray;
+    --bs-card-border-radius: 15px;
+}*/
+
+.list-group-item{
+    color: white;
+    border-color: #E2AE5A;
+}
+
+.progress-bar{
+    --bs-progress-bar-bg: #eca533;
+}
+
+#saveChanges{
+    --bs-btn-bg: #f1af44;
+    --bs-btn-border-color: #f1af44;
+    --bs-btn-hover-bg: #ff9d00;
+}
+
+#imgStoredItemModal {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    max-height: 300px;
+    max-width: 300px;
+    width: auto;
+    height: auto;
+}
+
+#storeItemButton {
+    height: 80px;
+    width: 80px;
+    z-index: 1050; /* Über anderen Inhalten positionieren */
+}

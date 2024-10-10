@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" defer>
+    <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}" defer>
+    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.min.js' %}" async></script>
+    <title>Storage</title>
+</head>
+
+<body class="h-100 position-relative">
+    <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center">
+        <div class="container-fluid">
+            <a class="navbar-brand ms-5 ps-5" href="{% url 'index'%}">
+              <img src="{% static 'storage/images/logo.png' %}" alt="Logo" height="60" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto me-5 pe-5">
+                    <li class="nav-item">
+                        <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}">Storage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active px-5" href="orders.html">Stats</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container mt-5 d-flex justify-content-center">
+
+        <div class="container row d-flex justify-content-center">
+          
+          <div class="container col-12 col-md-6 col-xxl-4 my-5 d-flex justify-content-center">
+
+                <!-- Card -->
+                <div class="card" style="width: 18rem;">
+                    <img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="card-img-top" alt="LED Rot 5mm" style="border-bottom: solid; border-width: 1px; border-color: gray;">
+                    <div class="card-body text-center">
+                    <h5 class="card-title" href="">LED rot 5mm</h5>
+                    <a href="#" class="stretched-link" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+                    </div>
+                </div> 
+
+                <!-- Modal stored item-->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header" style="border-bottom: none;">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="card-img-top" id="imgStoredItemModal" alt="LED Rot 5mm" style="height: 400px;">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">LED rot 5mm</h1>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Amount Stored:</label>
+                                    <input type="text" class="form-control" id="recipient-name" value="10" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message-text" class="col-form-label">Node:</label>
+                                    <textarea class="form-control" id="message-text" readonly>Rote 5mm LED vom Hersteller Bla Bla</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Remove from stock:</label>
+                                    <input type="number" class="form-control" id="recipient-name" value="0">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-warning">Show all bins</button>
+                        <button type="button" class="btn btn-danger">Remove from Stock</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>  
+    </div>
+
+    <!-- Fixed Button -->
+    <div class="position-relative">
+        <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#addNewItemToStore">
+            <img src="{% static 'storage/images/plus-square.svg' %}" alt="plus icon">
+        </a>
+    </div>
+
+    <!-- Modal add new item to store -->
+    <div class="modal fade" id="addNewItemToStore" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add new item to the storage</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Picture</label>
+                        <input class="form-control" type="file" id="formFile">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Name</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Quantity:</label>
+                        <input type="number" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Node:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" data-bs-target="#storageProcess" data-bs-toggle="modal">Store Item</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal for storage process -->
+    <div class="modal fade" id="storageProcess" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Please store your item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <strong>Item: LED rot 5mm<br>Quantity: 10<br><br></strong>
+                    Please store your item into the lith up storage bin.<br>
+                    You can split your item if there is not enough space for it.<br>
+                </div>
+
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          Item is to big to fit into the bin 
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          Test
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          Split items into two bins
+                        </button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Quantity that is stored into the first bin:</label>
+                                <input type="number" class="form-control" id="recipient-name">
+                            </div>
+                          </form>
+                          <button type="button" class="btn btn-danger">First quantitiy is stored</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success">Item is stored</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</body>
+</html>
