@@ -11,30 +11,36 @@
 </head>
 
 <body class="h-100 position-relative">
-    <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center">
-        <div class="container-fluid">
-            <a class="navbar-brand ms-5 ps-5" href="{% url 'index'%}">
-              <img src="{% static 'storage/images/logo.png' %}" alt="Logo" height="60" class="d-inline-block align-text-top">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto me-5 pe-5">
-                    <li class="nav-item">
-                        <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}">Storage</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active px-5" href="orders.html">Stats</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-secondary" type="submit">Search</button>
-                </form>
+    <div class="container-fluid px-5">
+        <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center" style="border-bottom: 1px solid black;">
+            <div class="container-fluid">
+                <a class="navbar-brand ms-5 ps-5" href="{% url 'index'%}">
+                <img src="{% static 'storage/images/logo.png' %}" alt="Logo" height="60" class="d-inline-block align-text-top">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-3 mb-lg-0 ps-5">
+                        <li class="nav-item">
+                            <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active px-5" href="orders.html" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active px-5" href="orders.html" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary" type="submit">Search</button>
+                    </form>
+                    <button class="btn ms-5" type="submit"><img src="{% static 'storage/images/box-arrow-down.svg' %}"></button>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
 
 
     <div class="container mt-5 d-flex justify-content-center">
@@ -78,11 +84,14 @@
                                     <input type="number" class="form-control" id="recipient-name" value="0">
                                 </div>
                             </form>
+                            <div class="container d-flex justify-content-end">
+                                <button type="button" class="btn btn-warning me-3">Add to Remove List</button>
+                                <button type="button" class="btn btn-danger">Remove from Stock</button>
+                            </div>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-warning">Show all bins</button>
-                        <button type="button" class="btn btn-danger">Remove from Stock</button>
                         </div>
                     </div>
                     </div>
@@ -94,20 +103,42 @@
 
     <!-- Fixed Button -->
     <div class="position-relative">
-        <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#addNewItemToStore">
+        <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#searchMasterData">
             <img src="{% static 'storage/images/plus-square.svg' %}" alt="plus icon">
         </a>
     </div>
 
-    <!-- Modal add new item to store -->
-    <div class="modal fade" id="addNewItemToStore" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal Search  Search master data -->
+    <div class="modal fade" id="searchMasterData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add new item to the storage</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Search for the item you want to store.</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Name of the Item</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                </form>
+                <div class="scrollspy-example bg-body-tertiary p-3 rounded-2 mb-3"  style="max-height: 200px; overflow-y: auto;">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                    </ul>
+                </div>
+
                 <form>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Picture</label>
@@ -122,14 +153,20 @@
                         <input type="number" class="form-control" id="recipient-name">
                     </div>
                     <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Volume:</label>
+                        <input type="number" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
                         <label for="message-text" class="col-form-label">Node:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
+                        <textarea class="form-control" id="message-text">Optional</textarea>
                     </div>
                 </form>
             </div>
+            
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger" data-bs-target="#storageProcess" data-bs-toggle="modal">Store Item</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-warning" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/plus-square.svg'%}" style="max-height: 20px;">Add to list</button>
+            <button type="button" class="btn btn-danger" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/box-seam-fill.svg'%}">Store Item</button>
             </div>
         </div>
         </div>
@@ -152,41 +189,73 @@
 
                 <div class="accordion" id="accordionExample">
                     <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                          Item is to big to fit into the bin 
-                        </button>
-                      </h2>
-                      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                          Test
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Split items into two bins
+                          </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                            <form>
+                              <div class="mb-3">
+                                  <label for="recipient-name" class="col-form-label">Quantity that is stored into the first bin:</label>
+                                  <input type="number" class="form-control" id="recipient-name">
+                              </div>
+                            </form>
+                            <button type="button" class="btn btn-danger">First quantitiy is stored</button>
+                          </div>
                         </div>
-                      </div>
                     </div>
 
                     <div class="accordion-item">
                       <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                          Split items into two bins
+                          Manually select a bin
                         </button>
                       </h2>
                       <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                          <form>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">Quantity that is stored into the first bin:</label>
-                                <input type="number" class="form-control" id="recipient-name">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                    <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="active-tab" data-bs-toggle="tab" href="#active" role="tab" aria-controls="active" aria-selected="true">Active</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="link-tab" data-bs-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">Link</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link disabled" id="disabled-tab" data-bs-toggle="tab" href="#disabled" role="tab" aria-controls="disabled" aria-selected="false" aria-disabled="true">Disabled</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="card-body tab-content">
+                                    <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                                        <h5 class="card-title">Active Tab Content</h5>
+                                        <p class="card-text">This is the content for the Active tab.</p>
+                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    </div>
+                                    <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
+                                        <h5 class="card-title">Link Tab Content</h5>
+                                        <p class="card-text">This is the content for the Link tab.</p>
+                                        <a href="#" class="btn btn-primary">Learn more</a>
+                                    </div>
+                                    <div class="tab-pane fade" id="disabled" role="tabpanel" aria-labelledby="disabled-tab">
+                                        <h5 class="card-title">Disabled Tab Content</h5>
+                                        <p class="card-text">This tab is disabled and should not be accessible.</p>
+                                    </div>
+                                </div>
                             </div>
-                          </form>
-                          <button type="button" class="btn btn-danger">First quantitiy is stored</button>
+                            
                         </div>
                       </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success">Item is stored</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-success"><img class="me-2" src="{% static 'storage/images/check2-all.svg'%}">Item is stored</button>
             </div>
         </div>
         </div>
