@@ -146,9 +146,9 @@
             </div>
             
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
-            <button type="button" class="btn btn-warning" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/trash.svg'%}">Delete selected Items</button>
-            <button type="button" class="btn btn-danger" data-bs-target="#destoreItem" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/box-arrow-down.svg'%}" style="height: 20px;">Destore</button>
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-warning d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/trash.svg'%}">Delete selected Items</button>
+            <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#destoreItem" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/box-arrow-down.svg'%}" style="height: 20px;">Destore</button>
             </div>
         </div>
         </div>
@@ -200,17 +200,17 @@
                 </form>
                 <div class="scrollspy-example bg-body-tertiary p-3 rounded-2 mb-3"  style="max-height: 200px; overflow-y: auto;">
                     <ul class="list-group">
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
-                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
+                        <li class="list-group-item d-flex align-items-center">LED rot 5mm<img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;"><input class="form-check-input ms-auto" name="ledSelection" type="radio" value="" id="flexCheckDefault"></li>
                     </ul>
                 </div>
 
@@ -239,9 +239,9 @@
             </div>
             
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
-            <button type="button" class="btn btn-warning" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/plus-square.svg'%}" style="max-height: 20px;">Add to list</button>
-            <button type="button" class="btn btn-danger" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/box-seam-fill.svg'%}">Store Item</button>
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-warning d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/plus-square.svg'%}" style="max-height: 20px;">Add to list</button>
+            <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/box-seam-fill.svg'%}">Store Item</button>
             </div>
         </div>
         </div>
@@ -449,8 +449,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
-            <button type="button" class="btn btn-success"><img class="me-2" src="{% static 'storage/images/check2-all.svg'%}">Item is stored</button>
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-success d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/check2-all.svg'%}">Item is stored</button>
             </div>
         </div>
         </div>
