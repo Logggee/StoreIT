@@ -8,3 +8,6 @@ def index(request):
 
 def storage(request):
     return render(request, "storage/storage.html")
+
+def config(request):
+    return render(request, "storage/configStorage.html")

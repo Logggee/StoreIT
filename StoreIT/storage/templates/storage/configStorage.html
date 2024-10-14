@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" defer>
+    <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}" defer>
+    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.min.js' %}" async></script>
+    <title>Config Storage</title>
+</head>
+<body>
+    <div class="container-fluid px-5">
+        <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center" style="border-bottom: 1px solid black;">
+            <div class="container-fluid">
+                <a class="navbar-brand ms-5 ps-5" href="{% url 'index'%}">
+                <img src="{% static 'storage/images/logo.png' %}" alt="Logo" height="60" class="d-inline-block align-text-top">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-3 mb-lg-0 ps-5">
+                        <li class="nav-item">
+                            <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active px-5" href="orders.html" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active px-5" href="{% url 'config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="active-tab" data-bs-toggle="tab" href="#active" role="tab" aria-controls="active" aria-selected="true">Storage 1</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="link-tab" data-bs-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">Storage 2</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="disabled-tab" data-bs-toggle="tab" href="#disabled" role="tab" aria-controls="disabled" aria-selected="false" aria-disabled="true">Storage 3</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card-body tab-content">
+
+                <!-- First tab -->
+                <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                    <p>Current configuration of Storage 1</p>
+
+                    <div class="container">
+                        <!-- Row 1 -->
+                        <div class="row mb-2 align-items-center">
+                          <span class="col-auto">Row 1</span>
+                          
+                          <div class="col d-flex justify-content-between mx-4">
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-1" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-1">1</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-2" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-2">2</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-3" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-3">3</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-4" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-4">4</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-5" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-5">5</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-6" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100" for="btnradio1-6">6</label>
+                          </div>
+                        </div>
+                      
+                        <!-- Row 2 -->
+                        <div class="row mb-2 align-items-center">
+                          <span class="col-auto">Row 2</span>
+                          
+                          <div class="col d-flex justify-content-between mx-4">
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2-1" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100" for="btnradio2-1">1</label>
+                          </div>
+                        </div>
+                      
+                        <!-- Row 3 -->
+                        <div class="row mb-2 align-items-center">
+                          <span class="col-auto">Row 3</span>
+                          
+                          <div class="col d-flex justify-content-between mx-4">
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-1" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-1">1</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-2" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-2">2</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-3" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-3">3</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-4" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-4">4</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-5" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-5">5</label>
+                      
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-6" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100" for="btnradio3-6">6</label>
+                          </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="row mb-2 align-items-center">
+                            <span class="col-auto">Row 4</span>
+                            
+                            <div class="col d-flex justify-content-between mx-4">
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-1" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-1">1</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-2" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-2">2</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-3" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-3">3</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-4" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-4">4</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-5" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-5">5</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-6" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100" for="btnradio4-6">6</label>
+                            </div>
+                        </div>
+
+                        <!-- Row 5 -->
+                        <div class="row mb-2 align-items-center">
+                            <span class="col-auto">Row 5</span>
+                            
+                            <div class="col d-flex justify-content-between mx-4">
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio5-1" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio5-1">1</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio5-2" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio5-2">2</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio5-3" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100" for="btnradio5-3">3</label>
+                            </div>
+                        </div>
+
+                        <!-- Row 6 -->
+                        <div class="row mb-2 align-items-center">
+                            <span class="col-auto">Row 6</span>
+                            
+                            <div class="col d-flex justify-content-between mx-4">
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio6-1" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio6-1">1</label>
+                        
+                              <input type="radio" class="btn-check" name="btnradio" id="btnradio6-2" autocomplete="off">
+                              <label class="btn btn-outline-primary w-100" for="btnradio6-2">2</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Second tab -->
+                <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
+                    <h5 class="card-title">New Storage detected!</h5>
+                    <p class="card-text">Please configure the newly detected storage</p>
+                    <form>
+                        <div class="container row">
+                            <div class="mb-3 text-start">
+                                <label for="recipient-name" class="col-form-label">Number of Storage rows:</label>
+                                <input type="number" class="form-control" id="recipient-name" placeholder="1" min="1">
+                            </div>
+                        </div>
+            
+                        <div class="container row">
+                            <div class="container col">
+                                <div class="mb-3 text-start">
+                                    <label for="recipient-name" class="col-form-label">Number of bins of row 1:</label>
+                                    <input type="number" class="form-control" id="recipient-name" placeholder="1" min="1">
+                                </div>
+                            </div>
+                            <div class="container col">
+                                <div class="mb-3 text-start">
+                                    <label for="recipient-name" class="col-form-label">Number of bins of row 2:</label>
+                                    <input type="number" class="form-control" id="recipient-name" placeholder="1" min="1">
+                                </div>
+                            </div>
+                            <div class="container col">
+                                <div class="mb-3 text-start">
+                                    <label for="recipient-name" class="col-form-label">Number of bins of row 3:</label>
+                                    <input type="number" class="form-control" id="recipient-name" placeholder="1" min="1">
+                                </div>
+                            </div>
+                            <div class="container col">
+                                <div class="mb-3 text-start">
+                                    <label for="recipient-name" class="col-form-label">Number of bins of row 4:</label>
+                                    <input type="number" class="form-control" id="recipient-name" placeholder="1" min="1">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="container-fluid" style="border-top: solid 1px gray;"></div>
+
+                    <div class="container row">
+                        <div class="container col">
+                            <div class="card-body tab-content">
+
+                                <!-- First tab -->
+                                <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                                    <p>Configured Layout of the storage</p>
+                
+                                    <div class="container">
+                                        <!-- Row 1 -->
+                                        <div class="row mb-2 align-items-center">
+                                          <span class="col-auto">Row 1</span>
+                                          
+                                          <div class="col d-flex justify-content-between mx-4">
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-1" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-1">1</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-2" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-2">2</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-3" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-3">3</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-4" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-4">4</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-5" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio1-5">5</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1-6" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100" for="btnradio1-6">6</label>
+                                          </div>
+                                        </div>
+                                      
+                                        <!-- Row 2 -->
+                                        <div class="row mb-2 align-items-center">
+                                          <span class="col-auto">Row 2</span>
+                                          
+                                          <div class="col d-flex justify-content-between mx-4">
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2-1" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100" for="btnradio2-1">1</label>
+                                          </div>
+                                        </div>
+                                      
+                                        <!-- Row 3 -->
+                                        <div class="row mb-2 align-items-center">
+                                          <span class="col-auto">Row 3</span>
+                                          
+                                          <div class="col d-flex justify-content-between mx-4">
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-1" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-1">1</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-2" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-2">2</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-3" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-3">3</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-4" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-4">4</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-5" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100 me-1" for="btnradio3-5">5</label>
+                                      
+                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3-6" autocomplete="off">
+                                            <label class="btn btn-outline-primary w-100" for="btnradio3-6">6</label>
+                                          </div>
+                                        </div>
+                
+                                        <!-- Row 4 -->
+                                        <div class="row mb-2 align-items-center">
+                                            <span class="col-auto">Row 4</span>
+                                            
+                                            <div class="col d-flex justify-content-between mx-4">
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-1" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-1">1</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-2" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-2">2</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-3" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-3">3</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-4" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-4">4</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-5" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio4-5">5</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio4-6" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100" for="btnradio4-6">6</label>
+                                            </div>
+                                        </div>
+                
+                                        <!-- Row 5 -->
+                                        <div class="row mb-2 align-items-center">
+                                            <span class="col-auto">Row 5</span>
+                                            
+                                            <div class="col d-flex justify-content-between mx-4">
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio5-1" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio5-1">1</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio5-2" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio5-2">2</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio5-3" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100" for="btnradio5-3">3</label>
+                                            </div>
+                                        </div>
+                
+                                        <!-- Row 6 -->
+                                        <div class="row mb-2 align-items-center">
+                                            <span class="col-auto">Row 6</span>
+                                            
+                                            <div class="col d-flex justify-content-between mx-4">
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio6-1" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100 me-1" for="btnradio6-1">1</label>
+                                        
+                                              <input type="radio" class="btn-check" name="btnradio" id="btnradio6-2" autocomplete="off">
+                                              <label class="btn btn-outline-primary w-100" for="btnradio6-2">2</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid" style="border-top: solid 1px gray;"></div>
+
+                    <div class="container row">
+                        <div class="container col">
+                            <div class="mb-3 text-start">
+                                <label for="recipient-name" class="col-form-label">Volume of S bin:</label>
+                                <input type="number" class="form-control" id="recipient-name" placeholder="1 ccm" min="1">
+                            </div>
+                        </div>
+                        <div class="container col">
+                            <div class="mb-3 text-start">
+                                <label for="recipient-name" class="col-form-label">Volume of M bin:</label>
+                                <input type="number" class="form-control" id="recipient-name" placeholder="1 ccm" min="1">
+                            </div>
+                        </div>
+                        <div class="container col">
+                            <div class="mb-3 text-start">
+                                <label for="recipient-name" class="col-form-label">Volume of L bin:</label>
+                                <input type="number" class="form-control" id="recipient-name" placeholder="1 ccm" min="1">
+                            </div>
+                        </div>
+                        <div class="container col">
+                            <div class="mb-3 text-start">
+                                <label for="recipient-name" class="col-form-label">Volume of XL bin:</label>
+                                <input type="number" class="form-control" id="recipient-name" placeholder="1 ccm" min="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third tab -->
+                <div class="tab-pane fade" id="disabled" role="tabpanel" aria-labelledby="disabled-tab">
+                    <h5 class="card-title">Disabled Tab Content</h5>
+                    <p class="card-text">This tab is disabled and should not be accessible.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
