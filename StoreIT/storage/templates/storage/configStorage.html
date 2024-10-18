@@ -25,7 +25,7 @@
                             <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="orders.html" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                            <a class="nav-link active px-5" href="{% url 'stats'%}" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active px-5" href="{% url 'config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
@@ -41,13 +41,13 @@
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="active-tab" data-bs-toggle="tab" href="#active" role="tab" aria-controls="active" aria-selected="true">Storage 1</a>
+                        <a class="nav-link d-flex align-items-center active" id="active-tab" data-bs-toggle="tab" href="#firstTab" role="tab" aria-controls="active" aria-selected="true">Storage 1</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="link-tab" data-bs-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">Storage 2</a>
+                        <a class="nav-link d-flex align-items-center" id="link-tab" data-bs-toggle="tab" href="#secondTab" role="tab" aria-controls="link" aria-selected="false">Storage 2</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="disabled-tab" data-bs-toggle="tab" href="#disabled" role="tab" aria-controls="disabled" aria-selected="false" aria-disabled="true">Storage 3</a>
+                        <a class="nav-link d-flex align-items-center" id="disabled-tab" data-bs-toggle="tab" href="#thirdTab" role="tab" aria-controls="disabled" aria-selected="false" aria-disabled="true"><img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 16px; filter: invert(1);">New Storage</a>
                     </li>
                 </ul>
             </div>
@@ -55,7 +55,7 @@
             <div class="card-body tab-content">
 
                 <!-- First tab -->
-                <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
+                <div class="tab-pane fade show active" id="firstTab" role="tabpanel" aria-labelledby="active-tab">
                     <p>Current configuration of Storage 1</p>
 
                     <div class="container mb-3">
@@ -178,15 +178,14 @@
 
                     <div class="container row">
                         <div class="container col d-flex justify-content-end">
-                            <button type="button" class="btn btn-warning mt-3 d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/arrow-clockwise.svg'%}">Change configuration</button>
+                            <button type="button" class="btn btn-warning mt-3 d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/icons/arrow-clockwise.svg'%}">Change configuration</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Second tab -->
-                <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
-                    <h5 class="card-title">New Storage detected!</h5>
-                    <p class="card-text">Please configure the newly detected storage</p>
+                <div class="tab-pane fade" id="secondTab" role="tabpanel" aria-labelledby="link-tab">
+                    <h5 class="card-title">Configure your new storage</h5>
                     <form>
                         <div class="container row">
                             <div class="mb-3 text-start">
@@ -380,13 +379,13 @@
 
                     <div class="container row">
                         <div class="container col d-flex justify-content-end">
-                            <button type="button" class="btn btn-success mt-3 d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/floppy.svg'%}">Safe configuration</button>
+                            <button type="button" class="btn btn-success mt-3 d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/icons/floppy.svg'%}">Safe configuration</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Third tab -->
-                <div class="tab-pane fade" id="disabled" role="tabpanel" aria-labelledby="disabled-tab">
+                <div class="tab-pane fade" id="disabled" role="thirdTab" aria-labelledby="link-tab">
                     <h5 class="card-title">Disabled Tab Content</h5>
                     <p class="card-text">This tab is disabled and should not be accessible.</p>
                 </div>

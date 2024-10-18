@@ -26,13 +26,13 @@
                             <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}" style="font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="orders.html" style="font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                            <a class="nav-link active px-5" href="{% url 'stats'%}" style="font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active px-5" href="{% url 'config'%}" style="font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
                         </li>
                     </ul>
-                    <button class="btn ms-auto me-5 pe-5" type="submit"><img src="{% static 'storage/images/person-circle.svg' %}"></button>
+                    <button class="btn ms-auto me-5 pe-5" type="submit"><img src="{% static 'storage/images/icons/person-circle.svg' %}"></button>
                 </div>
             </div>
         </nav>

@@ -11,3 +11,6 @@ def storage(request):
 
 def config(request):
     return render(request, "storage/configStorage.html")
+
+def stats(request):
+    return render(request, "storage/stats.html")

@@ -26,7 +26,7 @@
                             <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="orders" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                            <a class="nav-link active px-5" href="{% url 'stats'%}" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active px-5" href="{% url 'config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
@@ -36,7 +36,7 @@
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-secondary" type="submit">Search</button>
                     </form>
-                    <button class="btn ms-5" data-bs-toggle="modal" data-bs-target="#destoreModalList" type="submit"><img src="{% static 'storage/images/box-arrow-down.svg' %}"></button>
+                    <button class="btn ms-5" data-bs-toggle="modal" data-bs-target="#destoreModalList" type="submit"><img src="{% static 'storage/images/icons/box-arrow-down.svg' %}"></button>
                 </div>
             </div>
         </nav>
@@ -50,7 +50,17 @@
           <div class="container col-12 col-md-6 col-xxl-4 my-5 d-flex justify-content-center">
 
                 <!-- Card of stored item -->
-                <div class="card" style="width: 18rem;">
+                <div class="card" style="width: 18rem; border-radius: 5%;  box-shadow:
+                4px 0px 0px #141414, 0px 1px 0px #141414, 
+                7px 1px 0px #141414, 1px 2px 0px #141414, 
+                9px 2px 0px #141414, 2px 3px 0px #141414, 
+                3px 3px 0px #141414, 4px 3px 0px #141414, 
+                5px 4px 0px #141414, 4px 5px 0px #141414, 
+                6px 5px 0px #141414, 5px 6px 0px #141414, 
+                7px 6px 0px #141414, 6px 7px 0px #141414, 
+                8px 7px 0px #141414, 7px 8px 0px #141414, 
+                0px 8px 0px #141414, 8px 9px 0px #141414, 
+                2px 9px 0px #141414, 9px 9px 0px #141414;">
                     <img src="{% static 'storage/images/LED_rot_5mm.png' %}" class="card-img-top" alt="LED Rot 5mm" style="border-bottom: solid; border-width: 1px; border-color: gray;">
                     <div class="card-body text-center">
                     <h5 class="card-title" href="">LED rot 5mm</h5>
@@ -64,7 +74,7 @@
     <!-- Fixed Button -->
     <div class="position-relative">
         <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#searchMasterData">
-            <img src="{% static 'storage/images/plus-square.svg' %}" alt="plus icon">
+            <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
         </a>
     </div>
 
@@ -239,9 +249,9 @@
             </div>
             
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
-            <button type="button" class="btn btn-warning d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/plus-square.svg'%}" style="max-height: 20px;">Add to list</button>
-            <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/box-seam-fill.svg'%}">Store Item</button>
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-warning d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="max-height: 20px;">Add to list</button>
+            <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal"><img class="me-2" src="{% static 'storage/images/icons/box-seam-fill.svg'%}">Store Item</button>
             </div>
         </div>
         </div>
@@ -449,8 +459,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/x-lg.svg'%}">Cancel</button>
-            <button type="button" class="btn btn-success d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/check2-all.svg'%}">Item is stored</button>
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">Cancel</button>
+            <button type="button" class="btn btn-success d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">Item is stored</button>
             </div>
         </div>
         </div>
