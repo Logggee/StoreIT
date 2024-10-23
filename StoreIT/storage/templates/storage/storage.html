@@ -6,6 +6,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'storage/stylesheets/storage.css' %}">
     <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.min.js' %}"></script>
     <title>Storage</title>
 </head>
@@ -44,18 +45,19 @@
 
 
     <div class="container mt-5 d-flex justify-content-center">
+
         <div class="container row d-flex justify-content-center">
         {% for stored_item in stored_items_list %}
-            <div class="container col-12 col-md-6 col-xxl-4 my-5 d-flex justify-content-center">
+            <div class="container col-12 col-md-4 col-xxl-4 my-5 d-flex justify-content-center">
 
                 <!-- Card of stored item -->
-                <div class="card" style="border-radius: 0.9rem;">
-                    <img src="{% static 'storage/images/item_images/' %}{{ stored_item.item_id.item_image }}" class="card-img-top" alt="{{stored_item.item_id.item_name}}" style="border-bottom: solid 3px #d3ac7b; max-height: 300px; border-top-left-radius: 0.9rem; border-top-right-radius: 0.9rem;">
+                <div class="card" id="card-item-{{ stored_item.item_id.item_id }}" style="border-radius: 0.9rem;">
+                    <img src="{% static 'storage/images/item_images/' %}{{ stored_item.item_id.item_image }}" class="card-img-top" id="card-image" alt="{{stored_item.item_id.item_name}}">
 
                     <div class="card-body text-left ms-2">
                         <h4 class="card-title" href="">{{stored_item.item_id.item_name}}</h4>
                         <p>Quantity: {{stored_item.stored_item_quantity}}</p>
-                        <a href="#" class="stretched-link" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+                        <a href="#" class="stretched-link" data-bs-toggle="modal" data-bs-target="#stored-item-modal-{{ stored_item.item_id.item_id}}"></a>
                     </div>
                 </div> 
             </div>
@@ -70,56 +72,58 @@
         </a>
     </div>
 
-    <!-- Modal stored item-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="border-bottom: none;">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="card-img-top" id="imgStoredItemModal" alt="LED Rot 5mm" style="height: 200px;">
-            <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">LED rot 5mm</h1>
-            </div>
-            <div class="modal-body">
-                <form class="needs-validation">
-                    <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Amount Stored:</label>
-                        <input type="text" class="form-control" id="recipient-name" value="10" readonly>
+    {% for stored_item in stored_items_list %}
+        <!-- Modal stored item {{ stored_item.item_id }}-->
+        <div class="modal fade" id="stored-item-modal-{{ stored_item.item_id.item_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: none;">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <img src="{% static 'storage/images/item_images/' %}{{ stored_item.item_id.item_image }}" class="card-img-top" id="imgStoredItemModal" alt="{{ stored_item.item_id }}">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ stored_item.item_id.item_name }}</h1>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation">
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Amount Stored:</label>
+                            <input type="text" class="form-control" id="recipient-name" value="{{ stored_item.stored_item_quantity }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Node:</label>
+                            <textarea class="form-control" id="message-text" readonly>{{ stored_item.item_id.item_node}}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="datasheet-link" class="col-form-label">Datasheet:</label>
+                            <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="datasheet-link" style="text-decoration: none;">
+                                {{ stored_item.item_id.item_datasheet }}
+                            </a>
+                        </div>
+                        <div class="mb-3">
+                            <label for="datasheet-link" class="col-form-label">Bought here:</label>
+                            <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="datasheet-link" style="text-decoration: none;">
+                                {{ stored_item.item_id.item_purchase_place }}
+                            </a>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Remove from stock:</label>
+                            <input type="number" class="form-control" id="recipient-name" value="0" min="0" max="{{ stored_item.stored_item_quantity }}">
+                        </div>
+                    </form>
+                    <div class="container d-flex justify-content-end">
+                        <button type="button" class="btn btn-success">Show all bins</button>
                     </div>
-                    <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Node:</label>
-                        <textarea class="form-control" id="message-text" readonly>Rote 5mm LED vom Hersteller Bla Bla</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="datasheet-link" class="col-form-label">Datasheet:</label>
-                        <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="datasheet-link" style="text-decoration: none;">
-                            https://www.farnell.com/datasheets/1498852.pdf
-                        </a>
-                    </div>
-                    <div class="mb-3">
-                        <label for="datasheet-link" class="col-form-label">Bought here:</label>
-                        <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="datasheet-link" style="text-decoration: none;">
-                            https://www.reichelt.de/led-5-mm-bedrahtet-5-v-rot-30-mcd-60--led-5mm-5v-rt-p54104.html
-                        </a>
-                    </div>
-                    <div class="mb-3">
-                        <label for="recipient-name" class="col-form-label">Remove from stock:</label>
-                        <input type="number" class="form-control" id="recipient-name" value="0" min="0" max="10">
-                    </div>
-                </form>
-                <div class="container d-flex justify-content-end">
-                    <button type="button" class="btn btn-success">Show all bins</button>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning">Add to Destore List</button>
+                <button type="submit" class="btn btn-danger">Destore</button>
                 </div>
             </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-warning">Add to Destore List</button>
-            <button type="submit" class="btn btn-danger">Destore</button>
             </div>
         </div>
-        </div>
-    </div>
+    {% endfor %}
 
     <!-- Modal destore list -->
     <div class="modal fade" id="destoreModalList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
