@@ -1,6 +1,7 @@
 #card-image {
     border-bottom: solid 3px #d3ac7b;
     max-height: 250px;
+    max-width: 250px;
     border-top-left-radius: 0.9rem;
     border-top-right-radius: 0.9rem;
 }
@@ -8,4 +9,9 @@
 #imgStoredItemModal {
     height: 200px;
     border-radius: 0.9rem;
+}
+
+#master-data-search-image {
+    max-height: 30px;
+    border-radius: 0.2rem;
 }
