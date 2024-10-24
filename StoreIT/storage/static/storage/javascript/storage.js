@@ -50,9 +50,13 @@ function onlyOneSelectable(checkbox) {
                 document.getElementById("item-image-file-label").classList.add("d-none")
                 document.getElementById("item-image-file").classList.add("d-none")
                 document.getElementById("item-name").value = response_data.item_name;
+                document.getElementById("item-name").setAttribute("readonly", true);
                 document.getElementById("item-node").value = response_data.item_node;
+                document.getElementById("item-node").setAttribute("readonly", true);
                 document.getElementById("item-datasheet").value = response_data.item_datasheet;
+                document.getElementById("item-datasheet").setAttribute("readonly", true);
                 document.getElementById("item-purshase-place").value = response_data.item_purshase_place;
+                document.getElementById("item-purshase-place").setAttribute("readonly", true);
             })
     }
     // If the checkbox was unchecked empty all all form fields
@@ -60,8 +64,12 @@ function onlyOneSelectable(checkbox) {
         document.getElementById("item-image-file-label").classList.remove("d-none")
         document.getElementById("item-image-file").classList.remove("d-none")
         document.getElementById("item-name").value = "";
+        document.getElementById("item-name").removeAttribute("readonly");
         document.getElementById("item-node").value = "";
+        document.getElementById("item-node").removeAttribute("readonly");
         document.getElementById("item-datasheet").value = "";
-        document.getElementById("item-purshase-place").value = "";   
+        document.getElementById("item-datasheet").removeAttribute("readonly");
+        document.getElementById("item-purshase-place").value = "";
+        document.getElementById("item-purshase-place").removeAttribute("readonly");
     }
 }

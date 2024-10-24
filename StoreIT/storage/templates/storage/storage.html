@@ -16,7 +16,7 @@
     <div class="container-fluid px-5">
         <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center" style="border-bottom: 1px solid black;">
             <div class="container-fluid">
-                <a class="navbar-brand ms-5 ps-5" href="{% url 'index'%}">
+                <a class="navbar-brand ms-5 ps-5" href="{% url 'storage:index'%}">
                 <img src="{% static 'storage/images/logo.png' %}" alt="Logo" height="60" class="d-inline-block align-text-top">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,13 +25,13 @@
                 <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-3 mb-lg-0 ps-5">
                         <li class="nav-item">
-                            <a class="nav-link active px-5" aria-current="page" href="{% url 'storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
+                            <a class="nav-link active px-5" aria-current="page" href="{% url 'storage:storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="{% url 'stats'%}" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                            <a class="nav-link active px-5" href="{% url 'storage:stats'%}" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="{% url 'config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
+                            <a class="nav-link active px-5" href="{% url 'storage:config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
                         </li>
                     </ul>
                     <form class="d-flex" role="search">
@@ -263,7 +263,8 @@
                     </ul>                    
                 </div>
 
-                <form>
+                <form action="{% url 'storage:store_new_item' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                     <div class="mb-3">
                         <label for="item-image-file" class="form-label" id="item-image-file-label">Picture</label>
                         <input class="form-control" type="file" id="item-image-file">
@@ -304,7 +305,7 @@
                     <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="max-height: 20px;">
                     Add to list
                 </button>
-                <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal">
+                <button type="submit" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal">
                     <img class="me-2" src="{% static 'storage/images/icons/box-seam-fill.svg'%}">
                     Store Item
                 </button>

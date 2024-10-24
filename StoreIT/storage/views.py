@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.http import Http404
@@ -24,6 +24,23 @@ def storage_single_item(request, item_id):
         "item_purshase_place": item.item_purchase_place
     }
     return JsonResponse(data)
+
+def store_new_item(request):
+    if request.method == "POST":
+        item_name = request.POST.get('item_name')
+        item_quantity = request.POST.get('item_quantity')
+        item_volume = request.POST.get('item_volume')
+        item_image = request.FILES.get('item_image')  # Für Dateien (Bilder)
+
+        # Neues Item in der Datenbank speichern
+        new_item = Item(
+            name=item_name,
+            quantity=item_quantity,
+            volume=item_volume,
+            image=item_image
+        )
+        new_item.save()
+    return render(request, 'storage/storage.html')
 
 def config(request):
     return render(request, "storage/configStorage.html")
