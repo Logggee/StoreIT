@@ -1,7 +1,7 @@
 # forms.py
 from django import forms
 
-class ItemForm(forms.Form):
+class Store_Item_Form(forms.Form):
     item_image_file = forms.FileField(label='Picture', required=False, widget=forms.FileInput(attrs={
         'class': 'form-control',
         'id': 'item-image-file',
@@ -28,7 +28,8 @@ class ItemForm(forms.Form):
     item_node = forms.CharField(label='Node', required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'id': 'item-node',
-        'placeholder': 'Optional nodes'
+        'placeholder': 'Optional nodes',
+        'rows': 1
     }))
     
     item_datasheet = forms.URLField(label='Datasheet', required=False, widget=forms.TextInput(attrs={

@@ -41,6 +41,7 @@ function onlyOneSelectable(checkbox) {
     });
     // Prefill all form fields with the check items values
     if (checkbox.checked) {
+        let form = document.getElementById("add-new-item-form")
         checkbox_id = checkbox.id;
         item_id = checkbox_id.split('-').pop()
 
@@ -55,8 +56,9 @@ function onlyOneSelectable(checkbox) {
                 document.getElementById("item-node").setAttribute("readonly", true);
                 document.getElementById("item-datasheet").value = response_data.item_datasheet;
                 document.getElementById("item-datasheet").setAttribute("readonly", true);
-                document.getElementById("item-purshase-place").value = response_data.item_purshase_place;
-                document.getElementById("item-purshase-place").setAttribute("readonly", true);
+                document.getElementById("item-purchase-place").value = response_data.item_purchase_place;
+                document.getElementById("item-purchase-place").setAttribute("readonly", true);
+                form.action = `/storage/${response_data.item_id}`;
             })
     }
     // If the checkbox was unchecked empty all all form fields
@@ -69,7 +71,8 @@ function onlyOneSelectable(checkbox) {
         document.getElementById("item-node").removeAttribute("readonly");
         document.getElementById("item-datasheet").value = "";
         document.getElementById("item-datasheet").removeAttribute("readonly");
-        document.getElementById("item-purshase-place").value = "";
-        document.getElementById("item-purshase-place").removeAttribute("readonly");
+        document.getElementById("item-purchase-place").value = "";
+        document.getElementById("item-purchase-place").removeAttribute("readonly");
+        form.action = "storage/store_new_item";
     }
 }

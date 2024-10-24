@@ -9,8 +9,10 @@ urlpatterns = [
     # localhost:8000/storage/
     path("storage/", views.storage, name="storage"),
     # localhost:8000/storage/1
-    path("storage/<int:item_id>", views.storage_single_item, name="storage_single_item"),
+    # Caution this url is hard coded and used in storage.js
+    path("storage/<int:item_id>", views.storage_single_item, name="storage_existing_item"),
     # localhost:8000/storage/store_item
+    # Caution this url is hard coded and used in storage.js
     path("storage/store_new_item", views.store_new_item, name="store_new_item"),
     # localhost:8000/config/
     path("config/", views.config, name="config"),

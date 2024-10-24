@@ -263,35 +263,35 @@
                     </ul>                    
                 </div>
 
-                <form action="{% url 'storage:store_new_item' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+                <form action="{% url 'storage:store_new_item' %}" id="add-new-item-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label for="item-image-file" class="form-label" id="item-image-file-label">Picture</label>
-                        <input class="form-control" type="file" id="item-image-file">
+                        {{ store_item_form.item_image_file }}
                     </div>
                     <div class="mb-3">
                         <label for="item-name" class="col-form-label">Name</label>
-                        <input type="text" class="form-control" id="item-name" placeholder="Item name">
+                        {{ store_item_form.item_name }}
                     </div>
                     <div class="mb-3">
                         <label for="item-quantity" class="col-form-label">Quantity:</label>
-                        <input type="number" class="form-control" id="item-quantity" placeholder="Quantity to be stored">
+                        {{ store_item_form.item_quantity }}
                     </div>
                     <div class="mb-3">
                         <label for="item-volume" class="col-form-label">Volume:</label>
-                        <input type="number" class="form-control" id="item-volume" placeholder="Volume of the item/s">
+                        {{ store_item_form.item_volume }}
                     </div>
                     <div class="mb-3">
                         <label for="item-node" class="col-form-label">Node:</label>
-                        <textarea class="form-control" id="item-node" placeholder="Optional nodes"></textarea>
+                        {{ store_item_form.item_node }}
                     </div>
                     <div class="mb-3">
                         <label for="item-datasheet" class="col-form-label">Datasheet</label>
-                        <input type="text" class="form-control" id="item-datasheet" placeholder="Optional datasheet">
+                        {{ store_item_form.item_datasheet }}
                     </div>
                     <div class="mb-3">
-                        <label for="item-purshase-place" class="col-form-label">Purshase place</label>
-                        <input type="text" class="form-control" id="item-purshase-place" placeholder="Optional link to purshase place">
+                        <label for="item-purchase-place" class="col-form-label">Purchase place</label>
+                        {{ store_item_form.item_purchase_place }}
                     </div>
                 </form>
             </div>
@@ -305,7 +305,7 @@
                     <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="max-height: 20px;">
                     Add to list
                 </button>
-                <button type="submit" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal">
+                <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal" onclick="document.getElementById('add-new-item-form').submit();">
                     <img class="me-2" src="{% static 'storage/images/icons/box-seam-fill.svg'%}">
                     Store Item
                 </button>
