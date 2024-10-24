@@ -6,6 +6,8 @@ urlpatterns = [
     path("", views.index, name="index"),    # The name can be used for url command in a html href
     # localhost:8000/storage/
     path("storage/", views.storage, name="storage"),
+    # localhost:8000/storage/1
+    path("storage/<int:item_id>", views.storage_single_item, name="storage single item"),
     # localhost:8000/config/
     path("config/", views.config, name="config"),
     # localhost:8000/stats
