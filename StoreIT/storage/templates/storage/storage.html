@@ -247,7 +247,7 @@
             <div class="modal-body">
 
                 <div class="mb-3">
-                    <label for="recipient-name" class="col-form-label">Name of the Item</label>
+                    <label for="recipient-name" class="col-form-label">Search for a existing item</label>
                     <input type="text" class="form-control" id="master-data-search-field" onkeyup="filterItems()">
                 </div>
 
@@ -263,23 +263,51 @@
                     </ul>                    
                 </div>
 
-                <form action="{% url 'storage:store_new_item' %}" id="add-new-item-form" method="post" enctype="multipart/form-data">
+                <form action="{% url 'storage:storage' %}" id="add-new-item-form" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="item-image-file" class="form-label" id="item-image-file-label">Picture</label>
                         {{ store_item_form.item_image_file }}
+                        {% if store_item_form.item_image_file.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_image_file.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="item-name" class="col-form-label">Name</label>
                         {{ store_item_form.item_name }}
+                        {% if store_item_form.item_name.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="item-quantity" class="col-form-label">Quantity:</label>
                         {{ store_item_form.item_quantity }}
+                        {% if store_item_form.item_quantity.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_quantity.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="item-volume" class="col-form-label">Volume:</label>
                         {{ store_item_form.item_volume }}
+                        {% if store_item_form.item_volume.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_volume.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="item-node" class="col-form-label">Node:</label>
@@ -534,6 +562,16 @@
             </div>
         </div>
         </div>
-    </div>  
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const showModal = {{ show_modal|lower }}; // This variable is pares if there was a error in the form
+            
+            if (showModal) {
+                const modal = new bootstrap.Modal(document.getElementById('searchMasterData'));
+                modal.show(); // Modal öffnen
+            }
+        });
+    </script>    
 </body>
 </html>

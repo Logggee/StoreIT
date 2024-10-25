@@ -1,3 +1,4 @@
+# views.py
 import os
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
@@ -12,11 +13,49 @@ def index(request):
     return render(request, "storage/index.html")
 
 def storage(request):
-    stored_items_list = Stored_Item.objects.all()
-    items_list = Item.objects.all()
-    store_item_form = Store_Item_Form()
-    content = {"stored_items_list": stored_items_list, "items_list": items_list, "store_item_form": store_item_form}
-    return render(request, "storage/storage.html", content)
+    # Post request
+    if request.method == "POST":
+        # Validate the form and parse the POST data
+        store_item_form = Store_Item_Form(request.POST, request.FILES)
+        if store_item_form.is_valid():
+            # Safe the items image
+            item_image_directory = os.path.join(settings.BASE_DIR, 'storage/static/storage/images/item_images')
+            # If the folder does not exist create one
+            if not os.path.exists(item_image_directory):
+                os.makedirs(item_image_directory)
+
+            item_file_name = store_item_form.cleaned_data["item_image_file"].name
+            item_image_file_path = os.path.join(item_image_directory, item_file_name)
+            # Safe the image
+            with default_storage.open(item_image_file_path, 'wb+') as destination:
+                for chunk in store_item_form.cleaned_data["item_image_file"].chunks():
+                    destination.write(chunk)
+
+            new_item = Item(item_name=store_item_form.cleaned_data["item_name"],
+                            item_image=store_item_form.cleaned_data["item_image_file"].name,
+                            item_node=store_item_form.cleaned_data["item_node"],
+                            item_datasheet=store_item_form.cleaned_data["item_datasheet"],
+                            item_purchase_place=store_item_form.cleaned_data["item_purchase_place"])
+            new_item.save()
+
+            return redirect("/storage/")
+        
+        else:
+            stored_items_list = Stored_Item.objects.all()
+            items_list = Item.objects.all()
+            content = {"stored_items_list": stored_items_list,
+                       "items_list": items_list,
+                       "store_item_form": store_item_form,
+                       "show_modal": True} # Variable that declares to open the modal after reload
+            
+            return render(request, "storage/storage.html", content)
+    # Get request
+    else:
+        stored_items_list = Stored_Item.objects.all()
+        items_list = Item.objects.all()
+        store_item_form = Store_Item_Form()
+        content = {"stored_items_list": stored_items_list, "items_list": items_list, "store_item_form": store_item_form}
+        return render(request, "storage/storage.html", content)
 
 def storage_single_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
