@@ -21,11 +21,9 @@ function searchMasterData () {
 
         if (match) {
             items[i].classList.remove("d-none");  // Display item if all terms match
-            console.log("Displaying Item: ", items[i].innerText);
         } 
         else {
             items[i].classList.add("d-none");  // Hide item if any term doesn't match
-            console.log("Hiding Item: ", items[i].innerText);
         }
     }
 }
@@ -58,7 +56,8 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-datasheet").setAttribute("readonly", true);
                 document.getElementById("item-purchase-place").value = response_data.item_purchase_place;
                 document.getElementById("item-purchase-place").setAttribute("readonly", true);
-                form.action = `/storage/${response_data.item_id}`;
+                // Set the url to parse the primary key of the already existing item
+                form.action = `/storage/store_existing_item/${response_data.item_id}`;
             })
     }
     // If the checkbox was unchecked empty all all form fields

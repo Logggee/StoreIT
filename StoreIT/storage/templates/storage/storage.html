@@ -572,7 +572,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const form_error = {{ add_item_form_valid_error|yesno:"true,false" }}; // This variable is parsed if there was a error in the form
             const open_store_modal = {{ open_storage_modal|yesno:"true,false" }}; // Variabel is parsed if the add item form was valid to open next modal
-            console.log(open_store_modal);
 
             // Open add-new-item-modal to show the validation errors in the modal
             if (form_error) {

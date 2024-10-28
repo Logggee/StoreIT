@@ -71,8 +71,32 @@ def storage(request):
                    "open_storage_modal": open_storage_modal}
         
         return render(request, "storage/storage.html", content)
+    
+''' storage/store_existing_item/<int:item_id>
 
-def storage_single_item(request, item_id):
+This url endpoint is used to store a item where the same item is already stored somewhere.
+So only the quantity in the storage space needs to be updated. The function pics the same
+Bin where the other same items are already stored.
+Note that after the redirect the modal for the sotage process is opend right away.
+
+Params:
+    request: HTTP request object
+    item_id: primary key of a Item relation
+
+Returns:
+    A redirect to the url /storage/storage
+'''
+def store_existing_item (request, item_id):
+    if request.method == "POST":
+        # Get all same stored items
+        stored_items = Stored_Item.objects.filter(item_id=item_id)
+        #TODO Algo for searching for the last bin where same item was stored to add this item
+        print(stored_items)
+
+        request.session["open_storage_modal"] = True
+        return redirect("storage:storage")
+
+def stored_single_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     # Build JSON data for prefilling search master data form 
     data = {
