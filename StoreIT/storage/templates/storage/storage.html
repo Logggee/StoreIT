@@ -68,7 +68,7 @@
 
     <!-- Fixed Button -->
     <div class="position-relative">
-        <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#searchMasterData">
+        <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#add-new-item-modal">
             <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
         </a>
     </div>
@@ -236,8 +236,8 @@
         </div>
     </div>
 
-    <!-- Modal search master data -->
-    <div class="modal fade" id="searchMasterData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal to add new items to db -->
+    <div class="modal fade" id="add-new-item-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -266,17 +266,6 @@
                 <form action="{% url 'storage:storage' %}" id="add-new-item-form" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="item-image-file" class="form-label" id="item-image-file-label">Picture</label>
-                        {{ store_item_form.item_image_file }}
-                        {% if store_item_form.item_image_file.errors %}
-                        <div class="invalid-feedback">
-                            {% for error in store_item_form.item_image_file.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="mb-3">
                         <label for="item-name" class="col-form-label">Name</label>
                         {{ store_item_form.item_name }}
                         {% if store_item_form.item_name.errors %}
@@ -287,6 +276,19 @@
                         </div>
                         {% endif %}
                     </div>
+
+                    <div class="mb-3">
+                        <label for="item-image-file" class="form-label" id="item-image-file-label">Picture</label>
+                        {{ store_item_form.item_image_file }}
+                        {% if store_item_form.item_image_file.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_image_file.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
                     <div class="mb-3">
                         <label for="item-quantity" class="col-form-label">Quantity:</label>
                         {{ store_item_form.item_quantity }}
@@ -298,6 +300,7 @@
                         </div>
                         {% endif %}
                     </div>
+
                     <div class="mb-3">
                         <label for="item-volume" class="col-form-label">Volume:</label>
                         {{ store_item_form.item_volume }}
@@ -309,6 +312,7 @@
                         </div>
                         {% endif %}
                     </div>
+
                     <div class="mb-3">
                         <label for="item-node" class="col-form-label">Node:</label>
                         {{ store_item_form.item_node }}
@@ -317,6 +321,7 @@
                         <label for="item-datasheet" class="col-form-label">Datasheet</label>
                         {{ store_item_form.item_datasheet }}
                     </div>
+
                     <div class="mb-3">
                         <label for="item-purchase-place" class="col-form-label">Purchase place</label>
                         {{ store_item_form.item_purchase_place }}
@@ -333,7 +338,7 @@
                     <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="max-height: 20px;">
                     Add to list
                 </button>
-                <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal" onclick="document.getElementById('add-new-item-form').submit();">
+                <button type="button" class="btn btn-danger d-flex align-items-center" onclick="document.getElementById('add-new-item-form').submit();">
                     <img class="me-2" src="{% static 'storage/images/icons/box-seam-fill.svg'%}">
                     Store Item
                 </button>
@@ -342,8 +347,8 @@
         </div>
     </div>
 
-    <!-- Modal for storage process -->
-    <div class="modal fade" id="storageProcess" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal for the storage process -->
+    <div class="modal fade" id="storage-process-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -352,7 +357,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <strong>Item: LED rot 5mm<br>Quantity: 10<br><br></strong>
+                    <strong>{{ item_to_store.item_name }}<br>Quantity: 10<br><br></strong>
                     Please store your item into the lith up storage bin.<br>
                     You can split your item if there is not enough space for it.<br>
                 </div>
@@ -563,13 +568,23 @@
         </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const showModal = {{ show_modal|lower }}; // This variable is pares if there was a error in the form
-            
-            if (showModal) {
-                const modal = new bootstrap.Modal(document.getElementById('searchMasterData'));
-                modal.show(); // Modal öffnen
+            const form_error = {{ add_item_form_valid_error|yesno:"true,false" }}; // This variable is parsed if there was a error in the form
+            const open_store_modal = {{ open_storage_modal|yesno:"true,false" }}; // Variabel is parsed if the add item form was valid to open next modal
+            console.log(open_store_modal);
+
+            // Open add-new-item-modal to show the validation errors in the modal
+            if (form_error) {
+                const add_item_modal = new bootstrap.Modal(document.getElementById('add-new-item-modal'));
+                add_item_modal.show(); // Open add item modal to show the validation errors
+            }
+
+            // Open storage-process-modal if the add-new-item-form was valid and the redirect accured
+            if (open_store_modal) {
+                const store_item_in_bin_modal = new bootstrap.Modal(document.getElementById('storage-process-modal'));
+                store_item_in_bin_modal.show();
             }
         });
     </script>    
