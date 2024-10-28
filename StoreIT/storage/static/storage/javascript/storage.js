@@ -1,5 +1,5 @@
 // Function displays or hides items of the master data set which names matches the input field
-function filterItems() {
+function filterItems () {
     // Get the value from the input field and split it by spaces into an array of search terms
     let input = document.getElementById('master-data-search-field').value.toLowerCase().trim();
     let searchTerms = input.split(/\s+/); // Split by spaces, handling multiple spaces
@@ -31,7 +31,7 @@ function filterItems() {
 }
 
 // User can only select one checkbox in master data search list
-function onlyOneSelectable(checkbox) {
+function onlyOneSelectable (checkbox) {
     let checkboxes = document.getElementsByName('master-data-list-checkbox'); // query all checkboxes
     // Uncheck every checkbox except the checkbox that called the function
     checkboxes.forEach((item) => { 
@@ -75,4 +75,37 @@ function onlyOneSelectable(checkbox) {
         document.getElementById("item-purchase-place").removeAttribute("readonly");
         form.action = "storage/store_new_item";
     }
+}
+
+function showOnlySearchHits (input_field) {
+    // Get the value from the input field and split it by spaces into an array of search terms
+    let input = input_field.value.toLowerCase().trim();
+    let searchTerms = input.split(/\s+/); // Split by spaces, handling multiple spaces
+
+    // Get all cards
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach((card) => {
+        card_title = card.querySelector("h4.card-title");
+        let match = true;
+
+        if (card_title) {
+            const item_name = card_title.innerText.toLowerCase();
+
+            // Check if every search term is present in the item name
+            searchTerms.forEach(function(term) {
+                if (!item_name.includes(term)) {
+                    match = false; // If one term is missing, this item is not a match
+                }
+            });
+
+            if (match) {
+                card.classList.remove("d-none");  // Display item if all terms match
+            }
+
+            else {
+                card.classList.add("d-none");  // Hide item if any term doesn't match
+            }
+        }
+    });
 }

@@ -15,3 +15,8 @@
     max-height: 30px;
     border-radius: 0.2rem;
 }
+
+#search-input {
+    max-width: 250px;
+    min-width: 100px;
+}

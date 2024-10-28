@@ -34,10 +34,9 @@
                             <a class="nav-link active px-5" href="{% url 'storage:config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
                         </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-secondary" type="submit">Search</button>
-                    </form>
+
+                    <input class="form-control d-inline-flex me-2" id="search-input" type="text" placeholder="Search" aria-label="Search" onkeyup="showOnlySearchHits(this)">
+
                     <button class="btn ms-5" data-bs-toggle="modal" data-bs-target="#destoreModalList" type="submit"><img src="{% static 'storage/images/icons/box-arrow-down.svg' %}"></button>
                 </div>
             </div>
