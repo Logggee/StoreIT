@@ -1,5 +1,5 @@
 // Function displays or hides items of the master data set which names matches the input field
-function filterItems () {
+function searchMasterData () {
     // Get the value from the input field and split it by spaces into an array of search terms
     let input = document.getElementById('master-data-search-field').value.toLowerCase().trim();
     let searchTerms = input.split(/\s+/); // Split by spaces, handling multiple spaces
