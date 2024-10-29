@@ -9,6 +9,15 @@ from django.core.files.storage import default_storage
 from .models import Stored_Item, Item, Bin
 from .forms import Store_Item_Form
 
+''' /
+Landingpage
+
+Params:
+    request: HTTP request object
+
+Returns:
+    Renders the template index.html
+'''
 def index(request):
     return render(request, "storage/index.html")
 
@@ -96,6 +105,17 @@ def store_existing_item (request, item_id):
         request.session["open_storage_modal"] = True
         return redirect("storage:storage")
 
+''' /storage/<int:item_id>
+This url endpoint is used to get a single item via a ajax call. The items
+attributes are displayed in the add item form to prefill all fields when
+one in selected via a checkbox.
+
+Params:
+    request: HTTP request object
+
+Returns:
+    A JSON object with all item attributes of a single item
+'''
 def stored_single_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     # Build JSON data for prefilling search master data form 
@@ -109,47 +129,26 @@ def stored_single_item(request, item_id):
     }
     return JsonResponse(data)
 
-def store_new_item(request):
-    if request.method == "POST":
-        post_item_name = request.POST.get('item_name')
-        post_item_quantity = request.POST.get('item_quantity')
-        post_item_volume = request.POST.get('item_volume')
-        post_item_image = request.FILES.get('item_image_file')
-        post_item_node = request.POST.get('item_node')
-        post_item_datasheet = request.POST.get('item_datasheet')
-        post_item_purchase_place = request.POST.get('item_puchase_place')
+''' /config
+Config page
 
-        # Safe the items image
-        item_image_directory = os.path.join(settings.BASE_DIR, 'storage/static/storage/images/item_images')
-        # If the folder does not exist create one
-        if not os.path.exists(item_image_directory):
-            os.makedirs(item_image_directory)
+Params:
+    request: HTTP request object
 
-        item_file_name = post_item_image.name
-        item_image_file_path = os.path.join(item_image_directory, item_file_name)
-
-
-        print(f"File Path: {item_image_file_path}")
-
-        with default_storage.open(item_image_file_path, 'wb+') as destination:
-            for chunk in post_item_image.chunks():
-                destination.write(chunk)
-
-        # Add new item to the database
-        new_item = Item(
-            item_name = post_item_name,
-            item_quantity = post_item_quantity,
-            item_volume = post_item_volume,
-            item_image = item_file_name,
-            item_node = post_item_node,
-            item_datasheet = post_item_datasheet,
-            item_purchase_place = post_item_purchase_place
-        )
-        new_item.save()
-    return render(request, 'storage/storage.html')
-
+Returns:
+    Renders the template config.html
+'''
 def config(request):
     return render(request, "storage/configStorage.html")
 
+''' /stats
+Stats page
+
+Params:
+    request: HTTP request object
+
+Returns:
+    Renders the template stats.html
+'''
 def stats(request):
     return render(request, "storage/stats.html")
