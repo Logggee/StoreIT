@@ -7,7 +7,7 @@ from django.template import loader
 from django.http import Http404
 from django.core.files.storage import default_storage
 from .models import Stored_Item, Item, Bin
-from .forms import Store_Item_Form
+from .forms import Store_Item_Form, Destore_Item_Form
 from .utils import Storage_Page_State
 
 # Enum that holds the current state of the /storage template
@@ -69,10 +69,12 @@ def storage(request):
         else:
             stored_items_list = Stored_Item.objects.all()
             items_list = Item.objects.all()
-            storage_page_state = Storage_Page_State.FORM_ERROR
+            storage_page_state = Storage_Page_State.ADD_ITEM_FORM_ERROR
+            destore_item_form = Destore_Item_Form()
             content = {"stored_items_list": stored_items_list,
                        "items_list": items_list,
                        "store_item_form": store_item_form,
+                       "destore_item_form": destore_item_form,
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
@@ -84,9 +86,11 @@ def storage(request):
         stored_items_list = Stored_Item.objects.all()
         items_list = Item.objects.all()
         store_item_form = Store_Item_Form()
+        destore_item_form = Destore_Item_Form()
         content = {"stored_items_list": stored_items_list, 
                    "items_list": items_list, 
                    "store_item_form": store_item_form,
+                   "destore_item_form": destore_item_form,
                    "new_stored_item": new_stored_item,
                    "storage_page_state": storage_page_state.name}
         storage_page_state = Storage_Page_State.INIT
@@ -140,6 +144,27 @@ def stored_single_item(request, item_id):
         "item_purchase_place": item.item_purchase_place
     }
     return JsonResponse(data)
+
+def destore_item(request, stored_item_fk):
+    if request.method == "POST":
+        destore_item_form = Destore_Item_Form(request.POST, stored_item_fk=stored_item_fk)
+
+        if destore_item_form.is_valid():
+            return redirect("storage:storage")
+        
+        # Form was not valid
+        else:
+            print("Form was not valid")
+            stored_items_list = Stored_Item.objects.all()
+            items_list = Item.objects.all()
+            storage_page_state = Storage_Page_State.DESTORE_ITEM_FORM_ERROR
+            content = {"stored_items_list": stored_items_list,
+                       "items_list": items_list,
+                       "destore_item_form": destore_item_form,
+                       "stored_item_form_error": get_object_or_404(Stored_Item, item_id=stored_item_fk), # Used to open the correct modal where the error happend
+                       "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
+            storage_page_state = Storage_Page_State.INIT
+            return render(request, "storage/storage.html", content)
 
 ''' /config
 Config page

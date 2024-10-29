@@ -1,7 +1,9 @@
 # forms.py
+from .models import Stored_Item
 from . import models
 from django import forms
 from django.core.validators import FileExtensionValidator
+from django.shortcuts import get_object_or_404
 
 class Store_Item_Form(forms.Form):
 
@@ -78,3 +80,37 @@ class Store_Item_Form(forms.Form):
                 css_classes = field.widget.attrs.get('class', '')
                 # Add to the current classes is-invalid
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
+
+class Destore_Item_Form(forms.Form):
+    item_destore_quantity = forms.IntegerField(label='Item volume',
+                                            min_value=1,
+                                            required=True,
+                                            widget=forms.NumberInput(attrs={
+                                                'class': 'form-control',
+                                                'id': 'item-volume',
+                                                'placeholder': '0'
+    }))
+
+    def __init__(self, *args,  stored_item_fk=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.stored_item_fk = stored_item_fk
+        # In invalid case the bootstrap clase is-invalid needs to be added
+        # to the form elements
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                # Fetches to current classes
+                css_classes = field.widget.attrs.get('class', '')
+                # Add to the current classes is-invalid
+                field.widget.attrs['class'] = f'{css_classes} is-invalid'
+
+    def clean_item_destore_quantity(self):
+        input_quantity = self.cleaned_data.get("item_destore_quantity")
+
+        if self.stored_item_fk:
+            stored_item = get_object_or_404(Stored_Item, item_id=self.stored_item_fk)
+
+            if input_quantity > stored_item.stored_item_quantity:
+                raise forms.ValidationError(
+                    "You can only destore what's there!"
+                )
+        return input_quantity

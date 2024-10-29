@@ -85,40 +85,70 @@
                 <h1 class="modal-title fs-5" id="exampleModalLabel">{{ stored_item.item_id.item_name }}</h1>
                 </div>
                 <div class="modal-body">
-                    <form class="needs-validation">
-                        <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Amount Stored:</label>
-                            <input type="text" class="form-control" id="recipient-name" value="{{ stored_item.stored_item_quantity }}" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Node:</label>
-                            <textarea class="form-control" id="message-text" readonly>{{ stored_item.item_id.item_node}}</textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="datasheet-link" class="col-form-label">Datasheet:</label>
-                            <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="datasheet-link" style="text-decoration: none;">
+                    <div class="mb-3">
+                        <label for="item-stored-quantity" class="col-form-label">Amount Stored:</label>
+                        <input type="text" class="form-control" id="item-stored-quantity" value="{{ stored_item.stored_item_quantity }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="item-node-text" class="col-form-label">Node:</label>
+                        <textarea class="form-control" id="item-node-text" readonly>{% if stored_item.item_id.item_node == "" %}-{% else %}{{ stored_item.item_id.item_node }}{% endif %}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="item-datasheet-link" class="col-form-label">Datasheet:</label>
+                        <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="item-datasheet-link" style="text-decoration: none;">
+                            {% if stored_item.item_id.item_datasheet == "" %}
+                                -
+                            {% else %}
                                 {{ stored_item.item_id.item_datasheet }}
-                            </a>
-                        </div>
-                        <div class="mb-3">
-                            <label for="datasheet-link" class="col-form-label">Bought here:</label>
-                            <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="datasheet-link" style="text-decoration: none;">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="mb-3">
+                        <label for="item-purchase-place-link" class="col-form-label">Bought here:</label>
+                        <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="item-purchase-place-link" style="text-decoration: none;">
+                            {% if stored_item.item_id.item_purchase_place == "" %}
+                                -
+                            {% else %}
                                 {{ stored_item.item_id.item_purchase_place }}
-                            </a>
-                        </div>
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <form id="destore-item-form-{{ stored_item.item_id.item_id }}" action="{% url 'storage:destore_item' stored_item_fk=stored_item.item_id.item_id %}" method="post">
+                        {% csrf_token %}
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Remove from stock:</label>
-                            <input type="number" class="form-control" id="recipient-name" value="0" min="0" max="{{ stored_item.stored_item_quantity }}">
+                            <label for="item-destore-quantity" class="col-form-label">Remove from stock:</label>
+                            {{ destore_item_form.item_destore_quantity }}
+                            {% if destore_item_form.item_destore_quantity.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in destore_item_form.item_destore_quantity.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
                     </form>
+
                     <div class="container d-flex justify-content-end">
-                        <button type="button" class="btn btn-success">Show all bins</button>
+                        <button type="button" class="btn btn-success d-flex align-items-center" data-bs-dismiss="modal">
+                            <img class="me-2" src="{% static 'storage/images/icons/inboxes.svg'%}" style="height: 20px;">
+                            Show all Bins
+                        </button>
                     </div>
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-warning">Add to Destore List</button>
-                <button type="submit" class="btn btn-danger">Destore</button>
+                <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
+                    <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}" style="height: 20px;">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-warning d-flex align-items-center">
+                    <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 20px;">
+                    Add to Destore List
+                </button>
+                <button type="button" class="btn btn-danger d-flex align-items-center" onclick="document.getElementById('destore-item-form-{{ stored_item.item_id.item_id }}').submit();">
+                    <img class="me-2" src="{% static 'storage/images/icons/box-arrow-down.svg'%}" style="height: 20px;">
+                    Destore
+                </button>
                 </div>
             </div>
             </div>
@@ -262,7 +292,7 @@
                     </ul>                    
                 </div>
 
-                <form action="{% url 'storage:storage' %}" id="add-new-item-form" method="post" enctype="multipart/form-data">
+                <form id="add-new-item-form" action="{% url 'storage:storage' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="item-name" class="col-form-label">Name</label>
@@ -573,7 +603,7 @@
             const storage_page_state = "{{ storage_page_state }}";
 
             switch (storage_page_state) {
-                case "FORM_ERROR":
+                case "ADD_ITEM_FORM_ERROR":
                     const add_item_modal = new bootstrap.Modal(document.getElementById('add-new-item-modal'));
                     add_item_modal.show(); // Open add item modal to show the validation errors
                     break;
@@ -581,6 +611,11 @@
                 case "STORE_PROCESS":
                     const store_item_in_bin_modal = new bootstrap.Modal(document.getElementById('storage-process-modal'));
                     store_item_in_bin_modal.show();
+                    break;
+
+                case "DESTORE_ITEM_FORM_ERROR":
+                    const stored_item_modal = new bootstrap.Modal(document.getElementById('stored-item-modal-{{ stored_item_form_error.item_id.item_id }}'));
+                    stored_item_modal.show();
                     break;
             }
         });
