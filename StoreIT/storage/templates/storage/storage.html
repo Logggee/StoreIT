@@ -356,7 +356,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <strong>{{ item_to_store.item_name }}<br>Quantity: 10<br><br></strong>
+                    <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
                     Please store your item into the lith up storage bin.<br>
                     You can split your item if there is not enough space for it.<br>
                 </div>
@@ -570,19 +570,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const form_error = {{ add_item_form_valid_error|yesno:"true,false" }}; // This variable is parsed if there was a error in the form
-            const open_store_modal = {{ open_storage_modal|yesno:"true,false" }}; // Variabel is parsed if the add item form was valid to open next modal
+            const storage_page_state = "{{ storage_page_state }}";
 
-            // Open add-new-item-modal to show the validation errors in the modal
-            if (form_error) {
-                const add_item_modal = new bootstrap.Modal(document.getElementById('add-new-item-modal'));
-                add_item_modal.show(); // Open add item modal to show the validation errors
-            }
+            switch (storage_page_state) {
+                case "FORM_ERROR":
+                    const add_item_modal = new bootstrap.Modal(document.getElementById('add-new-item-modal'));
+                    add_item_modal.show(); // Open add item modal to show the validation errors
+                    break;
 
-            // Open storage-process-modal if the add-new-item-form was valid and the redirect accured
-            if (open_store_modal) {
-                const store_item_in_bin_modal = new bootstrap.Modal(document.getElementById('storage-process-modal'));
-                store_item_in_bin_modal.show();
+                case "STORE_PROCESS":
+                    const store_item_in_bin_modal = new bootstrap.Modal(document.getElementById('storage-process-modal'));
+                    store_item_in_bin_modal.show();
+                    break;
             }
         });
     </script>    

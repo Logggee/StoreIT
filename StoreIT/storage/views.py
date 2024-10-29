@@ -8,6 +8,11 @@ from django.http import Http404
 from django.core.files.storage import default_storage
 from .models import Stored_Item, Item, Bin
 from .forms import Store_Item_Form
+from .utils import Storage_Page_State
+
+# Enum that holds the current state of the /storage template
+# The states define which modals are opend initially
+storage_page_state = Storage_Page_State.INIT
 
 ''' /
 Landingpage
@@ -22,6 +27,7 @@ def index(request):
     return render(request, "storage/index.html")
 
 def storage(request):
+    global storage_page_state
     # Post request
     if request.method == "POST":
         # Validate the form and parse the POST data
@@ -53,32 +59,37 @@ def storage(request):
                                            item_id = new_item,
                                            stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
             new_stored_item.save()
-
-            request.session["open_storage_modal"] = True
+            # Safe the name and quantity of the item to display it in the modal after the redirect
+            request.session["new_stored_item"] = (store_item_form.cleaned_data["item_name"], store_item_form.cleaned_data["item_quantity"])
+            storage_page_state = Storage_Page_State.STORE_PROCESS
 
             return redirect("storage:storage")
         
+        # Form was not valid
         else:
             stored_items_list = Stored_Item.objects.all()
             items_list = Item.objects.all()
+            storage_page_state = Storage_Page_State.FORM_ERROR
             content = {"stored_items_list": stored_items_list,
                        "items_list": items_list,
                        "store_item_form": store_item_form,
-                       "add_item_form_valid_error": True} # Variable that declares to open the modal after reload
-            
+                       "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
+            storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
         
     # Get request
     else:
-        open_storage_modal = request.session.pop("open_storage_modal", False)
+        new_stored_item = request.session.pop("new_stored_item", False)
+
         stored_items_list = Stored_Item.objects.all()
         items_list = Item.objects.all()
         store_item_form = Store_Item_Form()
         content = {"stored_items_list": stored_items_list, 
                    "items_list": items_list, 
                    "store_item_form": store_item_form,
-                   "open_storage_modal": open_storage_modal}
-        
+                   "new_stored_item": new_stored_item,
+                   "storage_page_state": storage_page_state.name}
+        storage_page_state = Storage_Page_State.INIT
         return render(request, "storage/storage.html", content)
     
 ''' storage/store_existing_item/<int:item_id>
@@ -96,13 +107,14 @@ Returns:
     A redirect to the url /storage/storage
 '''
 def store_existing_item (request, item_id):
+    global storage_page_state
     if request.method == "POST":
         # Get all same stored items
         stored_items = Stored_Item.objects.filter(item_id=item_id)
         #TODO Algo for searching for the last bin where same item was stored to add this item
         print(stored_items)
 
-        request.session["open_storage_modal"] = True
+        storage_page_state = Storage_Page_State.STORE_PROCESS
         return redirect("storage:storage")
 
 ''' /storage/<int:item_id>
