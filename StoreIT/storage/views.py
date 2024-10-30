@@ -61,7 +61,7 @@ def storage(request):
             new_stored_item.save()
             # Safe the name and quantity of the item to display it in the modal after the redirect
             request.session["new_stored_item"] = (store_item_form.cleaned_data["item_name"], store_item_form.cleaned_data["item_quantity"])
-            storage_page_state = Storage_Page_State.STORE_PROCESS
+            storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
 
             return redirect("storage:storage")
         
@@ -118,7 +118,7 @@ def store_existing_item (request, item_id):
         #TODO Algo for searching for the last bin where same item was stored to add this item
         print(stored_items)
 
-        storage_page_state = Storage_Page_State.STORE_PROCESS
+        storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
         return redirect("storage:storage")
 
 ''' /storage/<int:item_id>
@@ -145,11 +145,28 @@ def stored_single_item(request, item_id):
     }
     return JsonResponse(data)
 
+''' /storage/destore_itme/<int:stored_item_fk>
+This url endpoint is used to destore a quantity of a stored item.
+
+Params:
+    request: HTTP request object
+    stored_item_fk: The item foregin key of a Stored_Item
+
+Returns:
+    Ether a render if there was a error in the form or
+    a redirect if the form was valid.
+'''
 def destore_item(request, stored_item_fk):
+    global storage_page_state
     if request.method == "POST":
         destore_item_form = Destore_Item_Form(request.POST, stored_item_fk=stored_item_fk)
 
         if destore_item_form.is_valid():
+            destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
+            stored_item = get_object_or_404(Stored_Item, item_id=stored_item_fk)
+            stored_item.stored_item_quantity = stored_item.stored_item_quantity - destore_quantity
+            stored_item.save()
+            storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
             return redirect("storage:storage")
         
         # Form was not valid
@@ -157,9 +174,11 @@ def destore_item(request, stored_item_fk):
             print("Form was not valid")
             stored_items_list = Stored_Item.objects.all()
             items_list = Item.objects.all()
+            store_item_form = Store_Item_Form()
             storage_page_state = Storage_Page_State.DESTORE_ITEM_FORM_ERROR
             content = {"stored_items_list": stored_items_list,
                        "items_list": items_list,
+                       "store_item_form": store_item_form,
                        "destore_item_form": destore_item_form,
                        "stored_item_form_error": get_object_or_404(Stored_Item, item_id=stored_item_fk), # Used to open the correct modal where the error happend
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
