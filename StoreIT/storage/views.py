@@ -178,7 +178,6 @@ def destore_item(request, stored_item_fk):
                        "destore_item_form_error": destore_item_form,
                        "item_with_destore_error": get_object_or_404(Item, pk=stored_item_fk), # Used to open the correct modal where the error happend
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
-            print(f"Item with destore error: {get_object_or_404(Item, pk=stored_item_fk)}")
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
 
