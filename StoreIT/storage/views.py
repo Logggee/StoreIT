@@ -68,14 +68,11 @@ def storage(request):
         
         # Form was not valid
         else:
-            stored_items_list = Stored_Item.objects.all()
-            items_list = Item.objects.all()
             storage_page_state = Storage_Page_State.ADD_ITEM_FORM_ERROR
-            destore_item_form = Destore_Item_Form()
-            content = {"stored_items_list": stored_items_list,
-                       "items_list": items_list,
+            content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(),
+                       "items_list": Item.objects.all(),
                        "store_item_form": store_item_form,
-                       "destore_item_form": destore_item_form,
+                       "destore_item_form": Destore_Item_Form(),
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
@@ -85,35 +82,29 @@ def storage(request):
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item = request.session.pop("new_stored_item", False)
 
-        # Gets a list with the summed up stored quantity of each item that is stored any where
-        total_stored_quantity_per_item = Stored_Item.get_total_stored_quantity_for_all_items()
-        items_list = Item.objects.all()
-        store_item_form = Store_Item_Form()
-        destore_item_form = Destore_Item_Form()
-        content = {"total_stored_quantity_per_item": total_stored_quantity_per_item, 
-                   "items_list": items_list, 
-                   "store_item_form": store_item_form,
-                   "destore_item_form": destore_item_form,
+        content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
+                   "items_list": Item.objects.all(), 
+                   "store_item_form": Store_Item_Form(),
+                   "destore_item_form": Destore_Item_Form(),
                    "new_stored_item": new_stored_item,
                    "storage_page_state": storage_page_state.name}
         storage_page_state = Storage_Page_State.INIT
         return render(request, "storage/storage.html", content)
     
-''' storage/store_existing_item/<int:item_id>
-
-This url endpoint is used to store a item where the same item is already stored somewhere.
-So only the quantity in the storage space needs to be updated. The function pics the same
-Bin where the other same items are already stored.
-Note that after the redirect the modal for the sotage process is opend right away.
-
-Params:
-    request: HTTP request object
-    item_id: primary key of a Item relation
-
-Returns:
-    A redirect to the url /storage/storage
-'''
 def store_existing_item (request, item_id):
+    ''' storage/store_existing_item/<int:item_id>
+    This url endpoint is used to store a item where the same item is already stored somewhere.
+    So only the quantity in the storage space needs to be updated. The function pics the same
+    Bin where the other same items are already stored.
+    Note that after the redirect the modal for the sotage process is opend right away.
+
+    Args:
+        request: HTTP request object
+        item_id: primary key of a Item relation
+
+    Returns:
+        A redirect to the url /storage/storage
+    '''
     global storage_page_state
     if request.method == "POST":
         # Get all same stored items
@@ -124,18 +115,18 @@ def store_existing_item (request, item_id):
         storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
         return redirect("storage:storage")
 
-''' /storage/<int:item_id>
-This url endpoint is used to get a single item via a ajax call. The items
-attributes are displayed in the add item form to prefill all fields when
-one in selected via a checkbox.
-
-Params:
-    request: HTTP request object
-
-Returns:
-    A JSON object with all item attributes of a single item
-'''
 def stored_single_item(request, item_id):
+    ''' /storage/<int:item_id>
+    This url endpoint is used to get a single item via a ajax call. The items
+    attributes are displayed in the add item form to prefill all fields when
+    one in selected via a checkbox.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        A JSON object with all item attributes of a single item
+    '''
     item = get_object_or_404(Item, pk=item_id)
     # Build JSON data for prefilling search master data form 
     data = {
@@ -148,18 +139,18 @@ def stored_single_item(request, item_id):
     }
     return JsonResponse(data)
 
-''' /storage/destore_itme/<int:stored_item_fk>
-This url endpoint is used to destore a quantity of a stored item.
-
-Params:
-    request: HTTP request object
-    stored_item_fk: The item foregin key of a Stored_Item
-
-Returns:
-    Ether a render if there was a error in the form or
-    a redirect if the form was valid.
-'''
 def destore_item(request, stored_item_fk):
+    ''' /storage/destore_itme/<int:stored_item_fk>
+    This url endpoint is used to destore a quantity of a stored item.
+
+    Args:
+        request: HTTP request object
+        stored_item_fk: The item foregin key of a Stored_Item
+
+    Returns:
+        Ether a render if there was a error in the form or
+        a redirect if the form was valid.
+    '''
     global storage_page_state
     if request.method == "POST":
         destore_item_form = Destore_Item_Form(request.POST, stored_item_fk=stored_item_fk)
@@ -179,40 +170,38 @@ def destore_item(request, stored_item_fk):
         
         # Form was not valid
         else:
-            print("Form was not valid")
-            stored_items_list = Stored_Item.objects.all()
-            items_list = Item.objects.all()
-            store_item_form = Store_Item_Form()
             storage_page_state = Storage_Page_State.DESTORE_ITEM_FORM_ERROR
-            content = {"stored_items_list": stored_items_list,
-                       "items_list": items_list,
-                       "store_item_form": store_item_form,
-                       "destore_item_form": destore_item_form,
-                       "stored_item_form_error": get_object_or_404(Stored_Item, item_id=stored_item_fk), # Used to open the correct modal where the error happend
+            content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(),
+                       "items_list": Item.objects.all(),
+                       "store_item_form": Store_Item_Form(),
+                       "destore_item_form": Destore_Item_Form(),
+                       "destore_item_form_error": destore_item_form,
+                       "item_with_destore_error": get_object_or_404(Item, pk=stored_item_fk), # Used to open the correct modal where the error happend
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
+            print(f"Item with destore error: {get_object_or_404(Item, pk=stored_item_fk)}")
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
 
-''' /config
-Config page
-
-Params:
-    request: HTTP request object
-
-Returns:
-    Renders the template config.html
-'''
 def config(request):
+    ''' /config
+    Config page
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        Renders the template config.html
+    '''
     return render(request, "storage/configStorage.html")
 
-''' /stats
-Stats page
-
-Params:
-    request: HTTP request object
-
-Returns:
-    Renders the template stats.html
-'''
 def stats(request):
+    ''' /stats
+    Stats page
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        Renders the template stats.html
+    '''
     return render(request, "storage/stats.html")

@@ -10,63 +10,56 @@ class Store_Item_Form(forms.Form):
     item_image_file = forms.ImageField(label='Item image',
                                        required=True,
                                        allow_empty_file=False,
-                                       widget=forms.FileInput(attrs={
-                                        'class': 'form-control',
-                                        'id': 'item-image-file'}))
+                                       widget=forms.FileInput(attrs={'class': 'form-control',
+                                                                     'id': 'item-image-file'}))
     
     item_name = forms.CharField(max_length=models.MAX_ITEM_NAME_LENGTH,
                                 min_length=1,
                                 label='Item name',
                                 required=True,
-                                widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'id': 'item-name',
-        'placeholder': 'Item name',
-        'required': 'true'
+                                widget=forms.TextInput(attrs={'class': 'form-control',
+                                                              'id': 'item-name',
+                                                              'placeholder': 'Item name',
+                                                              'required': 'true'
     }))
     
     item_quantity = forms.IntegerField(min_value=1,
                                        label='Item quantity', 
-                                       widget=forms.NumberInput(attrs={
-        'class': 'form-control',
-        'id': 'item-quantity',
-        'placeholder': 'Quantity to be stored',
-        'required': 'true'
+                                       widget=forms.NumberInput(attrs={'class': 'form-control',
+                                                                       'id': 'item-quantity',
+                                                                       'placeholder': 'Quantity to be stored',
+                                                                       'required': 'true'
     }))
     
     item_volume = forms.IntegerField(label='Item volume',
                                      required=True,
-                                     widget=forms.NumberInput(attrs={
-        'class': 'form-control',
-        'id': 'item-volume',
-        'placeholder': 'Volume of the item/s'
+                                     widget=forms.NumberInput(attrs={'class': 'form-control',
+                                                                     'id': 'item-volume',
+                                                                     'placeholder': 'Volume of the item/s'
     }))
     
     item_node = forms.CharField(max_length=models.MAX_ITEM_NODE_LENGTH,
                                 label='Item node',
                                 required=False,
-                                widget=forms.Textarea(attrs={
-        'class': 'form-control',
-        'id': 'item-node',
-        'placeholder': 'Optional nodes',
-        'rows': 1   # Minimal height for the text field
+                                widget=forms.Textarea(attrs={'class': 'form-control',
+                                                             'id': 'item-node',
+                                                             'placeholder': 'Optional nodes',
+                                                             'rows': 1   # Minimal height for the text field
     }))
     
     item_datasheet = forms.URLField(max_length=models.MAX_ITEM_DATASHEET_URL_LENGTH,
                                     label='Item datasheet', 
                                     required=False, 
-                                    widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'id': 'item-datasheet',
-        'placeholder': 'Optional datasheet'
+                                    widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                  'id': 'item-datasheet',
+                                                                  'placeholder': 'Optional datasheet'
     }))
     
     item_purchase_place = forms.URLField(label='Item purchase place',
                                          required=False,
-                                         widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'id': 'item-purchase-place',
-        'placeholder': 'Optional link to purchase place'
+                                         widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                       'id': 'item-purchase-place',
+                                                                       'placeholder': 'Optional link to purchase place'
     }))
 
     # In invalid case the bootstrap clase is-invalid needs to be added
@@ -83,12 +76,11 @@ class Store_Item_Form(forms.Form):
 
 class Destore_Item_Form(forms.Form):
     item_destore_quantity = forms.IntegerField(label='Item volume',
-                                            min_value=1,
-                                            required=True,
-                                            widget=forms.NumberInput(attrs={
-                                                'class': 'form-control',
-                                                'id': 'item-volume',
-                                                'placeholder': '0'
+                                               min_value=1,
+                                               required=True,
+                                               widget=forms.NumberInput(attrs={'class': 'form-control',
+                                                                               'id': 'item-volume',
+                                                                               'placeholder': '0'
     }))
 
     def __init__(self, *args,  stored_item_fk=None, **kwargs):
@@ -104,12 +96,12 @@ class Destore_Item_Form(forms.Form):
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
     def clean_item_destore_quantity(self):
+        #TODO this only works if a item is just i one stored_item
         input_quantity = self.cleaned_data.get("item_destore_quantity")
 
         if self.stored_item_fk:
-            stored_item = get_object_or_404(Stored_Item, item_id=self.stored_item_fk)
-
-            if input_quantity > stored_item.stored_item_quantity:
+            # Check if the user wants to destore more as exists
+            if input_quantity > Stored_Item.get_total_stored_quantity_of_one_item(self.stored_item_fk):
                 raise forms.ValidationError(
                     "You can only destore what's there!"
                 )

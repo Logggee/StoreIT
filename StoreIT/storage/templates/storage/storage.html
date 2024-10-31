@@ -73,7 +73,7 @@
     </div>
 
     {% for item, stored_item_total_quantity in total_stored_quantity_per_item %}
-        <!-- Modal stored item {{ item.item_id }}-->
+        <!-- Modal stored item {{ item.item_name }}-->
         <div class="modal fade" id="stored-item-modal-{{ item.item_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -118,10 +118,14 @@
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="item-destore-quantity" class="col-form-label">Remove from stock:</label>
-                            {{ destore_item_form.item_destore_quantity }}
-                            {% if destore_item_form.item_destore_quantity.errors %}
+                            {% if item_with_destore_error.item_id == item.item_id %}
+                                {{ destore_item_form_error.item_destore_quantity }}
+                            {% else %}
+                                {{ destore_item_form.item_destore_quantity }}
+                            {% endif %}
+                            {% if item_with_destore_error.item_id == item.item_id %}
                             <div class="invalid-feedback">
-                                {% for error in destore_item_form.item_destore_quantity.errors %}
+                                {% for error in destore_item_form_error.item_destore_quantity.errors %}
                                     {{ error }}
                                 {% endfor %}
                             </div>
@@ -758,7 +762,7 @@
                     break;
 
                 case "DESTORE_ITEM_FORM_ERROR":
-                    const stored_item_modal = new bootstrap.Modal(document.getElementById('stored-item-modal-{{ stored_item_form_error.item_id.item_id }}'));
+                    const stored_item_modal = new bootstrap.Modal(document.getElementById('stored-item-modal-{{ item_with_destore_error.item_id }}'));
                     stored_item_modal.show();
                     break;
 

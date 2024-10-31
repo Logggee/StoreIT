@@ -55,7 +55,16 @@ class Stored_Item (models.Model):
         return string
     
     @classmethod    # This decorator defines that this method is used without a instance if the class
-    def get_total_quantity_for_item(cls, item_id):  # cls needs to be used in a class method like self
+    def get_total_stored_quantity_of_one_item(cls, item_id) -> int:  # cls needs to be used in a class method like self
+        """Summes up the total quantity of one item
+
+        Args:
+            cls: Stored_Item class object
+            item_id: Primmary key of the item
+
+        Returns:
+            The summed up quantity of the item
+        """
         return cls.objects.filter(item_id=item_id).aggregate(total_quantity=Sum('stored_item_quantity'))['total_quantity'] or 0
     
     @classmethod
