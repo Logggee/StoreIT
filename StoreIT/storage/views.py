@@ -9,6 +9,7 @@ from django.core.files.storage import default_storage
 from .models import Stored_Item, Item, Bin
 from .forms import Store_Item_Form, Destore_Item_Form
 from .utils import Storage_Page_State
+from . import storageProcesses as storage_processes
 
 # Enum that holds the current state of the /storage template
 # The states define which modals are opend initially
@@ -92,7 +93,7 @@ def storage(request):
         return render(request, "storage/storage.html", content)
     
 def store_existing_item (request, item_id):
-    ''' storage/store_existing_item/<int:item_id>
+    """ storage/store_existing_item/<int:item_id>
     This url endpoint is used to store a item where the same item is already stored somewhere.
     So only the quantity in the storage space needs to be updated. The function pics the same
     Bin where the other same items are already stored.
@@ -104,7 +105,7 @@ def store_existing_item (request, item_id):
 
     Returns:
         A redirect to the url /storage/storage
-    '''
+    """
     global storage_page_state
     if request.method == "POST":
         # Get all same stored items
@@ -116,7 +117,7 @@ def store_existing_item (request, item_id):
         return redirect("storage:storage")
 
 def stored_single_item(request, item_id):
-    ''' /storage/<int:item_id>
+    """ /storage/<int:item_id>
     This url endpoint is used to get a single item via a ajax call. The items
     attributes are displayed in the add item form to prefill all fields when
     one in selected via a checkbox.
@@ -126,7 +127,7 @@ def stored_single_item(request, item_id):
 
     Returns:
         A JSON object with all item attributes of a single item
-    '''
+    """
     item = get_object_or_404(Item, pk=item_id)
     # Build JSON data for prefilling search master data form 
     data = {
@@ -157,14 +158,7 @@ def destore_item(request, stored_item_fk):
         # Form was valid
         if destore_item_form.is_valid():
             destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
-            stored_item = get_object_or_404(Stored_Item, item_id=stored_item_fk)
-            # Safe the delta quantity
-            stored_item.stored_item_quantity = stored_item.stored_item_quantity - destore_quantity
-            # If no quantity is left at this storage place the dataset can be deleted
-            if stored_item.stored_item_quantity == 0:
-                stored_item.delete()
-            else:
-                stored_item.save()
+            storage_processes.destore_item(stored_item_fk, destore_quantity)
             storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
             return redirect("storage:storage")
         
