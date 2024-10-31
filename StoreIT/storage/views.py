@@ -82,14 +82,15 @@ def storage(request):
         
     # Get request
     else:
-        test = Stored_Item.get_total_stored_quantity_for_all_items()
+        # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item = request.session.pop("new_stored_item", False)
 
-        stored_items_list = Stored_Item.objects.all()
+        # Gets a list with the summed up stored quantity of each item that is stored any where
+        total_stored_quantity_per_item = Stored_Item.get_total_stored_quantity_for_all_items()
         items_list = Item.objects.all()
         store_item_form = Store_Item_Form()
         destore_item_form = Destore_Item_Form()
-        content = {"stored_items_list": stored_items_list, 
+        content = {"total_stored_quantity_per_item": total_stored_quantity_per_item, 
                    "items_list": items_list, 
                    "store_item_form": store_item_form,
                    "destore_item_form": destore_item_form,

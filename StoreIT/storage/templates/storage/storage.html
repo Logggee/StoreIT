@@ -47,17 +47,17 @@
     <div class="container mt-5 d-flex justify-content-center">
 
         <div class="container row d-flex justify-content-center">
-        {% for stored_item in stored_items_list %}
+        {% for item, stored_item_total_quantity in total_stored_quantity_per_item %}
             <div class="container col-12 col-md-6 col-xl-4 col-xxl-3 my-5 d-flex justify-content-center">
 
                 <!-- Card of stored item -->
-                <div class="card" id="card-item-{{ stored_item.item_id.item_id }}" style="border-radius: 0.9rem;">
-                    <img src="{% static 'storage/images/item_images/' %}{{ stored_item.item_id.item_image }}" class="card-img-top" id="card-image" alt="{{stored_item.item_id.item_name}}">
+                <div class="card" id="card-item-{{ item.item_id }}" style="border-radius: 0.9rem;">
+                    <img src="{% static 'storage/images/item_images/' %}{{ item.item_image }}" class="card-img-top" id="card-image" alt="{{ item.item_name }}">
 
                     <div class="card-body text-left ms-2">
-                        <h4 class="card-title" href="">{{stored_item.item_id.item_name}}</h4>
-                        <p>Quantity: {{stored_item.stored_item_quantity}}</p>
-                        <a href="#" class="stretched-link" data-bs-toggle="modal" data-bs-target="#stored-item-modal-{{ stored_item.item_id.item_id}}"></a>
+                        <h4 class="card-title" href="">{{ item.item_name }}</h4>
+                        <p>Quantity: {{ stored_item_total_quantity }}</p>
+                        <a href="#" class="stretched-link" data-bs-toggle="modal" data-bs-target="#stored-item-modal-{{ item.item_id }}"></a>
                     </div>
                 </div> 
             </div>
@@ -72,49 +72,49 @@
         </a>
     </div>
 
-    {% for stored_item in stored_items_list %}
-        <!-- Modal stored item {{ stored_item.item_id }}-->
-        <div class="modal fade" id="stored-item-modal-{{ stored_item.item_id.item_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {% for item, stored_item_total_quantity in total_stored_quantity_per_item %}
+        <!-- Modal stored item {{ item.item_id }}-->
+        <div class="modal fade" id="stored-item-modal-{{ item.item_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="border-bottom: none;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <img src="{% static 'storage/images/item_images/' %}{{ stored_item.item_id.item_image }}" class="card-img-top" id="imgStoredItemModal" alt="{{ stored_item.item_id }}">
+                <img src="{% static 'storage/images/item_images/' %}{{ item.item_image }}" class="card-img-top" id="imgStoredItemModal" alt="{{ item.item_name }}">
                 <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ stored_item.item_id.item_name }}</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ item.item_name }}</h1>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="item-stored-quantity" class="col-form-label">Amount Stored:</label>
-                        <input type="text" class="form-control" id="item-stored-quantity" value="{{ stored_item.stored_item_quantity }}" readonly>
+                        <input type="text" class="form-control" id="item-stored-quantity" value="{{ stored_item_total_quantity }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="item-node-text" class="col-form-label">Node:</label>
-                        <textarea class="form-control" id="item-node-text" readonly>{% if stored_item.item_id.item_node == "" %}-{% else %}{{ stored_item.item_id.item_node }}{% endif %}</textarea>
+                        <textarea class="form-control" id="item-node-text" readonly>{% if item.item_node == "" %}-{% else %}{{ item.item_node }}{% endif %}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="item-datasheet-link" class="col-form-label">Datasheet:</label>
-                        <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="item-datasheet-link" style="text-decoration: none;">
-                            {% if stored_item.item_id.item_datasheet == "" %}
+                        <a href="{{ item.item_datasheet }}" target="_blank" class="form-control" id="item-datasheet-link" style="text-decoration: none;">
+                            {% if item.item_datasheet == "" %}
                                 -
                             {% else %}
-                                {{ stored_item.item_id.item_datasheet }}
+                                {{ item.item_datasheet }}
                             {% endif %}
                         </a>
                     </div>
                     <div class="mb-3">
                         <label for="item-purchase-place-link" class="col-form-label">Bought here:</label>
-                        <a href="https://www.farnell.com/datasheets/1498852.pdf" target="_blank" class="form-control" id="item-purchase-place-link" style="text-decoration: none;">
-                            {% if stored_item.item_id.item_purchase_place == "" %}
+                        <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link" style="text-decoration: none;">
+                            {% if item.item_purchase_place == "" %}
                                 -
                             {% else %}
-                                {{ stored_item.item_id.item_purchase_place }}
+                                {{ item.item_purchase_place }}
                             {% endif %}
                         </a>
                     </div>
 
-                    <form id="destore-item-form-{{ stored_item.item_id.item_id }}" action="{% url 'storage:destore_item' stored_item_fk=stored_item.item_id.item_id %}" method="post">
+                    <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_fk=item.item_id %}" method="post">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="item-destore-quantity" class="col-form-label">Remove from stock:</label>
@@ -145,7 +145,7 @@
                     <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 20px;">
                     Add to Destore List
                 </button>
-                <button type="button" class="btn btn-danger d-flex align-items-center" onclick="document.getElementById('destore-item-form-{{ stored_item.item_id.item_id }}').submit();">
+                <button type="button" class="btn btn-danger d-flex align-items-center" onclick="document.getElementById('destore-item-form-{{ item.item_id }}').submit();">
                     <img class="me-2" src="{% static 'storage/images/icons/box-arrow-down.svg'%}" style="height: 20px;">
                     Destore
                 </button>

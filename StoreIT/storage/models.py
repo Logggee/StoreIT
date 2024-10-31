@@ -1,6 +1,7 @@
 # models.py
 from django.db import models
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 
 # Item max values
 MAX_ITEM_NAME_LENGTH = 30
@@ -58,26 +59,22 @@ class Stored_Item (models.Model):
         return cls.objects.filter(item_id=item_id).aggregate(total_quantity=Sum('stored_item_quantity'))['total_quantity'] or 0
     
     @classmethod
-    def get_total_stored_quantity_for_all_items(cls) -> dict:
+    def get_total_stored_quantity_for_all_items(cls) -> list:
         """Summes up the total quantity per stored item
 
         Args:
             cls: Stored_Item class object
 
         Returns:
-            total_stored_quantity_all_items: A dict -> Keys are the item names and keys are the summed up quantitys  
+            total_stored_quantity_all_items: A list with the item dataset and the total quantity that is stored of the item
         """
-
-        # Dict to return
-        total_stored_quantity_all_items = dict()
-
+        # List to return
+        total_stored_quantity_all_items = list()
         # Groups all same items and sums the quantitys of them
-        total_stored_quantity_per_item = cls.objects.values('item_id__item_name').annotate(total_quantity=Sum('stored_item_quantity'))  # __ is the get the name via the foregin key
+        total_stored_quantity_per_item = cls.objects.values('item_id').annotate(total_quantity=Sum('stored_item_quantity'))
 
-        # Build the dict to return Key is the item name and the value the summed up quantity
+        # Build the list to return the summed up quantitys and items
         for item in total_stored_quantity_per_item:
-            item_name = item['item_id__item_name']  # 'item__name' greift auf den Namen des Items über den ForeignKey zu
-            total_item_quantity = item['total_quantity']
-            total_stored_quantity_all_items[item_name] = total_item_quantity
+            total_stored_quantity_all_items.append((get_object_or_404(Item, pk=item['item_id']), item['total_quantity']))
 
         return total_stored_quantity_all_items
