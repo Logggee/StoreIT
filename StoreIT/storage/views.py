@@ -14,19 +14,20 @@ from .utils import Storage_Page_State
 # The states define which modals are opend initially
 storage_page_state = Storage_Page_State.INIT
 
-''' /
-Landingpage
-
-Params:
-    request: HTTP request object
-
-Returns:
-    Renders the template index.html
-'''
 def index(request):
+    """ /
+    Landingpage
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        Renders the template index.html
+    """
     return render(request, "storage/index.html")
 
 def storage(request):
+
     global storage_page_state
     # Post request
     if request.method == "POST":
@@ -45,7 +46,7 @@ def storage(request):
             with default_storage.open(item_image_file_path, 'wb+') as destination:
                 for chunk in store_item_form.cleaned_data["item_image_file"].chunks():
                     destination.write(chunk)
-
+            # Build and Safe a new dataset of the new item
             new_item = Item(item_name = store_item_form.cleaned_data["item_name"],
                             item_image = store_item_form.cleaned_data["item_image_file"].name,
                             item_node = store_item_form.cleaned_data["item_node"],
@@ -81,6 +82,7 @@ def storage(request):
         
     # Get request
     else:
+        test = Stored_Item.get_total_stored_quantity_for_all_items()
         new_stored_item = request.session.pop("new_stored_item", False)
 
         stored_items_list = Stored_Item.objects.all()
@@ -160,12 +162,17 @@ def destore_item(request, stored_item_fk):
     global storage_page_state
     if request.method == "POST":
         destore_item_form = Destore_Item_Form(request.POST, stored_item_fk=stored_item_fk)
-
+        # Form was valid
         if destore_item_form.is_valid():
             destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
             stored_item = get_object_or_404(Stored_Item, item_id=stored_item_fk)
+            # Safe the delta quantity
             stored_item.stored_item_quantity = stored_item.stored_item_quantity - destore_quantity
-            stored_item.save()
+            # If no quantity is left at this storage place the dataset can be deleted
+            if stored_item.stored_item_quantity == 0:
+                stored_item.delete()
+            else:
+                stored_item.save()
             storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
             return redirect("storage:storage")
         

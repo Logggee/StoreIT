@@ -1,5 +1,6 @@
 # models.py
 from django.db import models
+from django.db.models import Sum
 
 # Item max values
 MAX_ITEM_NAME_LENGTH = 30
@@ -51,3 +52,32 @@ class Stored_Item (models.Model):
     def __str__(self) -> str:
         string = str(self.item_id) + " is stored " + str(self.stored_item_quantity) + " times in " + str(self.bin_id)
         return string
+    
+    @classmethod    # This decorator defines that this method is used without a instance if the class
+    def get_total_quantity_for_item(cls, item_id):  # cls needs to be used in a class method like self
+        return cls.objects.filter(item_id=item_id).aggregate(total_quantity=Sum('stored_item_quantity'))['total_quantity'] or 0
+    
+    @classmethod
+    def get_total_stored_quantity_for_all_items(cls) -> dict:
+        """Summes up the total quantity per stored item
+
+        Args:
+            cls: Stored_Item class object
+
+        Returns:
+            total_stored_quantity_all_items: A dict -> Keys are the item names and keys are the summed up quantitys  
+        """
+
+        # Dict to return
+        total_stored_quantity_all_items = dict()
+
+        # Groups all same items and sums the quantitys of them
+        total_stored_quantity_per_item = cls.objects.values('item_id__item_name').annotate(total_quantity=Sum('stored_item_quantity'))  # __ is the get the name via the foregin key
+
+        # Build the dict to return Key is the item name and the value the summed up quantity
+        for item in total_stored_quantity_per_item:
+            item_name = item['item_id__item_name']  # 'item__name' greift auf den Namen des Items über den ForeignKey zu
+            total_item_quantity = item['total_quantity']
+            total_stored_quantity_all_items[item_name] = total_item_quantity
+
+        return total_stored_quantity_all_items
