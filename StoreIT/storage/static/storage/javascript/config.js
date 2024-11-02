@@ -17,7 +17,7 @@ function generateCollumnInputFields(input) {
         const inputField = document.createElement("input");
         inputField.type = "number";
         inputField.className = "form-control";
-        inputField.placeholder = "1";
+        inputField.placeholder = "0";
         inputField.min = "1";
         inputField.oninput = function(){generStorageLayout(this, i+1)};
         
@@ -28,23 +28,29 @@ function generateCollumnInputFields(input) {
         // Füge colDiv dem Haupt-Container hinzu
         container_row.appendChild(colDiv);
     }
+
+    // If the number of rows is decremented the last row needs to be deleted
+    const container_storage_layout = document.getElementById("storage-layout-container");
+    container_storage_layout.removeChild(container_storage_layout.lastChild);
 }
 
 
 function generStorageLayout(input, row_number) {
     const number_of_bins = parseInt(input.value);
     const container_storage_layout = document.getElementById("storage-layout-container");
-    //container_storage_layout.innerHTML = "";
 
     const div_row = document.createElement("div");
     div_row.className = "row mb-2 align-items-center";
-
+    div_row.id = "storage-layout-row-" + row_number;
+    
     const span = document.createElement("span");
+    span.classList = "col-auto";
     span.innerText = "Row " + row_number;
     div_row.appendChild(span);
 
     const div_col = document.createElement("div");
     div_col.className = "col d-flex justify-content-between mx-4";
+    div_col.id = "storage-layout-col-" + row_number;
 
     for (let i = 0; i < number_of_bins; i++) {
         const input = document.createElement("input");
@@ -63,5 +69,23 @@ function generStorageLayout(input, row_number) {
     }
 
     div_row.appendChild(div_col);
-    container_storage_layout.appendChild(div_row);
+
+    // Get all existing rows in a array to avoid getting a refernce of the childs
+    const rows = Array.from(container_storage_layout.children);
+    // All childs are saved in the array so all childs can be deleted
+    container_storage_layout.innerHTML = "";
+    
+    let row_set = false;
+    rows.forEach((row) => {
+        if (parseInt(row.id.slice(-1)) == row_number) {
+            container_storage_layout.appendChild(div_row);
+            row_set = true;   
+        }
+        else {
+            container_storage_layout.appendChild(row);
+        }
+    });
+    if (!row_set) {
+        container_storage_layout.appendChild(div_row);
+    }
 }
