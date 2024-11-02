@@ -1,4 +1,8 @@
 function generateCollumnInputFields(input) {
+    // If the user entered a number smaller then 0 or 0 enter the min value
+    if (input.value == 1) {
+        input.value = 1;
+    }
     const numberOfRows = parseInt(input.value);  // Liest den Wert aus dem Inputfeld und konvertiert ihn in eine Zahl
     const container_row = document.getElementById("container-columns"); // Holt den Ziel-Container
     container_row.innerHTML = "";  // Leert den Container, um alte Eingabefelder zu entfernen
@@ -31,7 +35,9 @@ function generateCollumnInputFields(input) {
 
     // If the number of rows is decremented the last row needs to be deleted
     const container_storage_layout = document.getElementById("storage-layout-container");
-    container_storage_layout.removeChild(container_storage_layout.lastChild);
+    for (let i = 0; i < container_storage_layout.children.length - numberOfRows; i++) {
+        container_storage_layout.removeChild(container_storage_layout.lastChild);
+    }
 }
 
 
@@ -72,20 +78,27 @@ function generStorageLayout(input, row_number) {
 
     // Get all existing rows in a array to avoid getting a refernce of the childs
     const rows = Array.from(container_storage_layout.children);
+    // append the row as the first element in the array
+    rows.unshift(div_row);
     // All childs are saved in the array so all childs can be deleted
     container_storage_layout.innerHTML = "";
-    
-    let row_set = false;
-    rows.forEach((row) => {
-        if (parseInt(row.id.slice(-1)) == row_number) {
-            container_storage_layout.appendChild(div_row);
-            row_set = true;   
+    let smaller_row, bigger_row;
+
+    // Move the new row as long to the right until it is at the rigth position
+    for (let i = 0; i < rows.length - 1; i++) {
+        if (parseInt(rows[i].id.slice(-1)) > parseInt(rows[i + 1].id.slice(-1))) {
+            smaller_row = rows[i + 1];
+            bigger_row = rows[i];
+            rows[i] = smaller_row;
+            rows[i + 1] = bigger_row;
         }
-        else {
-            container_storage_layout.appendChild(row);
+        // If the row number already existed delete the old row
+        else if (parseInt(rows[i].id.slice(-1)) == parseInt(rows[i + 1].id.slice(-1))) {
+            rows.splice(i + 1, 1);
         }
-    });
-    if (!row_set) {
-        container_storage_layout.appendChild(div_row);
     }
+    // Append all rows the the container
+    rows.forEach((row) => {
+        container_storage_layout.appendChild(row);
+    });
 }
