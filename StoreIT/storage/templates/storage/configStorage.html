@@ -45,7 +45,7 @@
                         <a class="nav-link d-flex align-items-center active" id="active-tab" data-bs-toggle="tab" href="#firstTab" role="tab" aria-controls="active" aria-selected="true">Storage 1</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link d-flex align-items-center" id="add-storage-tab" data-bs-toggle="tab" href="#addTab" role="tab" aria-controls="active" aria-selected="true">
+                        <a class="nav-link d-flex align-items-center" id="add-storage-tab" data-bs-toggle="tab" href="#add-tab" role="tab" aria-controls="active" aria-selected="true">
                             <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 16px; filter: invert(1);">
                             New Storage
                         </a>
@@ -186,24 +186,26 @@
                 
 
                 <!-- Add new storage tab -->
-                <div class="tab-pane fade" id="addTab" role="thirdTab" aria-labelledby="link-tab">
+                <div class="tab-pane fade" id="add-tab" role="thirdTab" aria-labelledby="link-tab">
                     <h5 class="card-title">Configure your new storage</h5>
                     <form>
+                        <!-- Input for the number of rows -->
                         <div class="container row">
                             <div class="mb-3 text-start">
                                 <label for="storage-rows" class="col-form-label">Number of Storage rows:</label>
                                 <input type="number" class="form-control" id="storage-rows" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)">
                             </div>
                         </div>
-            
+                        <!-- Row for the n input filds for the number of bin per row -->
                         <div class="container row" id="container-columns">
                             
                         </div>
                     </form>
 
-                    <div class="container-fluid my-3" style="border-top: solid 1px gray;"></div>
+                    
 
-                    <div class="container row">
+                    <!-- Row where the configured layout of the storage is displayed -->
+                    <div class="container row" id="row-storage-layout">
                         <div class="container col" id="storage-layout-heading-container">
         
                             <div class="container" id="storage-layout-container">
@@ -212,8 +214,9 @@
                         </div>
                     </div>
 
-                    <div class="container-fluid my-3" style="border-top: solid 1px gray;"></div>
+                    
 
+                    <!-- Row where the inputs for the diffrent bin sizes is displayed -->
                     <div class="container row" id="container-bin-sizes-heading">
 
                         <div class="container row" id="container-bin-sizes-row">
@@ -221,9 +224,10 @@
                         </div>
                     </div>
 
-                    <div class="container-fluid my-3" style="border-top: solid 1px gray;"></div>
+                    
 
-                    <div class="container row">
+                    <!-- Row where the button for saving the configuration is displayed -->
+                    <div class="container row" id="row-safe-config">
                         <div class="container col d-flex justify-content-end">
                             <button type="button" class="btn btn-success mt-3 d-flex align-items-center"><img class="me-2" src="{% static 'storage/images/icons/floppy.svg'%}">Safe configuration</button>
                         </div>

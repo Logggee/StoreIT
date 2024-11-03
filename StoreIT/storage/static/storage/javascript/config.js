@@ -67,13 +67,19 @@ function generStorageLayout(input, row_number) {
     if (input.value == 0) {
         input.value = 1;
     }
-    // Add the heading of storage layout
+    // Add the heading of storage layout and all of the gray lines
     storage_layout_heading_container = document.getElementById("storage-layout-heading-container");
+    // Check if the heading already exists and if not create one
     if (!document.getElementById("storage-layout-heading")){
         const storage_layout_heading = document.createElement("p");
         storage_layout_heading.id = "storage-layout-heading";
         storage_layout_heading.innerHTML = "Configured layout of the storage";
         storage_layout_heading_container.insertBefore(storage_layout_heading, storage_layout_heading_container.firstChild);
+        // Add the gray lines for seperating the diffrent rows
+        const add_storga_tab = document.getElementById("add-tab");
+        add_storga_tab.insertBefore(createGrayLine(), document.getElementById("row-storage-layout"));
+        add_storga_tab.insertBefore(createGrayLine(), document.getElementById("container-bin-sizes-heading"));
+        add_storga_tab.insertBefore(createGrayLine(), document.getElementById("row-safe-config"));
     }
 
     const number_of_bins = parseInt(input.value);
@@ -180,4 +186,11 @@ function generStorageLayout(input, row_number) {
         div_bin_size_col.appendChild(div_bin_size);
         container_bin_sizes_row.appendChild(div_bin_size_col);
     }
+}
+// Helper function for creating a gray line element
+function createGrayLine() {
+    const grayLine = document.createElement("div");
+    grayLine.classList = "container-fluid my-3";
+    grayLine.style.borderTop = "solid 1px gray";
+    return grayLine;
 }
