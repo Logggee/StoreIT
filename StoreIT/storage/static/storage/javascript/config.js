@@ -69,9 +69,12 @@ function generStorageLayout(input, row_number) {
     }
     // Add the heading of storage layout
     storage_layout_heading_container = document.getElementById("storage-layout-heading-container");
-    const storage_layout_heading = document.createElement("p");
-    storage_layout_heading.innerHTML = "Configured layout of the storage";
-    storage_layout_heading_container.insertBefore(storage_layout_heading, storage_layout_heading_container.firstChild);
+    if (!document.getElementById("storage-layout-heading")){
+        const storage_layout_heading = document.createElement("p");
+        storage_layout_heading.id = "storage-layout-heading";
+        storage_layout_heading.innerHTML = "Configured layout of the storage";
+        storage_layout_heading_container.insertBefore(storage_layout_heading, storage_layout_heading_container.firstChild);
+    }
 
     const number_of_bins = parseInt(input.value);
     const container_storage_layout = document.getElementById("storage-layout-container");
@@ -138,19 +141,24 @@ function generStorageLayout(input, row_number) {
         container_storage_layout.appendChild(row);
     });
 
-    // Build the input fields for the bin sizes
-    const container_bin_sizes = document.getElementById("container-bin-sizes");
     // Add the heading
-    const bin_sizes_heading = document.createElement("p");
-    bin_sizes_heading.innerText = "Enter the volumes of the diffrent bin sizes";
-    container_bin_sizes.insertBefore(bin_sizes_heading, container_bin_sizes.firstChild);
+    const container_bin_sizes_heading = document.getElementById("container-bin-sizes-heading");
+    if (!document.getElementById("bin-sizes-heading")){
+        const bin_sizes_heading = document.createElement("p");
+        bin_sizes_heading.id = "bin-sizes-heading";
+        bin_sizes_heading.innerText = "Enter the volumes of the diffrent bin sizes";
+        container_bin_sizes_heading.insertBefore(bin_sizes_heading, container_bin_sizes_heading.firstChild);
+    }
+
+    // Build the input fields for the bin sizes
+    const container_bin_sizes_row = document.getElementById("container-bin-sizes-row");
     //const bin_sizes = Array.from(container_bin_sizes.children);
-    container_bin_sizes.innerHTML = "";
+    container_bin_sizes_row.innerHTML = "";
     const sizes = ["S", "M", "L", "XL", "XXL", "XXXL", "XXXXL", "XXXXXL"];
 
     for (let i = 0; i < diffret_bin_sizes.length; i++) {
-        div_col_bin_size = document.createElement("div");
-        div_col_bin_size.classList = "container col";
+        const div_bin_size_col = document.createElement("div");
+        div_bin_size_col.classList = "container col-3";
 
         div_bin_size = document.createElement("div");
         div_bin_size.classList = "mb-3 text-start";
@@ -169,7 +177,7 @@ function generStorageLayout(input, row_number) {
         input_bin_size.min = "1";
         div_bin_size.appendChild(input_bin_size);
 
-        div_col_bin_size.appendChild(div_bin_size);
-        container_bin_sizes.appendChild(div_col_bin_size);
+        div_bin_size_col.appendChild(div_bin_size);
+        container_bin_sizes_row.appendChild(div_bin_size_col);
     }
 }
