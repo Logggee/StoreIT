@@ -38,12 +38,26 @@ function generateCollumnInputFields(input) {
         container_row.appendChild(colDiv);
     }
 
-    // If the number of rows is decremented the last row needs to be deleted
+    // If the number of rows is decremented the last row/rows needs to be deleted
     const container_storage_layout = document.getElementById("storage-layout-container");
     const delete_n_rows = container_storage_layout.children.length - numberOfRows;
     for (let i = 0; i < delete_n_rows; i++) {
         container_storage_layout.removeChild(container_storage_layout.lastChild);
-        console.log("I = " + i);
+    }
+
+    // Check how much diffrent bin sizes exists after the changes
+    let diffret_bin_sizes = [];
+    const rows = container_row.children;
+    for(let i = 0; i < rows.length; i++) {
+        if (!diffret_bin_sizes.includes(rows[i].querySelector("input").value)) {
+            diffret_bin_sizes.push(rows[i].querySelector("input").value);
+        }
+    }
+
+    const container_bin_sizes = document.getElementById("container-bin-sizes");
+    delete_n_elements = container_bin_sizes.children.length - diffret_bin_sizes.length;
+    for (let i = 0; i < delete_n_elements; i++) {
+        container_bin_sizes.removeChild(container_bin_sizes.lastChild);
     }
 }
 
@@ -108,8 +122,44 @@ function generStorageLayout(input, row_number) {
             rows.splice(i + 1, 1);
         }
     }
+    let diffret_bin_sizes = [];
     // Append all rows the the container
     rows.forEach((row) => {
+        let number_of_bins = row.querySelectorAll("input");
+        if (!diffret_bin_sizes.includes(number_of_bins.length)) {
+            diffret_bin_sizes.push(number_of_bins.length);
+        }
         container_storage_layout.appendChild(row);
     });
+
+    // Build the input fields for the bin sizes
+    const container_bin_sizes = document.getElementById("container-bin-sizes");
+    //const bin_sizes = Array.from(container_bin_sizes.children);
+    container_bin_sizes.innerHTML = "";
+    const sizes = ["S", "M", "L", "XL", "XXL", "XXXL", "XXXXL", "XXXXXL"];
+
+    for (let i = 0; i < diffret_bin_sizes.length; i++) {
+        div_col_bin_size = document.createElement("div");
+        div_col_bin_size.classList = "container col";
+
+        div_bin_size = document.createElement("div");
+        div_bin_size.classList = "mb-3 text-start";
+
+        label_bin_size = document.createElement("label");
+        label_bin_size.for = "bin-size-" + sizes[i];
+        label_bin_size.classList = "col-form-label";
+        label_bin_size.innerText = "Volume of " + sizes[i] + " bin";
+        div_bin_size.appendChild(label_bin_size);
+
+        input_bin_size = document.createElement("input");
+        input_bin_size.type = "number";
+        input_bin_size.classList = "form-control";
+        input_bin_size.id = "bin-size-" + sizes[i];
+        input_bin_size.placeholder = "Volume in ccm";
+        input_bin_size.min = "1";
+        div_bin_size.appendChild(input_bin_size);
+
+        div_col_bin_size.appendChild(div_bin_size);
+        container_bin_sizes.appendChild(div_col_bin_size);
+    }
 }
