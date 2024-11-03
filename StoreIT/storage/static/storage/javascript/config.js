@@ -1,10 +1,11 @@
 function generateCollumnInputFields(input) {
-    // If the user entered a number smaller then 0 or 0 enter the min value
-    if (input.value == 1) {
+    // Prevent manual input of 0
+    if (input.value == 0) {
         input.value = 1;
     }
     const numberOfRows = parseInt(input.value);  // Liest den Wert aus dem Inputfeld und konvertiert ihn in eine Zahl
     const container_row = document.getElementById("container-columns"); // Holt den Ziel-Container
+    rows_inputs = Array.from(container_row.children);
     container_row.innerHTML = "";  // Leert den Container, um alte Eingabefelder zu entfernen
     
     for (let i = 0; i < numberOfRows; i++) {
@@ -21,9 +22,13 @@ function generateCollumnInputFields(input) {
         const inputField = document.createElement("input");
         inputField.type = "number";
         inputField.className = "form-control";
-        inputField.placeholder = "0";
+        inputField.placeholder = "n bins";
         inputField.min = "1";
         inputField.oninput = function(){generStorageLayout(this, i+1)};
+        if (i < rows_inputs.length && rows_inputs.length != 0) {
+            old_input_field = rows_inputs[i].querySelector("input");
+            inputField.value = old_input_field.value;
+        }
         
         // Füge die Elemente zum colDiv hinzu
         colDiv.appendChild(label);
@@ -35,13 +40,19 @@ function generateCollumnInputFields(input) {
 
     // If the number of rows is decremented the last row needs to be deleted
     const container_storage_layout = document.getElementById("storage-layout-container");
-    for (let i = 0; i < container_storage_layout.children.length - numberOfRows; i++) {
+    const delete_n_rows = container_storage_layout.children.length - numberOfRows;
+    for (let i = 0; i < delete_n_rows; i++) {
         container_storage_layout.removeChild(container_storage_layout.lastChild);
+        console.log("I = " + i);
     }
 }
 
 
 function generStorageLayout(input, row_number) {
+    // Prevent manual input of 0
+    if (input.value == 0) {
+        input.value = 1;
+    }
     const number_of_bins = parseInt(input.value);
     const container_storage_layout = document.getElementById("storage-layout-container");
 
