@@ -139,14 +139,14 @@ function generStorageLayout(input, row_number) {
 
     // Move the new row as long to the right until it is at the rigth position
     for (let i = 0; i < rows.length - 1; i++) {
-        if (parseInt(rows[i].id.slice(-1)) > parseInt(rows[i + 1].id.slice(-1))) {
+        if (parseInt(rows[i].id.match(/(\d+)/)) > parseInt(rows[i + 1].id.match(/(\d+)/))) {
             smaller_row = rows[i + 1];
             bigger_row = rows[i];
             rows[i] = smaller_row;
             rows[i + 1] = bigger_row;
         }
         // If the row number already existed delete the old row
-        else if (parseInt(rows[i].id.slice(-1)) == parseInt(rows[i + 1].id.slice(-1))) {
+        else if (parseInt(rows[i].id.match(/(\d+)/)) == parseInt(rows[i + 1].id.match(/(\d+)/))) {
             rows.splice(i + 1, 1);
         }
     }
