@@ -67,6 +67,12 @@ function generStorageLayout(input, row_number) {
     if (input.value == 0) {
         input.value = 1;
     }
+    // Add the heading of storage layout
+    storage_layout_heading_container = document.getElementById("storage-layout-heading-container");
+    const storage_layout_heading = document.createElement("p");
+    storage_layout_heading.innerHTML = "Configured layout of the storage";
+    storage_layout_heading_container.insertBefore(storage_layout_heading, storage_layout_heading_container.firstChild);
+
     const number_of_bins = parseInt(input.value);
     const container_storage_layout = document.getElementById("storage-layout-container");
 
@@ -134,6 +140,10 @@ function generStorageLayout(input, row_number) {
 
     // Build the input fields for the bin sizes
     const container_bin_sizes = document.getElementById("container-bin-sizes");
+    // Add the heading
+    const bin_sizes_heading = document.createElement("p");
+    bin_sizes_heading.innerText = "Enter the volumes of the diffrent bin sizes";
+    container_bin_sizes.insertBefore(bin_sizes_heading, container_bin_sizes.firstChild);
     //const bin_sizes = Array.from(container_bin_sizes.children);
     container_bin_sizes.innerHTML = "";
     const sizes = ["S", "M", "L", "XL", "XXL", "XXXL", "XXXXL", "XXXXXL"];
