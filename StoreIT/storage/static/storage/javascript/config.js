@@ -67,7 +67,7 @@ function generStorageLayout(input, row_number) {
     if (input.value == 0) {
         input.value = 1;
     }
-    // Add the heading of storage layout and all of the gray lines
+    // Add the heading of storage layout and all of the gray lines and safe config button
     storage_layout_heading_container = document.getElementById("storage-layout-heading-container");
     // Check if the heading already exists and if not create one
     if (!document.getElementById("storage-layout-heading")){
@@ -80,6 +80,19 @@ function generStorageLayout(input, row_number) {
         add_storga_tab.insertBefore(createGrayLine(), document.getElementById("row-storage-layout"));
         add_storga_tab.insertBefore(createGrayLine(), document.getElementById("container-bin-sizes-heading"));
         add_storga_tab.insertBefore(createGrayLine(), document.getElementById("row-safe-config"));
+        // Add the safe config button
+        const container_safe_config_button = document.getElementById("container-safe-config-button");
+        const safe_config_button = document.createElement("button");
+        safe_config_button.type = "button";
+        safe_config_button.classList = "btn btn-success mt-3 d-flex align-items-center";
+        safe_config_button.innerText = "Safe configuration";
+
+        const safe_config_button_image = document.createElement("img");
+        safe_config_button_image.classList = "me-2";
+        safe_config_button_image.src = "{% static 'storage/images/icons/floppy.svg'%}";
+
+        safe_config_button.appendChild(safe_config_button_image);
+        container_safe_config_button.appendChild(safe_config_button);
     }
 
     const number_of_bins = parseInt(input.value);
