@@ -54,7 +54,7 @@ function generateCollumnInputFields(input) {
         }
     }
 
-    const container_bin_sizes = document.getElementById("container-bin-sizes");
+    const container_bin_sizes = document.getElementById("container-bin-sizes-row");
     delete_n_elements = container_bin_sizes.children.length - diffret_bin_sizes.length;
     for (let i = 0; i < delete_n_elements; i++) {
         container_bin_sizes.removeChild(container_bin_sizes.lastChild);
