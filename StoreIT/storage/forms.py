@@ -106,3 +106,11 @@ class Destore_Item_Form(forms.Form):
                     "You can only destore what's there!"
                 )
         return input_quantity
+    
+class Storage_Layout_Form(forms.Form):
+    def __init__(self, *args, **kwargs):
+        dynamic_fields = kwargs.pop("dynamic_field", [])
+        super(Storage_Layout_Form, self).__init__(*args, **kwargs)
+
+        print(f"args: {args}")
+        print(f"kwargs: {kwargs}")

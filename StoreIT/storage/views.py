@@ -1,5 +1,6 @@
 # views.py
 import os
+import json
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, JsonResponse
@@ -7,7 +8,7 @@ from django.template import loader
 from django.http import Http404
 from django.core.files.storage import default_storage
 from .models import Stored_Item, Item, Bin
-from .forms import Store_Item_Form, Destore_Item_Form
+from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form
 from .utils import Storage_Page_State
 from . import storageProcesses as storage_processes
 
@@ -185,6 +186,12 @@ def config(request):
     Returns:
         Renders the template config.html
     '''
+    if request.method == "POST":
+        data = request.POST.dict()  # In ein normales Dictionary umwandeln
+        print(f"Data: {data}")
+        # Verarbeite die Daten wie benötigt
+        for key, value in data.items():
+            print(f"{key}: {value}")
     return render(request, "storage/configStorage.html")
 
 def stats(request):

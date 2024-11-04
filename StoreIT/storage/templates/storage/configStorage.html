@@ -188,50 +188,52 @@
                 <!-- Add new storage tab -->
                 <div class="tab-pane fade" id="add-tab" role="thirdTab" aria-labelledby="link-tab">
                     <h5 class="card-title">Configure your new storage</h5>
-                    <form>
+                    <form id="storage-layout-form" action="{% url 'storage:config' %}" method="post">
+                        {% csrf_token %}
                         <!-- Input for the number of rows -->
                         <div class="container row">
                             <div class="mb-3 text-start">
                                 <label for="storage-rows" class="col-form-label">Number of Storage rows:</label>
-                                <input type="number" class="form-control" id="storage-rows" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)">
+                                <input type="number" class="form-control" id="storage-rows" name="storage-row-input" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)">
                             </div>
                         </div>
                         <!-- Row for the n input filds for the number of bin per row -->
                         <div class="container row" id="container-columns">
                             
                         </div>
-                    </form>
+                    
 
                     
 
-                    <!-- Row where the configured layout of the storage is displayed -->
-                    <div class="container row" id="row-storage-layout">
-                        <div class="container col" id="storage-layout-heading-container">
-        
-                            <div class="container" id="storage-layout-container">
+                        <!-- Row where the configured layout of the storage is displayed -->
+                        <div class="container row" id="row-storage-layout">
+                            <div class="container col" id="storage-layout-heading-container">
+            
+                                <div class="container" id="storage-layout-container">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+                        <!-- Row where the inputs for the diffrent bin sizes is displayed -->
+                        <div class="container row" id="container-bin-sizes-heading">
+
+                            <div class="container row" id="container-bin-sizes-row">
 
                             </div>
                         </div>
-                    </div>
 
-                    
+                        
 
-                    <!-- Row where the inputs for the diffrent bin sizes is displayed -->
-                    <div class="container row" id="container-bin-sizes-heading">
-
-                        <div class="container row" id="container-bin-sizes-row">
-
+                        <!-- Row where the button for saving the configuration is displayed -->
+                        <div class="container row" id="row-safe-config">
+                            <div class="container col d-flex justify-content-end" id="container-safe-config-button">
+                                
+                            </div>
                         </div>
-                    </div>
-
-                    
-
-                    <!-- Row where the button for saving the configuration is displayed -->
-                    <div class="container row" id="row-safe-config">
-                        <div class="container col d-flex justify-content-end" id="container-safe-config-button">
-                            
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

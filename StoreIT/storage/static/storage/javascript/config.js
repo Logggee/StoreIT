@@ -3,43 +3,45 @@ function generateCollumnInputFields(input) {
     if (input.value == 0) {
         input.value = 1;
     }
-    const numberOfRows = parseInt(input.value);  // Liest den Wert aus dem Inputfeld und konvertiert ihn in eine Zahl
-    const container_row = document.getElementById("container-columns"); // Holt den Ziel-Container
+    // Get the number of rows from the user input
+    const numberOfRows = parseInt(input.value);
+    // Get and safe the existing bins per row input fields
+    const container_row = document.getElementById("container-columns");
     rows_inputs = Array.from(container_row.children);
-    container_row.innerHTML = "";  // Leert den Container, um alte Eingabefelder zu entfernen
-    
+    // Clear all bins per row input fields
+    container_row.innerHTML = "";
+    // Create a new number of bins per row input field for every row
     for (let i = 0; i < numberOfRows; i++) {
-        // Erzeugt ein div-Element für jede Reihe
         const colDiv = document.createElement("div");
         colDiv.className = "container col-3";
 
-        // Erzeugt das label-Element
         const label = document.createElement("label");
         label.className = "col-form-label";
         label.innerText = `Number of bins of row ${i + 1}:`;
         
-        // Erzeugt das input-Element
         const inputField = document.createElement("input");
         inputField.type = "number";
         inputField.className = "form-control";
         inputField.placeholder = "n bins";
         inputField.min = "1";
-        inputField.oninput = function(){generStorageLayout(this, i+1)};
+        inputField.oninput = () => {
+            generStorageLayout(this, i+1)
+        };
+        // For every input field that already existed prefill the the old value
         if (i < rows_inputs.length && rows_inputs.length != 0) {
             old_input_field = rows_inputs[i].querySelector("input");
             inputField.value = old_input_field.value;
         }
         
-        // Füge die Elemente zum colDiv hinzu
         colDiv.appendChild(label);
         colDiv.appendChild(inputField);
         
-        // Füge colDiv dem Haupt-Container hinzu
         container_row.appendChild(colDiv);
     }
 
-    // If the number of rows is decremented the last row/rows needs to be deleted
+    // If the number of rows is decremented the last row/rows of the layout needs to be deleted
     const container_storage_layout = document.getElementById("storage-layout-container");
+    // Calculate how many rows need to be deleted to match the new rows input
     const delete_n_rows = container_storage_layout.children.length - numberOfRows;
     for (let i = 0; i < delete_n_rows; i++) {
         container_storage_layout.removeChild(container_storage_layout.lastChild);
@@ -53,8 +55,9 @@ function generateCollumnInputFields(input) {
             diffret_bin_sizes.push(rows[i].querySelector("input").value);
         }
     }
-
+    // Remove a bin size input field if needed after the rows number has changed
     const container_bin_sizes = document.getElementById("container-bin-sizes-row");
+    // Calculate how many bin volume input fields need to be removed 
     delete_n_elements = container_bin_sizes.children.length - diffret_bin_sizes.length;
     for (let i = 0; i < delete_n_elements; i++) {
         container_bin_sizes.removeChild(container_bin_sizes.lastChild);
@@ -69,17 +72,18 @@ function generStorageLayout(input, row_number) {
     }
     // Add the heading of storage layout and all of the gray lines and safe config button
     storage_layout_heading_container = document.getElementById("storage-layout-heading-container");
-    // Check if the heading already exists and if not create one
+    // Check if the heading, gray seperating lines and safe button already exists and if not create them
     if (!document.getElementById("storage-layout-heading")){
+        // Create the heading for the storage layout
         const storage_layout_heading = document.createElement("p");
         storage_layout_heading.id = "storage-layout-heading";
         storage_layout_heading.innerHTML = "Configured layout of the storage";
         storage_layout_heading_container.insertBefore(storage_layout_heading, storage_layout_heading_container.firstChild);
         // Add the gray lines for seperating the diffrent rows
-        const add_storga_tab = document.getElementById("add-tab");
-        add_storga_tab.insertBefore(createGrayLine(), document.getElementById("row-storage-layout"));
-        add_storga_tab.insertBefore(createGrayLine(), document.getElementById("container-bin-sizes-heading"));
-        add_storga_tab.insertBefore(createGrayLine(), document.getElementById("row-safe-config"));
+        const storage_layout_form = document.getElementById("storage-layout-form");
+        storage_layout_form.insertBefore(createGrayLine(), document.getElementById("row-storage-layout"));
+        storage_layout_form.insertBefore(createGrayLine(), document.getElementById("container-bin-sizes-heading"));
+        storage_layout_form.insertBefore(createGrayLine(), document.getElementById("row-safe-config"));
         // Add the safe config button
         const container_safe_config_button = document.getElementById("container-safe-config-button");
         let safe_config_button = document.createElement("button");
@@ -88,18 +92,21 @@ function generStorageLayout(input, row_number) {
         safe_config_button.id = "button-safe-config";
         const safe_config_button_image = document.getElementById("safe-config-button-image");
         safe_config_button_image.style = "";
-
+        safe_config_button.onclick = () => {
+            document.getElementById("storage-layout-form").submit();
+        };
+        // Append the button before adding the text of the button
         safe_config_button.appendChild(safe_config_button_image);
         container_safe_config_button.appendChild(safe_config_button);
-
+        // Get the button again to add the text so the icon is left of the text
         safe_config_button = document.getElementById("button-safe-config");
         const textNode = document.createTextNode("Save configuration");
         safe_config_button.appendChild(textNode);
     }
-
+    // Get the new value of the changed bins input
     const number_of_bins = parseInt(input.value);
     const container_storage_layout = document.getElementById("storage-layout-container");
-
+    // Create a new row for the storage layout with the new number of bins in the row
     const div_row = document.createElement("div");
     div_row.className = "row mb-2 align-items-center";
     div_row.id = "storage-layout-row-" + row_number;
@@ -134,7 +141,7 @@ function generStorageLayout(input, row_number) {
 
     // Get all existing rows in a array to avoid getting a refernce of the childs
     const rows = Array.from(container_storage_layout.children);
-    // append the row as the first element in the array
+    // Append the row as the first element in the array
     rows.unshift(div_row);
     // All childs are saved in the array so all childs can be deleted
     container_storage_layout.innerHTML = "";
@@ -154,7 +161,7 @@ function generStorageLayout(input, row_number) {
         }
     }
     let diffret_bin_sizes = [];
-    // Append all rows the the container
+    // After soting all rows into the right order append all rows the the container
     rows.forEach((row) => {
         let number_of_bins = row.querySelectorAll("input");
         if (!diffret_bin_sizes.includes(number_of_bins.length)) {
@@ -163,7 +170,7 @@ function generStorageLayout(input, row_number) {
         container_storage_layout.appendChild(row);
     });
 
-    // Add the heading
+    // Add the heading for the diffrent bin sizes
     const container_bin_sizes_heading = document.getElementById("container-bin-sizes-heading");
     if (!document.getElementById("bin-sizes-heading")){
         const bin_sizes_heading = document.createElement("p");
@@ -203,7 +210,7 @@ function generStorageLayout(input, row_number) {
         container_bin_sizes_row.appendChild(div_bin_size_col);
     }
 }
-// Helper function for creating a gray line element
+// Helper function for creating a gray seperator line element
 function createGrayLine() {
     const grayLine = document.createElement("div");
     grayLine.classList = "container-fluid my-3";
