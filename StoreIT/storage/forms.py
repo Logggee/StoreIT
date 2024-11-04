@@ -1,4 +1,5 @@
 # forms.py
+import re
 from .models import Stored_Item
 from . import models
 from django import forms
@@ -108,9 +109,52 @@ class Destore_Item_Form(forms.Form):
         return input_quantity
     
 class Storage_Layout_Form(forms.Form):
+    storage_rows = forms.IntegerField(label="Number of storage rows",
+                                      min_value=1,
+                                      max_value=99,
+                                      required=True,
+                                      widget=forms.NumberInput(attrs={"type": "number",
+                                                                      "class": "form-control",
+                                                                      "id": "storage-rows",
+                                                                      "name": "storage-row-input",
+                                                                      "placeholder": "n rows",
+                                                                      "min": "1",
+                                                                      "max:": "99",
+                                                                      "oninput": "generateCollumnInputFields(this)",
+                                                                      'required': 'true'}))
+    
     def __init__(self, *args, **kwargs):
-        dynamic_fields = kwargs.pop("dynamic_field", [])
         super(Storage_Layout_Form, self).__init__(*args, **kwargs)
+        # In invalid case the bootstrap clase is-invalid needs to be added
+        # to the form elements
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                # Fetches to current classes
+                css_classes = field.widget.attrs.get('class', '')
+                # Add to the current classes is-invalid
+                field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
-        print(f"args: {args}")
-        print(f"kwargs: {kwargs}")
+        print(f"Args: {args}")
+        print(f"Kwargs: {kwargs}")
+
+        if len(args) != 0:
+            form_data = args[0]
+            
+            for field, value in form_data.items():
+                if "number-of-bins-row-" in field:
+                    match = re.search(r'-(\d+)$', field)
+                    row_number = int(match.group(1))
+                    self.fields[field] = forms.IntegerField(label="Number of bins in row " + str(row_number),
+                                                            min_value=1,
+                                                            max_value=20,
+                                                            required=True,
+                                                            widget=forms.NumberInput(attrs={"type": "number",
+                                                                                            "class": "form-control",
+                                                                                            "id": "storage-rows",
+                                                                                            "name": "number-of-bins-row-" + str(row_number),
+                                                                                            "placeholder": "n bins",
+                                                                                            "min": "1",
+                                                                                            "max:": "20",
+                                                                                            "oninput": "generateStorageLayout(this, i+1)",
+                                                                                            'required': 'true'}))
+        print(f"All fields: {self.fields}")

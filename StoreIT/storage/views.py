@@ -186,13 +186,25 @@ def config(request):
     Returns:
         Renders the template config.html
     '''
+    # Post request
     if request.method == "POST":
-        data = request.POST.dict()  # In ein normales Dictionary umwandeln
-        print(f"Data: {data}")
-        # Verarbeite die Daten wie benötigt
-        for key, value in data.items():
-            print(f"{key}: {value}")
-    return render(request, "storage/configStorage.html")
+        storage_layout_form = Storage_Layout_Form(request.POST)
+        if storage_layout_form.is_valid():
+            print("Form was valid")
+            #test = storage_layout_form.cleaned_data["number-of-bins-row-1"]
+            #print(f"Test value = {test}")
+            content = {"storage_layout_form": storage_layout_form}
+            return render(request, "storage/configStorage.html", content)
+
+        else:
+            print("Form was not valid")
+            content = {"storage_layout_form": storage_layout_form}
+            return render(request, "storage/configStorage.html", content)
+    
+    # Get request
+    else:
+        content = {"storage_layout_form": Storage_Layout_Form()}
+        return render(request, "storage/configStorage.html", content)
 
 def stats(request):
     ''' /stats

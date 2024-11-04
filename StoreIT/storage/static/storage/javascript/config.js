@@ -1,3 +1,5 @@
+//config.js
+
 function generateCollumnInputFields(input) {
     // Prevent manual input of 0
     if (input.value == 0) {
@@ -17,13 +19,14 @@ function generateCollumnInputFields(input) {
 
         const label = document.createElement("label");
         label.className = "col-form-label";
-        label.innerText = `Number of bins of row ${i + 1}:`;
+        label.innerText = "Number of bins of row " + (i + 1) + ":";
         
         const inputField = document.createElement("input");
         inputField.type = "number";
         inputField.className = "form-control";
         inputField.placeholder = "n bins";
         inputField.min = "1";
+        inputField.name = "number-of-bins-row-" + (i + 1);
         inputField.oninput = function() {
             generateStorageLayout(this, i+1);
         };
@@ -202,6 +205,7 @@ function generateStorageLayout(input, row_number) {
         input_bin_size.type = "number";
         input_bin_size.classList = "form-control";
         input_bin_size.id = "bin-size-" + sizes[i];
+        input_bin_size.name = "bin-size-" + sizes[i];
         input_bin_size.placeholder = "Volume in ccm";
         input_bin_size.min = "1";
         div_bin_size.appendChild(input_bin_size);

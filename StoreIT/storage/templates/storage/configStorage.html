@@ -194,7 +194,15 @@
                         <div class="container row">
                             <div class="mb-3 text-start">
                                 <label for="storage-rows" class="col-form-label">Number of Storage rows:</label>
-                                <input type="number" class="form-control" id="storage-rows" name="storage-row-input" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)">
+                                <!-- <input type="number" class="form-control" id="storage-rows" name="storage-row-input" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)"> -->
+                                 {{ storage_layout_form.storage_rows }}
+                                 {% if storage_layout_form.storage_rows.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in storage_layout_form.storage_rows.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- Row for the n input filds for the number of bin per row -->
