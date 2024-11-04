@@ -24,8 +24,8 @@ function generateCollumnInputFields(input) {
         inputField.className = "form-control";
         inputField.placeholder = "n bins";
         inputField.min = "1";
-        inputField.oninput = () => {
-            generStorageLayout(this, i+1)
+        inputField.oninput = function() {
+            generateStorageLayout(this, i+1);
         };
         // For every input field that already existed prefill the the old value
         if (i < rows_inputs.length && rows_inputs.length != 0) {
@@ -65,7 +65,7 @@ function generateCollumnInputFields(input) {
 }
 
 
-function generStorageLayout(input, row_number) {
+function generateStorageLayout(input, row_number) {
     // Prevent manual input of 0
     if (input.value == 0) {
         input.value = 1;
