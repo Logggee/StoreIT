@@ -1,13 +1,14 @@
 # views.py
 import os
 import json
+import re
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.http import Http404
 from django.core.files.storage import default_storage
-from .models import Stored_Item, Item, Bin
+from .models import Stored_Item, Item, Bin, Storage
 from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form
 from .utils import Storage_Page_State
 from . import storageProcesses as storage_processes
@@ -188,18 +189,56 @@ def config(request):
     '''
     # Post request
     if request.method == "POST":
-        storage_layout_form = Storage_Layout_Form(request.POST)
-        if storage_layout_form.is_valid():
-            print("Form was valid")
-            #test = storage_layout_form.cleaned_data["number-of-bins-row-1"]
-            #print(f"Test value = {test}")
-            content = {"storage_layout_form": storage_layout_form}
-            return render(request, "storage/configStorage.html", content)
+        form_data = request.POST.dict()
+        print(f"Form data: {form_data}")
 
-        else:
-            print("Form was not valid")
-            content = {"storage_layout_form": storage_layout_form}
-            return render(request, "storage/configStorage.html", content)
+        # Build and safe a new storage dataset
+        new_storage = Storage(storage_name = form_data["storage-name-input"])
+        new_storage.save()
+
+        diffrent_number_of_bin_per_row = list()
+        diffrent_bin_volumes = list()
+        for input_field, field_value in form_data.items():
+            # Regex only filters if just a number is after number-of-bins-row-[any number]
+            if re.match(r'number-of-bins-row-(\d+)$', input_field):
+                print(f"Row match: {input_field}")
+                # Build a list with all diffrent number of bins per row
+                if not field_value in diffrent_number_of_bin_per_row:
+                    diffrent_number_of_bin_per_row.append(int(field_value))
+            # Regex only matches if the string is 'bin-size-' with Capital letters after the last '-'
+            elif re.match(r'bin-size-([A-Z]*)$', input_field):
+                match = re.match(r'bin-size-([A-Z]*)$', input_field)
+                if not field_value in diffrent_bin_volumes:
+                    diffrent_bin_volumes.append(int(field_value))
+        # Sort least amount of bins per row to most numbers of bins per row
+        diffrent_number_of_bin_per_row.sort()
+        # Sort biggest volume to smallest volume
+        diffrent_bin_volumes.sort(reverse=True)
+        # Build a dict where the smallest number of bins matches with the biggest volume and so on for all cobinations
+        # Number of bins per row is the key and the coresponding volume is the value
+        bin_volumes = dict(zip(diffrent_number_of_bin_per_row, diffrent_bin_volumes))
+        print(f"Diffrent number of bins in rows: {bin_volumes}")
+
+        # Build the dataset for all the bins of the new storage
+        bin_number = 0
+        for input_field, field_value in form_data.items():
+             match = re.match(r'number-of-bins-row-(\d+)$', input_field)
+             # Filter for a row number
+             if match:
+                # Rows numbers are safed from 0 to n
+                row_number = int(match.group(1)) - 1
+                # Build all bin datasets for the row
+                for col_index in range(int(field_value)):
+                    bin_number += 1
+                    new_bin = Bin(storage_id = new_storage,
+                                  bin_number = bin_number,
+                                  bin_row = row_number,
+                                  bin_col = col_index,
+                                  bin_volume = bin_volumes[int(field_value)],
+                                  bin_volume_used = 0)
+                    new_bin.save()
+
+        return redirect("storage:config")
     
     # Get request
     else:

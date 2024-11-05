@@ -190,6 +190,14 @@
                     <h5 class="card-title">Configure your new storage</h5>
                     <form id="storage-layout-form" action="{% url 'storage:config' %}" method="post">
                         {% csrf_token %}
+
+                        <div class="container row">
+                            <div class="mb-3 text-start">
+                                <label for="storage-name" class="col-form-label">Name of the new storage:</label>
+                                <input type="text" class="form-control" id="storage-name" name="storage-name-input" placeholder="Enter a name" min="1" max="255">
+                            </div>
+                        </div>
+
                         <!-- Input for the number of rows -->
                         <div class="container row">
                             <div class="mb-3 text-start">
@@ -205,13 +213,11 @@
                                 {% endif %}
                             </div>
                         </div>
+
                         <!-- Row for the n input filds for the number of bin per row -->
                         <div class="container row" id="container-columns">
                             
                         </div>
-                    
-
-                    
 
                         <!-- Row where the configured layout of the storage is displayed -->
                         <div class="container row" id="row-storage-layout">
@@ -221,9 +227,7 @@
 
                                 </div>
                             </div>
-                        </div>
-
-                        
+                        </div>            
 
                         <!-- Row where the inputs for the diffrent bin sizes is displayed -->
                         <div class="container row" id="container-bin-sizes-heading">
@@ -232,8 +236,6 @@
 
                             </div>
                         </div>
-
-                        
 
                         <!-- Row where the button for saving the configuration is displayed -->
                         <div class="container row" id="row-safe-config">
