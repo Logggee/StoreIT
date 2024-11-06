@@ -43,7 +43,7 @@
                 <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                     {% for storage in storages_and_bins %}
                         <li class="nav-item" role="presentation">
-                            {% if foorloop.counter == 1 %}
+                            {% if forloop.counter == 1 %}
                             <a class="nav-link d-flex align-items-center active" id="{{ storage.storage_id }}-tab-heading" data-bs-toggle="tab" href="#{{ storage.storage_id }}-tab" role="tab" aria-controls="active" aria-selected="true">
                                 {{ storage.storage_name }}
                             </a>
@@ -56,7 +56,7 @@
                     {% endfor %}
 
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link d-flex align-items-center" id="add-storage-tab-heading" data-bs-toggle="tab" href="#add-storage-tab" role="tab" aria-controls="active" aria-selected="true">
+                        <a class="nav-link d-flex align-items-center" id="add-storage-tab-heading" data-bs-toggle="tab" href="#add-storage-tab" role="tab" aria-controls="active" aria-selected="false">
                             <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 16px; filter: invert(1);">
                             Add New Storage
                         </a>
