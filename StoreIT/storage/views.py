@@ -244,7 +244,7 @@ def config(request):
         storages_and_bins = dict()
         for storage in  Storage.objects.all():
             storages_and_bins[storage] = storage.all_bins_sorted_in_rows()
-
+        print(f"Storaged and all bin: {storages_and_bins}")
         content = {"storage_layout_form": Storage_Layout_Form(),
                    "storages_and_bins": storages_and_bins}
         

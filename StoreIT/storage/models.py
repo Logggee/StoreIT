@@ -35,7 +35,7 @@ class Storage (models.Model):
     def all_bins_sorted_in_rows(self) -> dict:
         all_bins_per_row = dict()
         for row_number in range(self.storage_number_of_rows):
-            all_bins_per_row[row_number] = Bin.objects.filter(bin_row = row_number)
+            all_bins_per_row[row_number] = Bin.objects.filter(storage_id = self.storage_id, bin_row = row_number)
         return all_bins_per_row
 
 class Bin (models.Model):
