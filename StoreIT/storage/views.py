@@ -190,7 +190,6 @@ def config(request):
     # Post request
     if request.method == "POST":
         form_data = request.POST.dict()
-        print(f"Form data: {form_data}")
 
         # Build and safe a new storage dataset
         new_storage = Storage(storage_name = form_data["storage-name-input"])
@@ -201,7 +200,6 @@ def config(request):
         for input_field, field_value in form_data.items():
             # Regex only filters if just a number is after number-of-bins-row-[any number]
             if re.match(r'number-of-bins-row-(\d+)$', input_field):
-                print(f"Row match: {input_field}")
                 # Build a list with all diffrent number of bins per row
                 if not field_value in diffrent_number_of_bin_per_row:
                     diffrent_number_of_bin_per_row.append(int(field_value))
@@ -217,7 +215,6 @@ def config(request):
         # Build a dict where the smallest number of bins matches with the biggest volume and so on for all cobinations
         # Number of bins per row is the key and the coresponding volume is the value
         bin_volumes = dict(zip(diffrent_number_of_bin_per_row, diffrent_bin_volumes))
-        print(f"Diffrent number of bins in rows: {bin_volumes}")
 
         # Build the dataset for all the bins of the new storage
         bin_number = 0
@@ -242,7 +239,17 @@ def config(request):
     
     # Get request
     else:
-        content = {"storage_layout_form": Storage_Layout_Form()}
+        # Get all storages and bins
+        storages_and_bins = dict()
+        for storage in  Storage.objects.all():
+            #print(f"All bins of storage {storage} with bins: {storage.all_bins_of_storage()}")
+            storages_and_bins[storage] = storage.all_bins_sorted_in_rows()
+
+        print(f"All bins per row: {storages_and_bins}")
+
+        content = {"storage_layout_form": Storage_Layout_Form(),
+                   "storages_and_bins": storages_and_bins}
+        
         return render(request, "storage/configStorage.html", content)
 
 def stats(request):

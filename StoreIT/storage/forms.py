@@ -134,8 +134,8 @@ class Storage_Layout_Form(forms.Form):
                 # Add to the current classes is-invalid
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
-        print(f"Args: {args}")
-        print(f"Kwargs: {kwargs}")
+        #print(f"Args: {args}")
+        #print(f"Kwargs: {kwargs}")
 
         if len(args) != 0:
             form_data = args[0]
@@ -158,4 +158,4 @@ class Storage_Layout_Form(forms.Form):
                                                                                             "max:": "20",
                                                                                             "oninput": "generateStorageLayout(this, i+1)",
                                                                                             'required': 'true'}))
-        print(f"All fields: {self.fields}")
+        #print(f"All fields: {self.fields}")

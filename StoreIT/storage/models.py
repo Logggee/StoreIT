@@ -27,9 +27,16 @@ class Item (models.Model):
 class Storage (models.Model):
     storage_id = models.BigAutoField("id of a storage", primary_key=True)   # INTEGER PRIMARY KEY AUTOINCREMENT
     storage_name = models.CharField("costum storage name", max_length=MAX_STORAGE_NAME_LENGTH)   # VARCHAR(50)
+    storage_number_of_rows = models.IntegerField("number of storage rows")
 
     def __str__(self) -> str:
         return self.storage_name
+    
+    def all_bins_sorted_in_rows(self) -> dict:
+        all_bins_per_row = dict()
+        for row_number in range(self.storage_number_of_rows):
+            all_bins_per_row[row_number] = Bin.objects.filter(bin_row = row_number)
+        return all_bins_per_row
 
 class Bin (models.Model):
     bin_id = models.BigAutoField("id of a single bin", primary_key=True)    # INTEGER PRIMARY KEY AUTOINCREMENT
