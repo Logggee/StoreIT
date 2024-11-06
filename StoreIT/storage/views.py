@@ -190,9 +190,10 @@ def config(request):
     # Post request
     if request.method == "POST":
         form_data = request.POST.dict()
-
+        print(f"Form data: {form_data}")
         # Build and safe a new storage dataset
-        new_storage = Storage(storage_name = form_data["storage-name-input"])
+        new_storage = Storage(storage_name = form_data["storage-name-input"],
+                              storage_number_of_rows = int(form_data["storage_rows"]))
         new_storage.save()
 
         diffrent_number_of_bin_per_row = list()
@@ -242,10 +243,7 @@ def config(request):
         # Get all storages and bins
         storages_and_bins = dict()
         for storage in  Storage.objects.all():
-            #print(f"All bins of storage {storage} with bins: {storage.all_bins_of_storage()}")
             storages_and_bins[storage] = storage.all_bins_sorted_in_rows()
-
-        print(f"All bins per row: {storages_and_bins}")
 
         content = {"storage_layout_form": Storage_Layout_Form(),
                    "storages_and_bins": storages_and_bins}
