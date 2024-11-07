@@ -78,11 +78,11 @@
                             {% for row_number, all_bins_in_row in all_pins_one_row.items %} 
                                 <!-- Row {{ row_number }} -->
                                 <div class="row mb-2 align-items-center">
-                                    <span class="col-auto">Row {{ row_number }}</span>
+                                    <span class="col-auto" style="min-width: 80px">Row {{ row_number|add:1}}</span>
                                     
                                     <div class="col d-flex justify-content-between mx-4">
                                         {% for bin in all_bins_in_row %}
-                                            <input type="radio" class="btn-check" name="btnradio" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off">
+                                            <input type="radio" class="btn-check" name="btnradio-{{ storage.storage_id }}" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off">
                                             <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}">
                                                 {{ bin.bin_number }}
                                             </label>
@@ -91,7 +91,7 @@
                                 </div>
                             {% endfor %}  
 
-                            <div class="container-fluid" style="border-top: solid 1px gray;"></div>
+                            <div class="container-fluid my-3" style="border-top: solid 1px gray;"></div>
 
                             <div class="container row">
                                 <div class="container col d-flex justify-content-end">
