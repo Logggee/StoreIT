@@ -82,7 +82,7 @@
                                     
                                     <div class="col d-flex justify-content-between mx-4">
                                         {% for bin in all_bins_in_row %}
-                                            <input type="radio" class="btn-check" name="btnradio-{{ storage.storage_id }}" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off">
+                                            <input type="radio" class="btn-check" name="btnradio-{{ storage.storage_id }}" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" onclick="get_all_items_of_bin('{{ bin.bin_id }}')">
                                             <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}">
                                                 {{ bin.bin_number }}
                                             </label>
@@ -167,6 +167,23 @@
 
             </div>
         </div>
+    </div>
+
+    <div class="container">
+        <table class="table table-striped" style=" border: solid 10px #212529; border-radius: 1rem;">
+            <thead>
+              <tr style="border-bottom: solid 2px gray;">
+                <th scope="col">Store Date</th>
+                <th scope="col">Image</th>
+                <th scope="col">Name</th>
+                <th scope="col">Stored Quantity</th>
+              </tr>
+            </thead>
+
+            <tbody id="table">
+              
+            </tbody>
+        </table>
     </div>
     <!-- Image is not visible and used to add it via the js script and make it visible -->
     <img class="me-2" id="safe-config-button-image" src="{% static 'storage/images/icons/floppy.svg'%}" style="display: none;">

@@ -58,7 +58,7 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-purchase-place").setAttribute("readonly", true);
                 // Set the url to parse the primary key of the already existing item
                 form.action = `/storage/store_existing_item/${response_data.item_id}`;
-            })
+            })  
     }
     // If the checkbox was unchecked empty all all form fields
     else {

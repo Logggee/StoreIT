@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.http import Http404
 from django.core.files.storage import default_storage
+from django.core.serializers import serialize
 from .models import Stored_Item, Item, Bin, Storage
 from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form
 from .utils import Storage_Page_State
@@ -249,6 +250,21 @@ def config(request):
                    "storages_and_bins": storages_and_bins}
         
         return render(request, "storage/configStorage.html", content)
+    
+def all_items_stored_in_bin(request, bin_id):
+    print("Ajax request")
+    all_items_in_bin = Stored_Item.objects.filter(bin_id = bin_id)
+    data = {}
+    for stored_item in all_items_in_bin:
+        data[stored_item.item_id.item_name] = {
+            "item_store_date_in_this_bin" : stored_item.stored_item_storedate,
+            "item_image": stored_item.item_id.item_image,
+            "item_name": stored_item.item_id.item_name,
+            "item_quantity_in_this_bin": stored_item.stored_item_quantity
+        }
+    print(f"All items in bin {all_items_in_bin}")
+    data = {"all_items_in_bin": data}
+    return JsonResponse(data, safe=False)
 
 def stats(request):
     ''' /stats

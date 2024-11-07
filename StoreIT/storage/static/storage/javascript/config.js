@@ -221,3 +221,53 @@ function createGrayLine() {
     grayLine.style.borderTop = "solid 1px gray";
     return grayLine;
 }
+
+// Function for axaj call to get all items that are stored in a specific bin
+function get_all_items_of_bin(bin_id) {
+    console.log("Bin number: " + bin_id);
+
+    fetch(`/config/${bin_id}`)
+        .then(response => response.json())
+        .then(response_data => {
+            console.log(response_data["all_items_in_bin"]);
+            all_items_in_bin = response_data["all_items_in_bin"]
+            console.log(Object.keys(all_items_in_bin).length)
+            item_names = Object.keys(all_items_in_bin)
+            const table = document.getElementById("table");
+            table.innerHTML = "";
+            for (let i = 0; i < Object.keys(all_items_in_bin).length; i++) {
+                stored_item = all_items_in_bin[item_names[i]];
+    
+                const table_row = document.createElement("tr");
+
+                const table_col_header = document.createElement("th");
+                table_col_header.scope = "row";
+                table_col_header.classList = "align-middle";
+                table_col_header.innerText = stored_item["item_store_date_in_this_bin"];
+                table_row.appendChild(table_col_header);
+
+                for (let j = 1; j < Object.keys(stored_item).length; j++) {
+                    const table_col = document.createElement("td");
+                    table_row.classList = "align-middle";
+                    switch(j) {
+                        case 1:
+                            const item_image = document.createElement("img");
+                            item_image.src = "";
+                            item_image.style = "height: 50px;";
+                            table_col.append(item_image);
+                            break;
+
+                        case 2:
+                            table_col.innerText = stored_item["item_name"];
+                            break;
+
+                        case 3:
+                            table_col.innerText = stored_item["item_quantity_in_this_bin"];
+                            break;
+                    }
+                    table_row.appendChild(table_col);
+                }
+                table.append(table_row);
+            }
+        })
+}

@@ -20,6 +20,8 @@ urlpatterns = [
     path("storage/destore_item/<int:stored_item_fk>", views.destore_item, name="destore_item"),
     # localhost:8000/config/
     path("config/", views.config, name="config"),
+    # localhost:8000/1/12
+    path("config/<int:bin_id>", views.all_items_stored_in_bin, name="all items stored in bin"),
     # localhost:8000/stats
     path("stats/", views.stats, name="stats")
 ]
