@@ -224,7 +224,8 @@ function createGrayLine() {
 
 // Function for axaj call to get all items that are stored in a specific bin
 function get_all_items_of_bin(bin_id) {
-    console.log("Bin number: " + bin_id);
+    table_container = document.getElementById("container-table");
+    table_container.classList = "container";
 
     fetch(`/config/${bin_id}`)
         .then(response => response.json())
