@@ -44,22 +44,22 @@
                     {% for storage in storages_and_bins %}
                         <li class="nav-item" role="presentation">
                             {% if forloop.counter == 1 %}
-                            <a class="nav-link d-flex align-items-center active" id="{{ storage.storage_id }}-tab-heading" data-bs-toggle="tab" href="#{{ storage.storage_id }}-tab" role="tab" aria-controls="active" aria-selected="true">
+                            <button class="nav-link d-flex align-items-center active" id="{{ storage.storage_id }}-tab-heading" data-bs-toggle="tab" data-bs-target="#{{ storage.storage_id }}-tab" type="button" role="tab" aria-controls="profile" aria-selected="true" onclick="tabSelected('{{ storage.storage_id }}')">
                                 {{ storage.storage_name }}
-                            </a>
+                            </button>
                             {% else %}
-                            <a class="nav-link d-flex align-items-center" id="{{ storage.storage_id }}-tab-heading" data-bs-toggle="tab" href="#{{ storage.storage_id }}-tab" role="tab" aria-controls="active" aria-selected="false">
+                            <button class="nav-link d-flex align-items-center" id="{{ storage.storage_id }}-tab-heading" data-bs-toggle="tab" data-bs-target="#{{ storage.storage_id }}-tab" type="button" role="tab" aria-controls="profile" aria-selected="false" onclick="tabSelected('{{ storage.storage_id }}')">
                                 {{ storage.storage_name }}
-                            </a>
+                            </button>
                             {% endif %}
                         </li>
                     {% endfor %}
 
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link d-flex align-items-center" id="add-storage-tab-heading" data-bs-toggle="tab" href="#add-storage-tab" role="tab" aria-controls="active" aria-selected="false">
+                        <button class="nav-link d-flex align-items-center" id="add-storage-tab-heading" data-bs-toggle="tab" data-bs-target="#add-storage-tab" type="button" role="tab" aria-controls="profile" aria-selected="false" onclick="tabSelected('{{ storage.storage_id }}')">
                             <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 16px; filter: invert(1);">
                             Add New Storage
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>

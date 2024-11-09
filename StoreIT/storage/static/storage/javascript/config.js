@@ -273,3 +273,16 @@ function get_all_items_of_bin(bin_id) {
             }
         })
 }
+
+function tabSelected(storage_id) {
+    let radio_group = document.querySelectorAll(`input[name="btnradio-group-${storage_id}"]`);
+
+    radio_group.forEach ((radio) => {
+        if (radio.checked) {
+            return
+        }
+    })
+
+    table_container = document.getElementById("container-table");
+    table_container.classList = "container d-none";
+}
