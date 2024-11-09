@@ -227,27 +227,30 @@ function get_all_items_of_bin(bin_id) {
     // Make the table visible
     table_container = document.getElementById("container-table");
     table_container.classList = "container";
-
+    // Fetch all items that are stored in the selected bin
     fetch(`/config/${bin_id}`)
         .then(response => response.json())
         .then(response_data => {
-            console.log(response_data["all_items_in_bin"]);
-            all_items_in_bin = response_data["all_items_in_bin"]
-            console.log(Object.keys(all_items_in_bin).length)
-            item_names = Object.keys(all_items_in_bin)
+            // Clear the previos table content
             const table = document.getElementById("table");
             table.innerHTML = "";
+            // extract the outer dict of the datastructure
+            all_items_in_bin = response_data["all_items_in_bin"]
+            item_names = Object.keys(all_items_in_bin)
+            // Build a table row for every item in this bin
             for (let i = 0; i < Object.keys(all_items_in_bin).length; i++) {
+                // Extract one item of the dict, the item is also a dict
                 stored_item = all_items_in_bin[item_names[i]];
     
                 const table_row = document.createElement("tr");
-
+                // First collumn is a header collumn
                 const table_col_header = document.createElement("th");
                 table_col_header.scope = "row";
                 table_col_header.classList = "align-middle";
                 table_col_header.innerText = stored_item["item_store_date_in_this_bin"];
+                // Append the header col to the row
                 table_row.appendChild(table_col_header);
-
+                // Build all other collumns
                 for (let j = 1; j < Object.keys(stored_item).length; j++) {
                     const table_col = document.createElement("td");
                     table_row.classList = "align-middle";
@@ -267,8 +270,10 @@ function get_all_items_of_bin(bin_id) {
                             table_col.innerText = stored_item["item_quantity_in_this_bin"];
                             break;
                     }
+                    // Append the col to the row
                     table_row.appendChild(table_col);
                 }
+                // Append the whole row to the table
                 table.append(table_row);
             }
         })
@@ -283,7 +288,6 @@ function tabSelected(storage_id) {
     for (let radio of radio_group) {
         // If a radio is check show the table and reload the table content
         if (radio.checked) {
-            table_container.classList = "container";
             // Trigger the oncklick function to show all items in the table again
             radio.onclick()
             return;
