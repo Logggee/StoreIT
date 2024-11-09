@@ -274,15 +274,21 @@ function get_all_items_of_bin(bin_id) {
         })
 }
 
+// Function is called when switching tabs
 function tabSelected(storage_id) {
-    let radio_group = document.querySelectorAll(`input[name="btnradio-group-${storage_id}"]`);
-
-    radio_group.forEach ((radio) => {
-        if (radio.checked) {
-            return
-        }
-    })
-
     table_container = document.getElementById("container-table");
+    // Query the group of radio buttons of the tab storage layout
+    let radio_group = document.querySelectorAll(`input[name="btnradio-${storage_id}"]`);
+    // Check if a radio is set from this group
+    for (let radio of radio_group) {
+        // If a radio is check show the table and reload the table content
+        if (radio.checked) {
+            table_container.classList = "container";
+            // Trigger the oncklick function to show all items in the table again
+            radio.onclick()
+            return;
+        }
+    }
+    // If no radio is selected hide the table
     table_container.classList = "container d-none";
 }
