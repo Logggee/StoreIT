@@ -257,7 +257,7 @@ def all_items_stored_in_bin(request, bin_id):
     data = {}
     for stored_item in all_items_in_bin:
         data[stored_item.item_id.item_name] = {
-            "item_store_date_in_this_bin" : stored_item.stored_item_storedate,
+            "item_store_date_in_this_bin" : stored_item.stored_item_storedate.strftime("%d.%m.%Y, %H:%M:%S"),
             "item_image": stored_item.item_id.item_image,
             "item_name": stored_item.item_id.item_name,
             "item_quantity_in_this_bin": stored_item.stored_item_quantity
