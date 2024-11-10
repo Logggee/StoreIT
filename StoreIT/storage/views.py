@@ -85,6 +85,8 @@ def storage(request):
     else:
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item = request.session.pop("new_stored_item", False)
+        # If a item was destored the session storage holds the destored item. This is needed to fill the destore modal
+        latest_destored_item_id = request.session.pop("latest_destored_item_id", False)
 
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
@@ -161,8 +163,10 @@ def destore_item(request, stored_item_fk):
         # Form was valid
         if destore_item_form.is_valid():
             destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
+            # Function that destores the item after the FIFO principle
             storage_processes.destore_item(stored_item_fk, destore_quantity)
             storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
+            request.session["latest_destored_item_id"] = stored_item_fk
             return redirect("storage:storage")
         
         # Form was not valid
@@ -204,6 +208,7 @@ def config(request):
             if re.match(r'number-of-bins-row-(\d+)$', input_field):
                 # Build a list with all diffrent number of bins per row
                 if not field_value in diffrent_number_of_bin_per_row:
+                    print(f"Field value: {field_value}")
                     diffrent_number_of_bin_per_row.append(int(field_value))
             # Regex only matches if the string is 'bin-size-' with Capital letters after the last '-'
             elif re.match(r'bin-size-([A-Z]*)$', input_field):
