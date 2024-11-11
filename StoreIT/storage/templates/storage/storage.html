@@ -573,36 +573,7 @@
         </div>
     </div>
 
-    <!-- Destore Modal  IS THIS USED AT ALL????-->
-    <div class="modal fade" id="destore-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h1 class="modal-title fs-5" id="destore-modal-heading">Please Destor your item</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
-                    Please store your item into the lith up storage bin.<br>
-                    You can split your item if there is not enough space for it.<br>
-                </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-        </div>
-    </div>
-
-    
-
     {% for destored_item in destore_places_and_quantitys %}
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#destore-item-modal-{{ destored_item.destore_bin_id }}">
-            Launch demo modal
-        </button>
         <!-- Modal destore item -->
         <div class="modal fade modal-lg" id="destore-item-modal-{{ destored_item.destore_bin_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -630,13 +601,13 @@
                                     <div class="col d-flex justify-content-between mx-4">
                                         {% for bin in all_bins_in_row %}
                                             {% if bin.bin_number == destored_item.destored_bin_number %}
-                                                <input type="radio" class="btn-check" name="btnradio-{{ storage.storage_id }}" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled checked>
-                                                <label class="btn btn-outline-success w-100 me-1" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
+                                                <input type="radio" class="btn-check" name="btnradio-{{ destored_item.destore_bin_id }}" id="btnradio-{{ bin.storage_id.storage_id}}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled checked>
+                                                <label class="btn btn-outline-success w-100 me-1" for="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
                                                     {{ bin.bin_number }}
                                                 </label>
                                             {% else %}
-                                                <input type="radio" class="btn-check" name="btnradio-{{ storage.storage_id }}" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled>
-                                                <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
+                                                <input type="radio" class="btn-check" name="btnradio-{{ destored_item.destore_bin_id }}" id="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled>
+                                                <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
                                                     {{ bin.bin_number }}
                                                 </label>
                                             {% endif %}
