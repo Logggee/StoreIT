@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load templateFilter %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}">
@@ -650,7 +651,21 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">Cancel</button>
-                    <button type="button" class="btn btn-success"><img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">Item is destored</button>
+                    <!-- If the destored item is in more than one bin link to the next modal -->
+                    {% if not forloop.last %}
+                        <!-- Get the next destore item to set the data-bs-target -->
+                        {% with next_destore_item=destore_places_and_quantitys|next:forloop.counter0 %}
+                            <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#destore-item-modal-{{ next_destore_item.destore_bin_id }}">
+                                <img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">Item is destored
+                            </button>
+                        {% endwith %}
+                    <!-- This destore_item was the last one so set the button to close the modal after destoring the item-->
+                    {% else %}
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                            <img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">
+                            Item is destored
+                        </button>
+                    {% endif %}
                 </div>
             </div>
             </div>
