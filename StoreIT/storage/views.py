@@ -31,7 +31,6 @@ def index(request):
     return render(request, "storage/index.html")
 
 def storage(request):
-
     global storage_page_state
     # Post request
     if request.method == "POST":
@@ -86,13 +85,17 @@ def storage(request):
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item = request.session.pop("new_stored_item", False)
         # If a item was destored the session storage holds the destored item. This is needed to fill the destore modal
-        latest_destored_item_id = request.session.pop("latest_destored_item_id", False)
+        #destore_places_and_quantitys = request.session.pop("destore_places_and_quantitys", list())
+        destore_places_and_quantitys = list()
+        destore_places_and_quantitys.append((Bin.objects.filter(bin_id = 1), 3))
+        print(f"Test {destore_places_and_quantitys}")
 
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
                    "store_item_form": Store_Item_Form(),
                    "destore_item_form": Destore_Item_Form(),
                    "new_stored_item": new_stored_item,
+                   "destore_places_and_quantitys": destore_places_and_quantitys,
                    "storage_page_state": storage_page_state.name}
         storage_page_state = Storage_Page_State.INIT
         return render(request, "storage/storage.html", content)
@@ -164,9 +167,11 @@ def destore_item(request, stored_item_fk):
         if destore_item_form.is_valid():
             destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
             # Function that destores the item after the FIFO principle
-            storage_processes.destore_item(stored_item_fk, destore_quantity)
+            # Return holds all the stored items that whare destored and the coresponding quantitys
+            destore_places_and_quantitys = storage_processes.destore_item(stored_item_fk, destore_quantity)
             storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
-            request.session["latest_destored_item_id"] = stored_item_fk
+            # Safe the data in the session storage to show it in the modal/modals after the redirect
+            request.session["destore_places_and_quantitys"] = destore_places_and_quantitys
             return redirect("storage:storage")
         
         # Form was not valid

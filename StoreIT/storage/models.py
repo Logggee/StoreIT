@@ -98,5 +98,11 @@ class Stored_Item (models.Model):
     
     @classmethod
     def get_stored_item_last_in_first_out_list(cls, item_id) -> list:
-        print(f"Items: {cls.objects.filter(item_id=item_id).order_by('-stored_item_storedate')}")
+        """ Builds a list which is orderd from latest storage date to earlyest storage date
+
+        This Method is a class method which does not require a instance of the class
+
+        Returns:
+            A list list which is orderd from latest storage date to earlyest storage date
+        """
         return cls.objects.filter(item_id=item_id).order_by('-stored_item_storedate')
