@@ -33,6 +33,15 @@ class Storage (models.Model):
         return self.storage_name
     
     def all_bins_sorted_in_rows(self) -> dict:
+        """ Build a dict that holds all bins of each row
+
+        Args:
+            self: instance of Storage
+
+        Returns:
+            all_bins_per_row: A dict where the keys are the row number and the values are all Bins as QuerySet
+                The dict es sorted from row 0 to row n
+        """
         all_bins_per_row = dict()
         for row_number in range(self.storage_number_of_rows):
             all_bins_per_row[row_number] = Bin.objects.filter(storage_id = self.storage_id, bin_row = row_number)

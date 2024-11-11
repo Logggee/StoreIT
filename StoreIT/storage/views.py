@@ -85,11 +85,13 @@ def storage(request):
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item = request.session.pop("new_stored_item", False)
         # If a item was destored the session storage holds the destored item. This is needed to fill the destore modal
-        #destore_places_and_quantitys = request.session.pop("destore_places_and_quantitys", list())
-        destore_places_and_quantitys = list()
-        destore_places_and_quantitys.append((Bin.objects.filter(bin_id = 1), 3))
-        print(f"Test {destore_places_and_quantitys}")
-
+        destore_places_and_quantitys = request.session.pop("destore_places_and_quantitys", list())
+        if len(destore_places_and_quantitys) != 0:
+            for destore_place_and_quantity in destore_places_and_quantitys:
+                storage = get_object_or_404(Storage, pk=destore_place_and_quantity["destored_storage_id"])
+                print(f"Storage {storage}")
+                destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
+        print(f"Destore place and quantitys: {destore_places_and_quantitys}")
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
                    "store_item_form": Store_Item_Form(),
@@ -169,6 +171,7 @@ def destore_item(request, stored_item_fk):
             # Function that destores the item after the FIFO principle
             # Return holds all the stored items that whare destored and the coresponding quantitys
             destore_places_and_quantitys = storage_processes.destore_item(stored_item_fk, destore_quantity)
+            print(f"Destore Places and quantitys: {destore_places_and_quantitys}")
             storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
             # Safe the data in the session storage to show it in the modal/modals after the redirect
             request.session["destore_places_and_quantitys"] = destore_places_and_quantitys
@@ -252,6 +255,7 @@ def config(request):
     # Get request
     else:
         # Get all storages and bins
+        # TODO check if list es the better datatype here because the key is maybe not relevant
         storages_and_bins = dict()
         for storage in  Storage.objects.all():
             storages_and_bins[storage] = storage.all_bins_sorted_in_rows()
