@@ -234,9 +234,7 @@ function get_all_items_of_bin(bin_id) {
             // Clear the previos table content
             const table = document.getElementById("table");
             table.innerHTML = "";
-            // extract the outer dict of the datastructure
-            //all_items_in_bin = response_data["all_items_in_bin"]
-            //item_names = Object.keys(all_items_in_bin)
+
             // Build a table row for every item in this bin
             for (let i = 0; i < response_data.length; i++) {
                 // Extract one item of the dict, the item is also a dict
