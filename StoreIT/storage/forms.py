@@ -97,7 +97,6 @@ class Destore_Item_Form(forms.Form):
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
     def clean_item_destore_quantity(self):
-        #TODO this only works if a item is just in one stored_item
         input_quantity = self.cleaned_data.get("item_destore_quantity")
 
         if self.stored_item_fk:
