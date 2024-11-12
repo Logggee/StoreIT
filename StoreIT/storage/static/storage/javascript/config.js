@@ -244,7 +244,7 @@ function get_all_items_of_bin(bin_id) {
                 // First collumn is a header collumn
                 const table_col_header = document.createElement("th");
                 table_col_header.scope = "row";
-                table_col_header.classList = "align-middle";
+                table_col_header.classList = "align-middle ps-3";
                 table_col_header.innerText = stored_item["item_store_date_in_this_bin"];
                 // Append the header col to the row
                 table_row.appendChild(table_col_header);
@@ -255,8 +255,8 @@ function get_all_items_of_bin(bin_id) {
                     switch(j) {
                         case 1:
                             const item_image = document.createElement("img");
-                            item_image.src = "";
-                            item_image.style = "height: 50px;";
+                            item_image.src = stored_item["item_image"];
+                            item_image.style = "height: 50px; border-radius: 0.5rem";
                             table_col.append(item_image);
                             break;
 

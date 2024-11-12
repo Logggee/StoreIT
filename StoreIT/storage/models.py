@@ -16,7 +16,8 @@ MAX_STORAGE_NAME_LENGTH = 30
 class Item (models.Model):
     item_id = models.BigAutoField("id of a item", primary_key=True) # INTEGER PRIMARY KEY AUTOINCREMENT
     item_name = models.CharField("name of the item", max_length=MAX_ITEM_NAME_LENGTH)    # TEXT
-    item_image = models.CharField("path to the item image", max_length=MAX_ITEM_IMAGE_FILE_NAME_LENGTH)    # TEXT
+    item_image = models.ImageField("a image of the item", upload_to="item_images") # This folder is created in media folder automatically
+    item_volume = models.FloatField("the volume of the item")
     item_node = models.CharField("optional item nodes", max_length=MAX_ITEM_NODE_LENGTH, blank=True) # TEXT
     item_datasheet = models.CharField("url to the datasheet of the item", max_length=MAX_ITEM_DATASHEET_URL_LENGTH, blank=True)   # TEXT
     item_purchase_place = models.CharField("url to a possible item purchase place", max_length=MAX_ITEM_PURCHASE_PLACE_URL_LENGTH, blank=True) # TEXT

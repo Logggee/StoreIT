@@ -37,25 +37,7 @@ def storage(request):
         # Validate the form and parse the POST data
         store_item_form = Store_Item_Form(request.POST, request.FILES)
         if store_item_form.is_valid():
-            # Safe the items image
-            item_image_directory = os.path.join(settings.BASE_DIR, 'storage/static/storage/images/item_images')
-            # If the folder does not exist create one
-            if not os.path.exists(item_image_directory):
-                os.makedirs(item_image_directory)
-
-            item_file_name = store_item_form.cleaned_data["item_image_file"].name
-            item_image_file_path = os.path.join(item_image_directory, item_file_name)
-            # Safe the image
-            with default_storage.open(item_image_file_path, 'wb+') as destination:
-                for chunk in store_item_form.cleaned_data["item_image_file"].chunks():
-                    destination.write(chunk)
-            # Build and Safe a new dataset of the new item
-            new_item = Item(item_name = store_item_form.cleaned_data["item_name"],
-                            item_image = store_item_form.cleaned_data["item_image_file"].name,
-                            item_node = store_item_form.cleaned_data["item_node"],
-                            item_datasheet = store_item_form.cleaned_data["item_datasheet"],
-                            item_purchase_place = store_item_form.cleaned_data["item_purchase_place"])
-            new_item.save()
+            new_item = store_item_form.save()
 
             # Add a new stored item to the database
             # TODO Storage algorythm goes here
@@ -84,14 +66,16 @@ def storage(request):
     else:
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item = request.session.pop("new_stored_item", False)
+
         # If a item was destored the session storage holds the destored item. This is needed to fill the destore modal
         destore_places_and_quantitys = request.session.pop("destore_places_and_quantitys", list())
+        print(f"Session storage: {destore_places_and_quantitys}")
         if len(destore_places_and_quantitys) != 0:
             for destore_place_and_quantity in destore_places_and_quantitys:
                 storage = get_object_or_404(Storage, pk=destore_place_and_quantity["destored_storage_id"])
-                print(f"Storage {storage}")
                 destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
-        print(f"Destore place and quantitys: {destore_places_and_quantitys}")
+        print(destore_places_and_quantitys)
+
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
                    "store_item_form": Store_Item_Form(),
@@ -99,7 +83,9 @@ def storage(request):
                    "new_stored_item": new_stored_item,
                    "destore_places_and_quantitys": destore_places_and_quantitys,
                    "storage_page_state": storage_page_state.name}
+        
         storage_page_state = Storage_Page_State.INIT
+
         return render(request, "storage/storage.html", content)
     
 def store_existing_item (request, item_id):
@@ -271,7 +257,7 @@ def all_items_stored_in_bin(request, bin_id):
     data = list()
     for stored_item in all_items_in_bin:
         data.append({"item_store_date_in_this_bin" : stored_item.stored_item_storedate.strftime("%d.%m.%Y, %H:%M:%S"),
-                     "item_image": stored_item.item_id.item_image,
+                     "item_image": stored_item.item_id.item_image.url,
                      "item_name": stored_item.item_id.item_name,
                      "item_quantity_in_this_bin": stored_item.stored_item_quantity
         })
