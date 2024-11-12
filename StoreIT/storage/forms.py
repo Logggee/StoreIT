@@ -19,7 +19,7 @@ class Store_Item_Form(forms.ModelForm):
         fields = [
             'item_name', 'item_image', 'item_volume', 'item_node', 'item_datasheet', 'item_purchase_place'
         ]
-        
+        # TODO all id's are not unique
         widgets = {
             'item_name': forms.TextInput(attrs={
                 'class': 'form-control',

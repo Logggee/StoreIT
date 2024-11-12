@@ -115,8 +115,12 @@ function showOnlySearchHits (input_field) {
 }
 
 function addItemToDestoreList(item_id) {
-    console.log("add item to destore list");
     const destore_list = document.getElementById("destore-list");
+    if (destore_list.childElementCount == 0) {
+        document.getElementById("destore-list-empty-text").classList = "d-none";
+        document.getElementById("destore-list-delete-item-button").classList.remove("d-none");
+        document.getElementById("destore-list-destore-button").classList.remove("d-none");
+    }
     const list_item = document.createElement("li");
     list_item.classList = "list-group-item d-flex align-items-center";
     const item_image = document.createElement("img");

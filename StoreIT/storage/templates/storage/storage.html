@@ -169,6 +169,7 @@
             </div>
             <div class="modal-body">
                 <div class="scrollspy-example bg-body-tertiary p-3 rounded-2 mb-3"  style="max-height: 500px; overflow-y: auto;">
+                    <p id="destore-list-empty-text">No item staged for destoring yet :(</p>
                     <ul class="list-group" id="destore-list">
                         <!-- The destore list is generated here -->
                     </ul>
@@ -180,11 +181,11 @@
                 <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">
                 Cancel
             </button>
-            <button type="button" class="btn btn-warning d-flex align-items-center" data-bs-target="#storageProcess" data-bs-toggle="modal">
+            <button type="button" class="btn btn-warning d-flex align-items-center d-none" id="destore-list-delete-item-button" data-bs-target="#storageProcess" data-bs-toggle="modal">
                 <img class="me-2" src="{% static 'storage/images/icons/trash.svg'%}">
                 Delete selected Items
             </button>
-            <button type="button" class="btn btn-danger d-flex align-items-center" data-bs-target="#destoreItem" data-bs-toggle="modal">
+            <button type="button" class="btn btn-danger d-flex align-items-center d-none" id="destore-list-destore-button" data-bs-target="#destoreItem" data-bs-toggle="modal">
                 <img class="me-2" src="{% static 'storage/images/icons/box-arrow-down.svg'%}" style="height: 20px;">
                 Destore
             </button>
