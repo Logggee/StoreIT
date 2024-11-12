@@ -30,6 +30,7 @@ function searchMasterData () {
 
 // User can only select one checkbox in master data search list
 function onlyOneSelectable (checkbox) {
+    let form = document.getElementById("add-new-item-form");
     let checkboxes = document.getElementsByName('master-data-list-checkbox'); // query all checkboxes
     // Uncheck every checkbox except the checkbox that called the function
     checkboxes.forEach((item) => { 
@@ -39,15 +40,14 @@ function onlyOneSelectable (checkbox) {
     });
     // Prefill all form fields with the check items values
     if (checkbox.checked) {
-        let form = document.getElementById("add-new-item-form")
         checkbox_id = checkbox.id;
         item_id = checkbox_id.split('-').pop()
 
         fetch(`/storage/${item_id}`)
             .then(response => response.json())
             .then(response_data => {
-                document.getElementById("item-image-file-label").classList.add("d-none")
-                document.getElementById("item-image-file").classList.add("d-none")
+                document.getElementById("item-image-label").classList.add("d-none")
+                document.getElementById("item-image").classList.add("d-none")
                 document.getElementById("item-name").value = response_data.item_name;
                 document.getElementById("item-name").setAttribute("readonly", true);
                 document.getElementById("item-node").value = response_data.item_node;
@@ -56,14 +56,17 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-datasheet").setAttribute("readonly", true);
                 document.getElementById("item-purchase-place").value = response_data.item_purchase_place;
                 document.getElementById("item-purchase-place").setAttribute("readonly", true);
+                document.getElementById("item-volume").value = response_data.item_volume;
+                document.getElementById("item-volume").setAttribute("readonly", true);
+
                 // Set the url to parse the primary key of the already existing item
                 form.action = `/storage/store_existing_item/${response_data.item_id}`;
             })  
     }
     // If the checkbox was unchecked empty all all form fields
     else {
-        document.getElementById("item-image-file-label").classList.remove("d-none")
-        document.getElementById("item-image-file").classList.remove("d-none")
+        document.getElementById("item-image-label").classList.remove("d-none")
+        document.getElementById("item-image").classList.remove("d-none")
         document.getElementById("item-name").value = "";
         document.getElementById("item-name").removeAttribute("readonly");
         document.getElementById("item-node").value = "";
@@ -72,6 +75,8 @@ function onlyOneSelectable (checkbox) {
         document.getElementById("item-datasheet").removeAttribute("readonly");
         document.getElementById("item-purchase-place").value = "";
         document.getElementById("item-purchase-place").removeAttribute("readonly");
+        document.getElementById("item-volume").value = "";
+        document.getElementById("item-volume").removeAttribute("readonly");
         form.action = "storage/store_new_item";
     }
 }

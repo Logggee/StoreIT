@@ -129,7 +129,8 @@ def stored_single_item(request, item_id):
     data = {
         "item_id": item.item_id,
         "item_name": item.item_name,
-        "item_image": item.item_image,
+        "item_image": item.item_image.url,
+        "item_volume": item.item_volume,
         "item_node": item.item_node,
         "item_datasheet": item.item_datasheet,
         "item_purchase_place": item.item_purchase_place
