@@ -268,16 +268,14 @@ def config(request):
 def all_items_stored_in_bin(request, bin_id):
     print("Ajax request")
     all_items_in_bin = Stored_Item.objects.filter(bin_id = bin_id)
-    data = {}
+    data = list()
     for stored_item in all_items_in_bin:
-        data[stored_item.item_id.item_name] = {
-            "item_store_date_in_this_bin" : stored_item.stored_item_storedate.strftime("%d.%m.%Y, %H:%M:%S"),
-            "item_image": stored_item.item_id.item_image,
-            "item_name": stored_item.item_id.item_name,
-            "item_quantity_in_this_bin": stored_item.stored_item_quantity
-        }
-    print(f"All items in bin {all_items_in_bin}")
-    data = {"all_items_in_bin": data}
+        data.append({"item_store_date_in_this_bin" : stored_item.stored_item_storedate.strftime("%d.%m.%Y, %H:%M:%S"),
+                     "item_image": stored_item.item_id.item_image,
+                     "item_name": stored_item.item_id.item_name,
+                     "item_quantity_in_this_bin": stored_item.stored_item_quantity
+        })
+    print(f"All items in bin {data}")
     return JsonResponse(data, safe=False)
 
 def stats(request):

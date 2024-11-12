@@ -235,12 +235,12 @@ function get_all_items_of_bin(bin_id) {
             const table = document.getElementById("table");
             table.innerHTML = "";
             // extract the outer dict of the datastructure
-            all_items_in_bin = response_data["all_items_in_bin"]
-            item_names = Object.keys(all_items_in_bin)
+            //all_items_in_bin = response_data["all_items_in_bin"]
+            //item_names = Object.keys(all_items_in_bin)
             // Build a table row for every item in this bin
-            for (let i = 0; i < Object.keys(all_items_in_bin).length; i++) {
+            for (let i = 0; i < response_data.length; i++) {
                 // Extract one item of the dict, the item is also a dict
-                stored_item = all_items_in_bin[item_names[i]];
+                stored_item = response_data[i];
     
                 const table_row = document.createElement("tr");
                 // First collumn is a header collumn
