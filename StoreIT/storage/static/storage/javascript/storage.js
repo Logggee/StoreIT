@@ -121,7 +121,7 @@ function addItemToDestoreList(item_id) {
     list_item.classList = "list-group-item d-flex align-items-center";
     const item_image = document.createElement("img");
     item_image.classList = "ms-2";
-    item_image.style = "max-height: 30px;";
+    item_image.style = "max-height: 30px; border-radius: 0.2rem";
     const checkbox = document.createElement("input");
     checkbox.classList = "form-check-input ms-auto";
     checkbox.type = "checkbox";

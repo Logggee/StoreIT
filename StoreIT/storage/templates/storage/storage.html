@@ -145,7 +145,7 @@
                     <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}" style="height: 20px;">
                     Cancel
                 </button>
-                <button type="button" class="btn btn-warning d-flex align-items-center" onclick="addItemToDestoreList({{ item.item_id }})">
+                <button type="button" class="btn btn-warning d-flex align-items-center" onclick="addItemToDestoreList({{ item.item_id }})" data-bs-dismiss="modal">
                     <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 20px;">
                     Add to Destore List
                 </button>
@@ -170,11 +170,7 @@
             <div class="modal-body">
                 <div class="scrollspy-example bg-body-tertiary p-3 rounded-2 mb-3"  style="max-height: 500px; overflow-y: auto;">
                     <ul class="list-group" id="destore-list">
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm
-                            <img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
+                        <!-- The destore list is generated here -->
                     </ul>
                 </div>
             </div>
