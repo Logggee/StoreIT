@@ -93,6 +93,7 @@ function generateStorageLayout(input, row_number) {
         safe_config_button.type = "button";
         safe_config_button.classList = "btn btn-success mt-3 d-flex align-items-center";
         safe_config_button.id = "button-safe-config";
+        // Append the button icon and make it visible
         const safe_config_button_image = document.getElementById("safe-config-button-image");
         safe_config_button_image.style = "";
         safe_config_button.onclick = () => {

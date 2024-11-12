@@ -38,7 +38,11 @@ def destore_item(item_id, destore_quantity) -> list:
 
         
         destore_places_and_quantitys.append({"destore_bin_id": stored_item.bin_id.bin_id,
-                                             "destored_item_id": stored_item.item_id.item_id,
+                                             "destored_item_name": stored_item.item_id.item_name,
+                                             "destored_item_image": stored_item.item_id.item_image.url,
+                                             "destored_storage_id": stored_item.bin_id.storage_id.storage_id,
+                                             "destored_storage_name": stored_item.bin_id.storage_id.storage_name,
+                                             "destored_bin_number": stored_item.bin_id.bin_number,
                                              "destored_quantity": destored_quantity_at_current_location})
         if destore_complete:
             return destore_places_and_quantitys

@@ -587,7 +587,7 @@
                         <div class="container col-4 d-flex flex-column justify-content-center">
                             <p><span style="margin-right: 8px;"><strong>Item:</strong></span>{{ destored_item.destored_item_name }}</p>
                             <p><span style="margin-right: 8px;"><strong>Destore Quantity:</strong></span>{{ destored_item.destored_quantity }}</p>
-                            <img src="{% static 'storage/images/item_images/' %}{{ destored_item.destored_item_image }}" class="img-fluid" alt="{{ destored_item.destored_item_name }}">
+                            <img src="{{ destored_item.destored_item_image }}" class="img-fluid" alt="{{ destored_item.destored_item_name }}">
                         </div>
 
                         <div class="container col-8 d-flex align-items-center justify-content-center">
