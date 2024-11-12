@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    <!-- Fixed Button -->
+    <!-- Fixed Button to add new items -->
     <div class="position-relative">
         <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#add-new-item-modal">
             <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
@@ -145,7 +145,7 @@
                     <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}" style="height: 20px;">
                     Cancel
                 </button>
-                <button type="button" class="btn btn-warning d-flex align-items-center">
+                <button type="button" class="btn btn-warning d-flex align-items-center" onclick="addItemToDestoreList({{ item.item_id }})">
                     <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 20px;">
                     Add to Destore List
                 </button>
@@ -169,53 +169,10 @@
             </div>
             <div class="modal-body">
                 <div class="scrollspy-example bg-body-tertiary p-3 rounded-2 mb-3"  style="max-height: 500px; overflow-y: auto;">
-                    <ul class="list-group">
+                    <ul class="list-group" id="destore-list">
                         <li class="list-group-item d-flex align-items-center">
                             LED rot 5mm
                             <img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm
-                            <img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm
-                            <img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm
-                            <img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
-                            <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
-                        </li>
-                        <li class="list-group-item d-flex align-items-center">
-                            LED rot 5mm<img src="{% static 'storage/images/item_images/LED_rot_5mm.png' %}" class="ms-2" style="max-height: 30px;">
                             <input class="form-check-input ms-auto" type="checkbox" value="" id="flexCheckDefault">
                         </li>
                     </ul>

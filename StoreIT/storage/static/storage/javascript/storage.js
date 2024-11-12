@@ -46,8 +46,8 @@ function onlyOneSelectable (checkbox) {
         fetch(`/storage/${item_id}`)
             .then(response => response.json())
             .then(response_data => {
-                document.getElementById("item-image-label").classList.add("d-none")
-                document.getElementById("item-image").classList.add("d-none")
+                document.getElementById("item-image-label").classList.add("d-none");
+                document.getElementById("item-image").classList.add("d-none");
                 document.getElementById("item-name").value = response_data.item_name;
                 document.getElementById("item-name").setAttribute("readonly", true);
                 document.getElementById("item-node").value = response_data.item_node;
@@ -65,8 +65,8 @@ function onlyOneSelectable (checkbox) {
     }
     // If the checkbox was unchecked empty all all form fields
     else {
-        document.getElementById("item-image-label").classList.remove("d-none")
-        document.getElementById("item-image").classList.remove("d-none")
+        document.getElementById("item-image-label").classList.remove("d-none");
+        document.getElementById("item-image").classList.remove("d-none");
         document.getElementById("item-name").value = "";
         document.getElementById("item-name").removeAttribute("readonly");
         document.getElementById("item-node").value = "";
@@ -112,4 +112,30 @@ function showOnlySearchHits (input_field) {
             }
         }
     });
+}
+
+function addItemToDestoreList(item_id) {
+    console.log("add item to destore list");
+    const destore_list = document.getElementById("destore-list");
+    const list_item = document.createElement("li");
+    list_item.classList = "list-group-item d-flex align-items-center";
+    const item_image = document.createElement("img");
+    item_image.classList = "ms-2";
+    item_image.style = "max-height: 30px;";
+    const checkbox = document.createElement("input");
+    checkbox.classList = "form-check-input ms-auto";
+    checkbox.type = "checkbox";
+    checkbox.value = "";
+
+    // Fetch the data of the added item via a ajax call
+    fetch(`/storage/${item_id}`)
+        .then(response => response.json())
+        .then(response_data => {
+            list_item.innerText = response_data.item_name;
+            item_image.src = response_data.item_image;
+            item_image.alt = response_data.item_name;
+            list_item.appendChild(item_image);
+            list_item.appendChild(checkbox);
+            destore_list.appendChild(list_item);
+        })
 }
