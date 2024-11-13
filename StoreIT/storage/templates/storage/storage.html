@@ -51,8 +51,8 @@
             <div class="container col-12 col-md-6 col-xl-4 col-xxl-3 my-5 d-flex justify-content-center">
 
                 <!-- Card of stored item -->
-                <div class="card" id="card-item-{{ item.item_id }}" style="border-radius: 0.9rem;">
-                    <img src="{{ item.item_image.url }}" class="card-img-top" id="card-image" alt="{{ item.item_name }}">
+                <div class="card stored-item-card" id="card-item-{{ item.item_id }}">
+                    <img src="{{ item.item_image.url }}" class="card-img-top item-card-image" id="card-image" alt="{{ item.item_name }}">
 
                     <div class="card-body text-left ms-2">
                         <h4 class="card-title" href="">{{ item.item_name }}</h4>
@@ -80,22 +80,22 @@
                 <div class="modal-header" style="border-bottom: none;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <img src="{{ item.item_image.url }}" class="card-img-top" id="imgStoredItemModal" alt="{{ item.item_name }}">
+                <img src="{{ item.item_image.url }}" class="stored-item-modal-image" id="imgStoredItemModal-{{ item.item_id }}" alt="{{ item.item_name }}">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">{{ item.item_name }}</h1>
+                    <h1 class="modal-title fs-5">{{ item.item_name }}</h1>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="item-stored-quantity" class="col-form-label">Amount Stored:</label>
-                        <input type="text" class="form-control" id="item-stored-quantity" value="{{ stored_item_total_quantity }}" readonly>
+                        <label for="item-stored-quantity-{{ item.item_id }}" class="col-form-label">Amount Stored:</label>
+                        <input type="text" class="form-control" id="item-stored-quantity-{{ item.item_id }}" value="{{ stored_item_total_quantity }}" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="item-node-text" class="col-form-label">Node:</label>
-                        <textarea class="form-control" id="item-node-text" readonly>{% if item.item_node == "" %}-{% else %}{{ item.item_node }}{% endif %}</textarea>
+                        <label for="item-node-text-{{ item.item_id }}" class="col-form-label">Node:</label>
+                        <textarea class="form-control" id="item-node-text-{{ item.item_id }}" readonly>{% if item.item_node == "" %}-{% else %}{{ item.item_node }}{% endif %}</textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="item-datasheet-link" class="col-form-label">Datasheet:</label>
-                        <a href="{{ item.item_datasheet }}" target="_blank" class="form-control" id="item-datasheet-link" style="text-decoration: none;">
+                        <label for="item-datasheet-link-{{ item.item_id }}" class="col-form-label">Datasheet:</label>
+                        <a href="{{ item.item_datasheet }}" target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
                             {% if item.item_datasheet == "" %}
                                 -
                             {% else %}
@@ -104,8 +104,8 @@
                         </a>
                     </div>
                     <div class="mb-3">
-                        <label for="item-purchase-place-link" class="col-form-label">Bought here:</label>
-                        <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link" style="text-decoration: none;">
+                        <label for="item-purchase-place-link-{{ item.item_id }}" class="col-form-label">Bought here:</label>
+                        <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
                             {% if item.item_purchase_place == "" %}
                                 -
                             {% else %}
@@ -117,7 +117,7 @@
                     <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_fk=item.item_id %}" method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="item-destore-quantity" class="col-form-label">Remove from stock:</label>
+                            <label for="item-destore-quantity-{{ item.item_id }}" class="col-form-label">Remove from stock:</label>
                             {% if item_with_destore_error.item_id == item.item_id %}
                                 {{ destore_item_form_error.item_destore_quantity }}
                             {% else %}
@@ -214,7 +214,7 @@
                         {% for item in items_list %}
                         <li class="list-group-item d-flex align-items-center" id="master-data-search-list-item-{{ item.item_id }}">
                             {{ item.item_name }}
-                            <img src="{{ item.item_image.url }}" class="ms-2" id="master-data-search-image" alt="item.item_name">
+                            <img src="{{ item.item_image.url }}" class="ms-2 master-data-search-image" id="master-data-search-image-{{ item.item_id }}" alt="item.item_name">
                             <input class="form-check-input ms-auto" id="master-data-search-radio-{{ item.item_id }}" type="checkbox" name="master-data-list-checkbox" value="{{ item.item_id }}" onchange="onlyOneSelectable(this)">
                         </li>
                         {% endfor %}

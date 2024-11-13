@@ -67,11 +67,11 @@ class Store_Item_Form(forms.ModelForm):
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
 class Destore_Item_Form(forms.Form):
-    item_destore_quantity = forms.IntegerField(label='Item volume',
+    item_destore_quantity = forms.IntegerField(label='Item destore quantity',
                                                min_value=1,
                                                required=True,
                                                widget=forms.NumberInput(attrs={'class': 'form-control',
-                                                                               'id': 'item-volume',
+                                                                               'id': 'item-destore-quantity',
                                                                                'placeholder': '0'
     }))
 

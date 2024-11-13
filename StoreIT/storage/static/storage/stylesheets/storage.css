@@ -1,9 +1,9 @@
-.destore-list-image {
-    max-height: 30px;
-    border-radius: 0.2rem;
+/*------------- Stored Item Cards -------------------*/
+.card.stored-item-card {
+    border-radius: 0.9rem;
 }
 
-#card-image {
+.card-img-top.item-card-image {
     border-bottom: solid 3px #d3ac7b;
     max-height: 250px;
     max-width: 250px;
@@ -11,17 +11,39 @@
     border-top-right-radius: 0.9rem;
 }
 
-#imgStoredItemModal {
-    height: 200px;
+/*------------- Stored Item Modal -------------------*/
+.stored-item-modal-image {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    max-height: 300px;
+    max-width: 300px;
+    width: auto;
+    height: auto;
     border-radius: 0.9rem;
+    height: 200px;
 }
-
-#master-data-search-image {
+/*------------- Destore list -------------------*/
+.destore-list-image {
     max-height: 30px;
     border-radius: 0.2rem;
 }
 
+/*------------- Master data search list -------------------*/
+.master-data-search-image {
+    max-height: 30px;
+    border-radius: 0.2rem;
+}
+
+/*------------- Navbar Search input field -------------------*/
 #search-input {
     max-width: 250px;
     min-width: 100px;
+}
+
+/*------------- Button to add new items to the storage -------------------*/
+#storeItemButton {
+    height: 80px;
+    width: 80px;
+    z-index: 1050; /* Über anderen Inhalten positionieren */
 }

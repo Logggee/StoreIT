@@ -2,19 +2,3 @@
 body{
     background-color: #d3ac7b;
 }
-
-#imgStoredItemModal {
-    display: block;
-    margin-right: auto;
-    margin-left: auto;
-    max-height: 300px;
-    max-width: 300px;
-    width: auto;
-    height: auto;
-}
-
-#storeItemButton {
-    height: 80px;
-    width: 80px;
-    z-index: 1050; /* Über anderen Inhalten positionieren */
-}
