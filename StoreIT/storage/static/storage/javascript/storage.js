@@ -123,13 +123,16 @@ function addItemToDestoreList(item_id) {
     }
     const list_item = document.createElement("li");
     list_item.classList = "list-group-item d-flex align-items-center";
+
     const item_image = document.createElement("img");
     item_image.classList = "ms-2";
     item_image.style = "max-height: 30px; border-radius: 0.2rem";
+
     const checkbox = document.createElement("input");
     checkbox.classList = "form-check-input ms-auto";
     checkbox.type = "checkbox";
     checkbox.value = "";
+    checkbox.name = "destore-list-checkbox";
 
     // Fetch the data of the added item via a ajax call
     fetch(`/storage/${item_id}`)
@@ -142,4 +145,22 @@ function addItemToDestoreList(item_id) {
             list_item.appendChild(checkbox);
             destore_list.appendChild(list_item);
         })
+}
+
+function deleteItemDestoringList() {
+    destore_list_checkboxes = document.getElementsByName("destore-list-checkbox");
+    destore_list_checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            // Remove the li element where the checkbox was set
+            checkbox.parentNode.parentNode.removeChild(checkbox.parentNode);
+        }
+    });
+
+    // Check if the list is now empty to show the empty text again and remove the delete and destore button
+    const destore_list = document.getElementById("destore-list");
+    if (destore_list.childElementCount == 0) {
+        document.getElementById("destore-list-empty-text").classList = "";
+        document.getElementById("destore-list-delete-item-button").classList.add("d-none");
+        document.getElementById("destore-list-destore-button").classList.add("d-none");
+    }
 }
