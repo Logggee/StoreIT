@@ -1,3 +1,8 @@
+.destore-list-image {
+    max-height: 30px;
+    border-radius: 0.2rem;
+}
+
 #card-image {
     border-bottom: solid 3px #d3ac7b;
     max-height: 250px;
