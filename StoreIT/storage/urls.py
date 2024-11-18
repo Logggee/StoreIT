@@ -23,5 +23,7 @@ urlpatterns = [
     # localhost:8000/1/12
     path("config/<int:bin_id>", views.all_items_stored_in_bin, name="all items stored in bin"),
     # localhost:8000/stats
-    path("stats/", views.stats, name="stats")
+    path("stats/", views.stats, name="stats"),
+    # localhost:8000/login
+    path("login/", views.user_login, name="login")
 ]

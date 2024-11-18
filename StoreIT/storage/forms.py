@@ -2,7 +2,7 @@
 import re
 from django import forms
 from .models import Stored_Item, Item, User
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 
 class User_Registration_Form(UserCreationForm):
     """ Costum user registaration form
@@ -44,6 +44,21 @@ class User_Registration_Form(UserCreationForm):
                   "password2",
                   "first_name",
                   "last_name"]
+        
+class User_Login_Form(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control form-control-lg",
+                                      "id": "login-username",
+                                      "type": "text",
+                                      "placeholder": "Username"})
+    )
+
+    password = forms.CharField(
+        widget = forms.PasswordInput(attrs={"class": "form-control form-control-lg",
+                                          "id": "login-password",
+                                          "type": "password",
+                                          "placeholder": "Password"})
+    )
 
 class User_Change_Form(UserChangeForm):
     class Meta:

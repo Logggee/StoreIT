@@ -10,9 +10,10 @@ from django.http import Http404
 from django.core.files.storage import default_storage
 from django.core.serializers import serialize
 from .models import Stored_Item, Item, Bin, Storage
-from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form, User_Registration_Form
+from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form, User_Registration_Form, User_Login_Form
 from .utils import Storage_Page_State
 from . import storageProcesses as storage_processes
+from django.contrib.auth import login
 
 # Enum that holds the current state of the /storage template
 # The states define which modals are opend initially
@@ -28,7 +29,17 @@ def register(request):
             redirect("storage:storage")
         else:
            content = {"user_registration_form": User_Registration_Form()}
-           #render(request, "") 
+           #render(request, "")
+
+def user_login(request):
+    if request.method == "POST":
+        print(f"Form Login POST")
+        user_login_form = User_Login_Form(request, data=request.POST) # User_Login_Form inherits from AuthenticationForm so the request needs to be parsed
+        if user_login_form.is_valid():
+            print(f"Form Login was valid")
+            user = user_login_form.get_user()
+            login(request, user)
+            return redirect("storage:storage")
 
 def index(request):
     """ /
@@ -40,9 +51,23 @@ def index(request):
     Returns:
         Renders the template index.html
     """
-    return render(request, "storage/index.html")
+    content = {"login_form": User_Login_Form()}
+    
+    return render(request, "storage/index.html", content)
 
 def storage(request):
+    """ /storage/
+
+    Page shows all stored items as cards. There are also modals to add a new item to the storage or
+    a modal with a destoring list to destore multiple itmes at once.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        Get: renders the template
+        Post: If Post was valid redirect to /storage/ if not valid render template with errors shown
+    """
     global storage_page_state
     # Post request
     if request.method == "POST":
