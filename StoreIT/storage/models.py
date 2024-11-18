@@ -2,6 +2,7 @@
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import AbstractUser
 
 # Item max values
 MAX_ITEM_NAME_LENGTH = 30
@@ -12,6 +13,9 @@ MAX_ITEM_PURCHASE_PLACE_URL_LENGTH = 100
 
 # Storage max valus
 MAX_STORAGE_NAME_LENGTH = 30
+
+class User (AbstractUser):
+    pass
 
 class Item (models.Model):
     item_id = models.BigAutoField("id of a item", primary_key=True) # INTEGER PRIMARY KEY AUTOINCREMENT

@@ -26,13 +26,13 @@
                 <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-3 mb-lg-0 ps-5">
                         <li class="nav-item">
-                            <a class="nav-link active px-5" aria-current="page" href="{% url 'storage:storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
+                            <a class="nav-link active px-5 navbar-link" aria-current="page" href="{% url 'storage:storage' %}" style="border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="{% url 'storage:stats'%}" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
+                            <a class="nav-link active px-5 navbar-link" href="{% url 'storage:stats'%}"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active px-5" href="{% url 'storage:config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
+                            <a class="nav-link active px-5 navbar-link" href="{% url 'storage:config'%}" style="border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
                         </li>
                     </ul>
 
@@ -121,6 +121,7 @@
                             {% if item_with_destore_error.item_id == item.item_id %}
                                 {{ destore_item_form_error.item_destore_quantity }}
                             {% else %}
+                                <!-- TODO: id of this field is not unique -->
                                 {{ destore_item_form.item_destore_quantity }}
                             {% endif %}
                             {% if item_with_destore_error.item_id == item.item_id %}

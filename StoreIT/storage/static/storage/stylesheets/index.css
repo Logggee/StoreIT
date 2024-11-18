@@ -1,0 +1,11 @@
+.modal-header.login-modal {
+    border-bottom: none;
+}
+
+.modal-content.modal-login {
+    border-radius: 1rem;
+}
+
+#landingpage-text {
+    color: black;
+}

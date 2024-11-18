@@ -2,3 +2,8 @@
 body{
     background-color: #d3ac7b;
 }
+
+.nav-link.active.px-5.navbar-link {
+    color: black; 
+    font-size: 18px;
+}

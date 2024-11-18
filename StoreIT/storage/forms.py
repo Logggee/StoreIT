@@ -1,9 +1,11 @@
 # forms.py
 import re
-from .models import Stored_Item, Item
-from . import models
 from django import forms
-from django.core.validators import FileExtensionValidator
+from .models import Stored_Item, Item
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+
 
 class Store_Item_Form(forms.ModelForm):
     item_quantity = forms.IntegerField(min_value=1,
@@ -67,6 +69,7 @@ class Store_Item_Form(forms.ModelForm):
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
 class Destore_Item_Form(forms.Form):
+    # TODO: id if this field is not unique
     item_destore_quantity = forms.IntegerField(label='Item destore quantity',
                                                min_value=1,
                                                required=True,
@@ -149,3 +152,13 @@ class Storage_Layout_Form(forms.Form):
                                                                                             "oninput": "generateStorageLayout(this, i+1)",
                                                                                             'required': 'true'}))
         #print(f"All fields: {self.fields}")
+
+class User_Registration_Form(UserCreationForm):
+    # Django standart form doesnt include a email field
+    email = forms.EmailField(required=True)
+    class Meta:
+        model = User
+        fields = ["username",
+                  "email",
+                  "password1",
+                  "password2"]

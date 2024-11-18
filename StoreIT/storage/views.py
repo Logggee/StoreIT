@@ -10,13 +10,25 @@ from django.http import Http404
 from django.core.files.storage import default_storage
 from django.core.serializers import serialize
 from .models import Stored_Item, Item, Bin, Storage
-from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form
+from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form, User_Registration_Form
 from .utils import Storage_Page_State
 from . import storageProcesses as storage_processes
 
 # Enum that holds the current state of the /storage template
 # The states define which modals are opend initially
 storage_page_state = Storage_Page_State.INIT
+
+def register(request):
+    if request.method == "POST":
+        user_registration_form = User_Registration_Form(request.POST)
+        # Check if the form input where all valid
+        if user_registration_form.is_valid():
+            # Safe the new user in the db
+            user_registration_form.save()
+            redirect("storage:storage")
+        else:
+           content = {"user_registration_form": User_Registration_Form()}
+           #render(request, "") 
 
 def index(request):
     """ /
