@@ -26,19 +26,25 @@ def register(request):
         if user_registration_form.is_valid():
             # Safe the new user in the db
             user_registration_form.save()
-            redirect("storage:storage")
+            return redirect("storage:storage")
         else:
            content = {"user_registration_form": User_Registration_Form()}
            #render(request, "")
 
 def user_login(request):
+    global storage_page_state
+
     if request.method == "POST":
         print(f"Form Login POST")
         user_login_form = User_Login_Form(request, data=request.POST) # User_Login_Form inherits from AuthenticationForm so the request needs to be parsed
+
         if user_login_form.is_valid():
             print(f"Form Login was valid")
             user = user_login_form.get_user()
             login(request, user)
+            return redirect("storage:storage")
+        else:
+            storage_page_state = Storage_Page_State.LOGIN
             return redirect("storage:storage")
 
 def index(request):
@@ -96,6 +102,7 @@ def storage(request):
                        "store_item_form": store_item_form,
                        "destore_item_form": Destore_Item_Form(),
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
+            
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
         
@@ -113,13 +120,20 @@ def storage(request):
                 destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
         print(destore_places_and_quantitys)
 
+        # Check if a storage even exists if not the add new item button shoud not be displayed
+        if len(Storage.objects.all()) > 0:
+            storage_exists = True
+        else:
+            storage_exists = False
+
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
                    "store_item_form": Store_Item_Form(),
                    "destore_item_form": Destore_Item_Form(),
                    "new_stored_item": new_stored_item,
                    "destore_places_and_quantitys": destore_places_and_quantitys,
-                   "storage_page_state": storage_page_state.name}
+                   "storage_page_state": storage_page_state.name,
+                   "storage_exists": storage_exists}
         
         storage_page_state = Storage_Page_State.INIT
 
@@ -191,6 +205,10 @@ def destore_item(request, stored_item_fk):
         destore_item_form = Destore_Item_Form(request.POST, stored_item_fk=stored_item_fk)
         # Form was valid
         if destore_item_form.is_valid():
+            # Prevents the user from adding items if no storage exists yet
+            if len(Storage.objects.all()) == 0:
+                return redirect("storage:storage")
+            
             destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
             # Function that destores the item after the FIFO principle
             # Return holds all the stored items that whare destored and the coresponding quantitys

@@ -65,12 +65,18 @@
         </div>
     </div>
 
+    {% if storage_exists%}
     <!-- Fixed Button to add new items -->
     <div class="position-relative">
         <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#add-new-item-modal">
             <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
         </a>
     </div>
+    {% else %}
+    <div class="container text-center">
+        <h1 class="text-dark">You need to add a storage under config first!</h1>
+    </div>
+    {% endif %}
 
     {% for item, stored_item_total_quantity in total_stored_quantity_per_item %}
         <!-- Modal stored item {{ item.item_name }}-->

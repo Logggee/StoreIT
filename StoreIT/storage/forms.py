@@ -60,6 +60,17 @@ class User_Login_Form(AuthenticationForm):
                                           "placeholder": "Password"})
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # In invalid case the bootstrap clase is-invalid needs to be added
+        # to the form elements
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                # Fetches to current classes
+                css_classes = field.widget.attrs.get('class', '')
+                # Add to the current classes is-invalid
+                field.widget.attrs['class'] = f'{css_classes} is-invalid'
+
 class User_Change_Form(UserChangeForm):
     class Meta:
         model = User
@@ -117,9 +128,8 @@ class Store_Item_Form(forms.ModelForm):
             }),
         }
 
-    def __init__(self, *args,  stored_item_fk=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.stored_item_fk = stored_item_fk
         # In invalid case the bootstrap clase is-invalid needs to be added
         # to the form elements
         for field_name, field in self.fields.items():

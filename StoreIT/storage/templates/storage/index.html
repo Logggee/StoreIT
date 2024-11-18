@@ -91,6 +91,13 @@
                                     {% csrf_token %}
                                     <div class="form-outline form-white mb-4">
                                         {{ login_form.username }}
+                                        {% if login_form.errors %}
+                                            <div class="invalid-feedback">
+                                            {% for error in errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                            </div>
+                                        {% endif %}
                                     </div>
                         
                                     <div class="form-outline form-white mb-4">
