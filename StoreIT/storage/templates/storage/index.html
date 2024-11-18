@@ -41,9 +41,9 @@
                               <img src="{% static 'storage/images/icons/person-circle.svg'%}">
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark">
-                              <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-login">Login</button></li>
-                              <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal-register">Register</button></li>
-                              <li><button class="dropdown-item">Logout</button></li>
+                              <li><a class="dropdown-item" href="{% url 'storage:login' %}">Login</a></li>
+                              <li><a class="dropdown-item">Register</a></li>
+                              <li><a class="dropdown-item">Logout</a></li>
                             </ul>
                           </li>
                         </ul>
