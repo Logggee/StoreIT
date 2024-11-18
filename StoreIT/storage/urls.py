@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import User_Login
 
 app_name = "storage"
 
@@ -25,5 +26,7 @@ urlpatterns = [
     # localhost:8000/stats
     path("stats/", views.stats, name="stats"),
     # localhost:8000/login
-    path("login/", views.user_login, name="login")
+    #path("login/", views.user_login, name="login"),
+
+    path('accounts/login/', User_Login.as_view(), name='login'),
 ]

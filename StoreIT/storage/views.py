@@ -14,10 +14,14 @@ from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form, User
 from .utils import Storage_Page_State
 from . import storageProcesses as storage_processes
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 
 # Enum that holds the current state of the /storage template
 # The states define which modals are opend initially
 storage_page_state = Storage_Page_State.INIT
+
+class User_Login(LoginView):
+    authentication_form = User_Login_Form
 
 def register(request):
     if request.method == "POST":
