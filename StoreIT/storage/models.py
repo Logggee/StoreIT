@@ -14,6 +14,7 @@ MAX_ITEM_PURCHASE_PLACE_URL_LENGTH = 100
 # Storage max valus
 MAX_STORAGE_NAME_LENGTH = 30
 
+# Overwrite the default User modal to have the possibility for costumisation in the future
 class User (AbstractUser):
     pass
 
