@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="de" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}" defer>
     <link rel="stylesheet" href="{% static 'storage/stylesheets/index.css' %}" defer>
     <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}" async></script>
-    <title>Registration</title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
+
+<body class="vh-100 position-relative">
     <div class="container-fluid px-5">
         <nav class="navbar navbar-expand-md navbar-light navbar-transparent d-flex justify-content-center" style="border-bottom: 1px solid black;">
             <div class="container-fluid">
@@ -39,11 +40,18 @@
                             <button class="btn dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                               <img src="{% static 'storage/images/icons/person-circle.svg'%}">
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                              <li><a class="dropdown-item" href="{% url 'storage:login' %}">Login</a></li>
-                              <li><a class="dropdown-item" href="{% url 'storage:register' %}">Register</a></li>
-                              <li><a class="dropdown-item">Logout</a></li>
-                            </ul>
+                            {# Check if a user is currently logged in or not #}
+                            {% if current_user.username == '' %}
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{% url 'storage:login' %}">Login</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'storage:register' %}">Register</a></li>
+                                </ul>
+                            {% else %}
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <p class="text-center py-2" id="current-user-name">{{ user.first_name }} {{ user.last_name }}</p>
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                </ul>
+                            {% endif %}
                           </li>
                         </ul>
                     </div>
@@ -51,45 +59,9 @@
             </div>
         </nav>
     </div>
+
+    {% block content %}
+    {% endblock %}
     
-    <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-12 text-center d-flex justify-content-center">
-    
-            <div class="card" style="width: 25rem; border-radius: 1rem;">
-              <div class="card-body">
-                <div class="container py-5 h-100">
-                  <div class="row d-flex justify-content-center align-items-center h-100">
-                    <div class="col-12 text-center">
-                        <div class="mb-md-2 mt-md-4">
-                            <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
-                            <p class="text-white-50 mb-5">Please enter your data to create a new user account!</p>
-                            <form method="post">
-                                {% csrf_token %}
-                                {% for field in user_registration_form %}
-                                    <div class="mb-3">
-                                        {{ field }}
-                                        {% if field.errors %}
-                                            <div class="text-danger">
-                                                {% for error in field.errors %}
-                                                    {{ error }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                                <p class="text-white-50">All * field need to be filled.</p>
-                                <button class="btn btn-outline-light btn-lg px-5 mt-5" type="submit">Register</button>
-                            </form>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-      </div>
 </body>
 </html>

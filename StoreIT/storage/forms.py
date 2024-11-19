@@ -64,7 +64,7 @@ class User_Registration_Form(UserCreationForm):
             "class": "form-control form-control-lg",
             "id": "registration-email",
             "type": "email",
-            "placeholder": "Email"
+            "placeholder": "Email *"
         })
     )
     
@@ -75,7 +75,7 @@ class User_Registration_Form(UserCreationForm):
             "class": "form-control form-control-lg",
             "id": "registration-first-name",
             "type": "text",
-            "placeholder": "First Name"
+            "placeholder": "First Name *"
         })
     )
     
@@ -86,7 +86,7 @@ class User_Registration_Form(UserCreationForm):
             "class": "form-control form-control-lg",
             "id": "registration-last-name",
             "type": "text",
-            "placeholder": "Last Name"
+            "placeholder": "Last Name *"
         })
     )
     
@@ -96,7 +96,7 @@ class User_Registration_Form(UserCreationForm):
             "class": "form-control form-control-lg",
             "id": "registration-username",
             "type": "text",
-            "placeholder": "Username"
+            "placeholder": "Username *"
         })
     )
     
@@ -106,7 +106,7 @@ class User_Registration_Form(UserCreationForm):
             "class": "form-control form-control-lg",
             "id": "registration-password1",
             "type": "password",
-            "placeholder": "Password"
+            "placeholder": "Password *"
         })
     )
     
@@ -116,7 +116,7 @@ class User_Registration_Form(UserCreationForm):
             "class": "form-control form-control-lg",
             "id": "registration-password2",
             "type": "password",
-            "placeholder": "Confirm Password"
+            "placeholder": "Confirm Password *"
         })
     )
 
