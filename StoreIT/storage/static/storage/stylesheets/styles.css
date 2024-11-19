@@ -7,3 +7,7 @@ body{
     color: black; 
     font-size: 18px;
 }
+
+#current-user-name {
+    border-bottom: solid gray 1px;
+}

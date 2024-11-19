@@ -1,11 +1,11 @@
 from django.contrib import admin
 from .models import Item, Storage, Bin, Stored_Item, User
 from django.contrib.auth.admin import UserAdmin
-from .forms import User_Registration_Form, User_Change_Form
+from .forms import User_Registration_Form_Django_Admin, User_Change_Form
 
 class User_Admin(UserAdmin):
     # Defines which form is used for adding users
-    add_form = User_Registration_Form
+    add_form = User_Registration_Form_Django_Admin
     # Defines which form is used to change existing user data
     form = User_Change_Form
 

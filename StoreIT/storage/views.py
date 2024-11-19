@@ -1,19 +1,12 @@
 # views.py
-import os
-import json
 import re
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.template import loader
-from django.http import Http404
-from django.core.files.storage import default_storage
-from django.core.serializers import serialize
+from django.http import JsonResponse
 from .models import Stored_Item, Item, Bin, Storage
 from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form, User_Registration_Form, User_Login_Form
 from .utils import Storage_Page_State
 from . import storageProcesses as storage_processes
-from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 
 # Enum that holds the current state of the /storage template
@@ -24,37 +17,36 @@ class User_Login(LoginView):
     authentication_form = User_Login_Form
 
 def register(request):
+    """ /register/
+
+    Endpoint for new user registration. The form is the UserCreationForm but all
+    field are overwritten to add costum bootstrap styling to all input fields.
+
+    Args:
+        request: HTTP request object
+
+    Returns:
+        Renders the template registration.html or 
+        redirects to login after a successfull registration
+    """
+    # Post request a user wants to register
     if request.method == "POST":
         user_registration_form = User_Registration_Form(request.POST)
         # Check if the form input where all valid
         if user_registration_form.is_valid():
             # Safe the new user in the db
             user_registration_form.save()
-            return redirect("storage:storage")
+            return redirect("storage:login")
+        
+        # The registration form was not valid
         else:
-           content = {"user_registration_form": User_Registration_Form()}
-           #render(request, "")
-
-def user_login(request):
-    global storage_page_state
-
-    if request.method == "POST":
-        print(f"Form Login POST")
-        user_login_form = User_Login_Form(request, data=request.POST) # User_Login_Form inherits from AuthenticationForm so the request needs to be parsed
-
-        if user_login_form.is_valid():
-            print(f"Form Login was valid")
-            user = user_login_form.get_user()
-            login(request, user)
-            return redirect("storage:storage")
-        else:
-            print(f"Form Login was not valid")
-            print(f"Form errors: {user_login_form.errors}")
-            content = {"form": user_login_form}
-            return render(request, "registration/login.html", content)
+            content = {"user_registration_form": user_registration_form}
+            return render(request, "registration/registration.html", content)
+        
+    # Get request render the registration template
     else:
-        content = {"form": User_Login_Form()}
-        return render(request, "registration/login.html", content)
+        content = {"user_registration_form": User_Registration_Form()}
+        return render(request, "registration/registration.html", content)
 
 
 def index(request):
@@ -67,8 +59,8 @@ def index(request):
     Returns:
         Renders the template index.html
     """
-    content = {"login_form": User_Login_Form()}
-    
+    print(f"Current User: {request.user.username}")
+    content = {"current_user": request.user}
     return render(request, "storage/index.html", content)
 
 def storage(request):

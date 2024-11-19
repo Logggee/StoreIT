@@ -4,10 +4,11 @@ from django import forms
 from .models import Stored_Item, Item, User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 
-class User_Registration_Form(UserCreationForm):
+class User_Registration_Form_Django_Admin(UserCreationForm):
     """ Costum user registaration form
 
-    A costun user registration form. This is needed because this application is overwritung the standart auth.User modal.
+    This form is only used for the django admin side.
+    A costum user registration form. This is needed because the application is overwriting the standart auth.User modal.
     This is done to have better costumisation options of users in the future.
 
     Inherits:
@@ -40,12 +41,131 @@ class User_Registration_Form(UserCreationForm):
         model = User
         fields = ["username",
                   "email",
-                  "password1",
-                  "password2",
                   "first_name",
-                  "last_name"]
+                  "last_name",
+                  "password1",
+                  "password2",]
+        
+class User_Registration_Form(UserCreationForm):
+    """ Costum user registaration form
+
+    This form is used for User registration on the webside.
+    A costum user registration form. This is needed because the application is overwriting the standart auth.User modal.
+    This is done to have better costumisation options of users in the future.
+
+    Inherits:
+        UserCreationForm
+    """
+    # Django standart form doesnt include a email field
+    
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            "class": "form-control form-control-lg",
+            "id": "registration-email",
+            "type": "email",
+            "placeholder": "Email"
+        })
+    )
+    
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={
+            "class": "form-control form-control-lg",
+            "id": "registration-first-name",
+            "type": "text",
+            "placeholder": "First Name"
+        })
+    )
+    
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={
+            "class": "form-control form-control-lg",
+            "id": "registration-last-name",
+            "type": "text",
+            "placeholder": "Last Name"
+        })
+    )
+    
+    username = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            "class": "form-control form-control-lg",
+            "id": "registration-username",
+            "type": "text",
+            "placeholder": "Username"
+        })
+    )
+    
+    password1 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control form-control-lg",
+            "id": "registration-password1",
+            "type": "password",
+            "placeholder": "Password"
+        })
+    )
+    
+    password2 = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control form-control-lg",
+            "id": "registration-password2",
+            "type": "password",
+            "placeholder": "Confirm Password"
+        })
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already in use!")
+        return email
+    
+    def clean_first_name(self):
+        first_name = self.cleaned_data["first_name"]
+        if not first_name.isalpha():
+            raise forms.ValidationError("Your first name can only contain letters!")
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data["last_name"]
+        if not last_name.isalpha():
+            raise forms.ValidationError("Your last name can only contain letters!")
+        return last_name
+    
+    class Meta:
+        model = User
+        fields = ["username",
+                  "email",
+                  "first_name",
+                  "last_name",
+                  "password1",
+                  "password2"]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # In invalid case the bootstrap clase is-invalid needs to be added
+        # to the form elements
+        for field_name, field in self.fields.items():
+            if self.errors.get(field_name):
+                # Fetches to current classes
+                css_classes = field.widget.attrs.get('class', '')
+                # Add to the current classes is-invalid
+                field.widget.attrs['class'] = f'{css_classes} is-invalid'
         
 class User_Login_Form(AuthenticationForm):
+    """ Login form
+
+    This form is used for the user login. The standart AuthenticationForm
+    is used except some bootstrap styling that is added to the fields.
+
+    Inherits:
+        AuthenticationForm
+    """
     username = forms.CharField(
         widget=forms.TextInput(attrs={"class": "form-control form-control-lg",
                                       "id": "login-username",
@@ -60,18 +180,9 @@ class User_Login_Form(AuthenticationForm):
                                           "placeholder": "Password"})
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # In invalid case the bootstrap clase is-invalid needs to be added
-        # to the form elements
-        for field_name, field in self.fields.items():
-            if self.errors.get(field_name):
-                # Fetches to current classes
-                css_classes = field.widget.attrs.get('class', '')
-                # Add to the current classes is-invalid
-                field.widget.attrs['class'] = f'{css_classes} is-invalid'
-
 class User_Change_Form(UserChangeForm):
+    """ Form for changing current user data
+    """
     class Meta:
         model = User
         fields = ["username",

@@ -40,11 +40,19 @@
                             <button class="btn dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
                               <img src="{% static 'storage/images/icons/person-circle.svg'%}">
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                              <li><a class="dropdown-item" href="{% url 'storage:login' %}">Login</a></li>
-                              <li><a class="dropdown-item">Register</a></li>
-                              <li><a class="dropdown-item">Logout</a></li>
-                            </ul>
+                            {# Check if a user is currently logged in or not #}
+                            {% if current_user.username == '' %}
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{% url 'storage:login' %}">Login</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'storage:register' %}">Register</a></li>
+                                    <li><a class="dropdown-item">Logout</a></li>
+                                </ul>
+                            {% else %}
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <p class="text-center py-2" id="current-user-name">{{ user.first_name }} {{ user.last_name }}</p>
+                                    <li><a class="dropdown-item">Logout</a></li>
+                                </ul>
+                            {% endif %}
                           </li>
                         </ul>
                     </div>
@@ -61,7 +69,9 @@
                     <h1>How it works!</h1>
                     <p>
                         The easiest storage system of all time!<br>
-                        Just navigate to storage there you can see all the stored items.<br>
+                        You can digitalize yout storga at home and StoreIT will know at all times where your stuff is located.<br>
+                        Add all your storages to the database under config.<br>
+                        After that you can add items to your storage under Storage.<br>
                         If you want to store items or unstore items your self you just have to create your own user account and you can start rigth away.
                     </p> 
                 </div>

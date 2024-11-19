@@ -25,8 +25,8 @@ urlpatterns = [
     path("config/<int:bin_id>", views.all_items_stored_in_bin, name="all_items_stored_in_bin"),
     # localhost:8000/stats
     path("stats/", views.stats, name="stats"),
-    # localhost:8000/login
-    #path("login/", views.user_login, name="user_login"),
-
+    # localhost:8000/accounts/login
     path('accounts/login/', User_Login.as_view(), name='login'),
+    # localhost:8000/accounts/login
+    path('register/', views.register, name='register'),
 ]
