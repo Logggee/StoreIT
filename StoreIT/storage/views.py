@@ -48,8 +48,14 @@ def user_login(request):
             login(request, user)
             return redirect("storage:storage")
         else:
-            storage_page_state = Storage_Page_State.LOGIN
-            return redirect("storage:storage")
+            print(f"Form Login was not valid")
+            print(f"Form errors: {user_login_form.errors}")
+            content = {"form": user_login_form}
+            return render(request, "registration/login.html", content)
+    else:
+        content = {"form": User_Login_Form()}
+        return render(request, "registration/login.html", content)
+
 
 def index(request):
     """ /

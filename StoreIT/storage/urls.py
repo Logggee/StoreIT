@@ -22,11 +22,11 @@ urlpatterns = [
     # localhost:8000/config/
     path("config/", views.config, name="config"),
     # localhost:8000/1/12
-    path("config/<int:bin_id>", views.all_items_stored_in_bin, name="all items stored in bin"),
+    path("config/<int:bin_id>", views.all_items_stored_in_bin, name="all_items_stored_in_bin"),
     # localhost:8000/stats
     path("stats/", views.stats, name="stats"),
     # localhost:8000/login
-    #path("login/", views.user_login, name="login"),
+    #path("login/", views.user_login, name="user_login"),
 
     path('accounts/login/', User_Login.as_view(), name='login'),
 ]
