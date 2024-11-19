@@ -50,7 +50,7 @@
                             {% else %}
                                 <ul class="dropdown-menu dropdown-menu-dark">
                                     <p class="text-center py-2" id="current-user-name">{{ user.first_name }} {{ user.last_name }}</p>
-                                    <li><a class="dropdown-item">Logout</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                                 </ul>
                             {% endif %}
                           </li>
