@@ -259,25 +259,29 @@ def config(request):
             # Regex only filters if just a number is after number-of-bins-row-[any number]
             if re.match(r'number-of-bins-row-(\d+)$', input_field):
                 # Build a list with all diffrent number of bins per row
-                if not field_value in diffrent_number_of_bin_per_row:
-                    print(f"Field value: {field_value}")
+                if not int(field_value) in diffrent_number_of_bin_per_row:
                     diffrent_number_of_bin_per_row.append(int(field_value))
             # Regex only matches if the string is 'bin-size-' with Capital letters after the last '-'
             elif re.match(r'bin-size-([A-Z]*)$', input_field):
                 match = re.match(r'bin-size-([A-Z]*)$', input_field)
-                if not field_value in diffrent_bin_volumes:
+                # TODO this if is probably useless because bin sizes shoud be diffrent for each field
+                if not int(field_value) in diffrent_bin_volumes:
                     diffrent_bin_volumes.append(int(field_value))
         # Sort least amount of bins per row to most numbers of bins per row
         diffrent_number_of_bin_per_row.sort()
+        print(f"Diffrent number of bins per row: {diffrent_number_of_bin_per_row}")
         # Sort biggest volume to smallest volume
         diffrent_bin_volumes.sort(reverse=True)
+        print(f"Diffrent bin volumes: {diffrent_bin_volumes}")
         # Build a dict where the smallest number of bins matches with the biggest volume and so on for all cobinations
         # Number of bins per row is the key and the coresponding volume is the value
         bin_volumes = dict(zip(diffrent_number_of_bin_per_row, diffrent_bin_volumes))
-
+        print(f"Bin volumes: {bin_volumes}")
         # Build the dataset for all the bins of the new storage
         bin_number = 0
         for input_field, field_value in form_data.items():
+             print(f"Input field: {input_field}")
+             print(f"Field value: {field_value}")
              match = re.match(r'number-of-bins-row-(\d+)$', input_field)
              # Filter for a row number
              if match:
@@ -310,7 +314,6 @@ def config(request):
         return render(request, "storage/configStorage.html", content)
     
 def all_items_stored_in_bin(request, bin_id):
-    print("Ajax request")
     all_items_in_bin = Stored_Item.objects.filter(bin_id = bin_id)
     data = list()
     for stored_item in all_items_in_bin:
