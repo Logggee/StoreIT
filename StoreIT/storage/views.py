@@ -15,6 +15,7 @@ storage_page_state = Storage_Page_State.INIT
 
 class User_Login(LoginView):
     authentication_form = User_Login_Form
+    extra_context = {"current_user": request.user}
 
 def register(request):
     """ /register/

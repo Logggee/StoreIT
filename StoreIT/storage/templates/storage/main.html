@@ -6,7 +6,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" defer>
     <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}" defer>
-    <link rel="stylesheet" href="{% static 'storage/stylesheets/index.css' %}" defer>
+    {% block stylesheets %}{% endblock  %}
     <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}" async></script>
     <title>{% block title %}{% endblock %}</title>
 </head>
