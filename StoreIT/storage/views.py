@@ -176,6 +176,12 @@ def store_existing_item (request, item_id):
     if request.method == "POST":
         # Get all same stored items
         stored_items = Stored_Item.objects.filter(item_id=item_id)
+        last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
+        print(f"Item quantity: {request.POST["item_quantity"]}")
+        latest_added_item = last_in_first_out_list[0]
+        latest_added_item.stored_item_quantity += int(request.POST["item_quantity"])
+        latest_added_item.save()
+
         #TODO Algo for searching for the last bin where same item was stored to add this item
         print(stored_items)
 

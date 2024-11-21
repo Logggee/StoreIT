@@ -118,6 +118,6 @@ class Stored_Item (models.Model):
         This Method is a class method which does not require a instance of the class
 
         Returns:
-            A list list which is orderd from latest storage date to earlyest storage date
+            A list list which is orderd from the most recent date to the latest date
         """
         return cls.objects.filter(item_id=item_id).order_by('-stored_item_storedate')
