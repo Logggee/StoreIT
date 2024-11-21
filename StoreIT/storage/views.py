@@ -1,6 +1,5 @@
 # views.py
 import re
-from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
 from .models import Stored_Item, Item, Bin, Storage
@@ -283,6 +282,8 @@ def config(request):
             elif re.match(r'bin-size-([A-Z]*)$', input_field):
                 match = re.match(r'bin-size-([A-Z]*)$', input_field)
                 # TODO this if is probably useless because bin sizes shoud be diffrent for each field
+                # so there is no need to check if it already exist in the list because a bin size shoud always differ
+                # from all other bin sizes
                 if not int(field_value) in diffrent_bin_volumes:
                     diffrent_bin_volumes.append(int(field_value))
         # Sort least amount of bins per row to most numbers of bins per row

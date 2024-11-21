@@ -49,7 +49,7 @@
                                 </ul>
                             {% else %}
                                 <ul class="dropdown-menu dropdown-menu-dark">
-                                    <p class="text-center py-2" id="current-user-name">{{ user.first_name }} {{ user.last_name }}</p>
+                                    <p class="text-start py-2 ps-3" id="current-user-name">Locked in as:<br>{{ user.first_name }} {{ user.last_name }}</p>
                                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                                 </ul>
                             {% endif %}
@@ -61,8 +61,7 @@
         </nav>
     </div>
 
-    {% block body_content %}
-    {% endblock %}
+{% block body_content %}{% endblock %}
     
 </body>
 </html>
