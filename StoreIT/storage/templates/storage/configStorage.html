@@ -1,42 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'storage/stylesheets/styles.css' %}">
-    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'storage/javascript/config.js'%}"></script>
-    <title>Config Storage</title>
-</head>
-<body>
-    <div class="container-fluid px-5">
-        <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center" style="border-bottom: 1px solid black;">
-            <div class="container-fluid">
-                <a class="navbar-brand ms-5 ps-5" href="{% url 'storage:index'%}">
-                <img src="{% static 'storage/images/logo.png' %}" alt="Logo" height="60" class="d-inline-block align-text-top">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse me-5 pe-5" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-3 mb-lg-0 ps-5">
-                        <li class="nav-item">
-                            <a class="nav-link active px-5" aria-current="page" href="{% url 'storage:storage' %}" style="color: black; font-size: 18px; border-right: solid black 1px;"  onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STORAGE</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active px-5" href="{% url 'storage:stats'%}" style="color: black; font-size: 18px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">STATS</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active px-5" href="{% url 'storage:config'%}" style="color: black; font-size: 18px;  border-left: solid black 1px;" onmouseover="this.style.color='#787575'" onmouseout="this.style.color='#000'">CONFIG</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-
+{% extends 'storage/main.html' %}
+{% load static %}
+{% block  scripts %} <script src="{% static 'storage/javascript/config.js'%}"></script> {% endblock %}
+{% block title %} Storage configuration {% endblock %}
+{% block body_content %}
     <div class="container my-5">
         <div class="card text-center" style=" border: solid 10px #212529; border-radius: 1rem;">
             <div class="card-header">
@@ -188,5 +154,4 @@
     </div>
     <!-- Image is not visible and used to add it via the js script and make it visible -->
     <img class="me-2" id="safe-config-button-image" src="{% static 'storage/images/icons/floppy.svg'%}" style="display: none;">
-</body>
-</html>
+{% endblock %}
