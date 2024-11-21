@@ -14,8 +14,23 @@ from django.contrib.auth.views import LoginView
 storage_page_state = Storage_Page_State.INIT
 
 class User_Login(LoginView):
+    """ Class base standart login in view from Django
+
+    This is used because a costum authentication form is used to apply bootstrap styling.
+    Also the current logged in user needs to be set in the context.
+
+    Inherits:
+        LoginView
+    """
+    # Set the costum form with bootstrap sytling
     authentication_form = User_Login_Form
-    extra_context = {"current_user": request.user}
+    # Check if a user is logged in and set it to the context
+    def get_context_data(self, **kwargs) -> dict[str, object]:
+        # Get the current context
+        context = super().get_context_data(**kwargs)
+        # Set the request.user to the context that gets renderd
+        context["current_user"] = self.request.user
+        return context
 
 def register(request):
     """ /register/
@@ -41,12 +56,14 @@ def register(request):
         
         # The registration form was not valid
         else:
-            content = {"user_registration_form": user_registration_form}
+            content = {"user_registration_form": user_registration_form,
+                       "current_user": request.user}
             return render(request, "registration/registration.html", content)
         
     # Get request render the registration template
     else:
-        content = {"user_registration_form": User_Registration_Form()}
+        content = {"user_registration_form": User_Registration_Form(),
+                   "current_user": request.user}
         return render(request, "registration/registration.html", content)
 
 
