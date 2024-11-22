@@ -94,6 +94,12 @@ def storage(request):
         Post: If Post was valid redirect to /storage/ if not valid render template with errors shown
     """
     global storage_page_state
+    # Check if a storage even exists if not the add new item button shoud not be displayed
+    if len(Storage.objects.all()) > 0:
+        storage_exists = True
+    else:
+        storage_exists = False
+
     # Post request
     if request.method == "POST":
         # Validate the form and parse the POST data
@@ -120,7 +126,8 @@ def storage(request):
                        "items_list": Item.objects.all(),
                        "store_item_form": store_item_form,
                        "destore_item_form": Destore_Item_Form(),
-                       "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
+                       "storage_page_state": storage_page_state.name, # Variable that declares to open the modal after reload
+                       "storage_exists": storage_exists} 
             
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
@@ -139,12 +146,6 @@ def storage(request):
                 destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
         print(destore_places_and_quantitys)
 
-        # Check if a storage even exists if not the add new item button shoud not be displayed
-        if len(Storage.objects.all()) > 0:
-            storage_exists = True
-        else:
-            storage_exists = False
-
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
                    "store_item_form": Store_Item_Form(),
@@ -153,7 +154,7 @@ def storage(request):
                    "destore_places_and_quantitys": destore_places_and_quantitys,
                    "storage_page_state": storage_page_state.name,
                    "storage_exists": storage_exists}
-        
+        print(f"Content: {content}")
         storage_page_state = Storage_Page_State.INIT
 
         return render(request, "storage/storage.html", content)
@@ -173,20 +174,42 @@ def store_existing_item (request, item_id):
         A redirect to the url /storage/storage
     """
     global storage_page_state
+    # Check if a storage even exists if not the add new item button shoud not be displayed
+    if len(Storage.objects.all()) > 0:
+        storage_exists = True
+    else:
+        storage_exists = False
+
     if request.method == "POST":
-        # Get all same stored items
-        stored_items = Stored_Item.objects.filter(item_id=item_id)
-        last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
-        print(f"Item quantity: {request.POST["item_quantity"]}")
-        latest_added_item = last_in_first_out_list[0]
-        latest_added_item.stored_item_quantity += int(request.POST["item_quantity"])
-        latest_added_item.save()
+        store_item_form = Store_Item_Form(request.POST, item_image_required=False)
+        if store_item_form.is_valid():
+            # Get all same stored items
+            stored_items = Stored_Item.objects.filter(item_id=item_id)
+            last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
+            print(f"Item quantity: {request.POST["item_quantity"]}")
+            latest_added_item = last_in_first_out_list[0]
+            latest_added_item.stored_item_quantity += int(request.POST["item_quantity"])
+            latest_added_item.save()
 
-        #TODO Algo for searching for the last bin where same item was stored to add this item
-        print(stored_items)
+            #TODO Algo for searching for the last bin where same item was stored to add this item
+            print(stored_items)
 
-        storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
-        return redirect("storage:storage")
+            storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
+            return redirect("storage:storage")
+        else:
+            storage_page_state = Storage_Page_State.ADD_EXISTING_ITEM_FORM_ERROR
+            print(f"Error item item id: {item_id}")
+            print(f"Form was invalid: {store_item_form.errors}")
+            content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(),
+                       "items_list": Item.objects.all(),
+                       "store_item_form": store_item_form,
+                       "destore_item_form": Destore_Item_Form(),
+                       "storage_page_state": storage_page_state.name, # Variable that declares to open the modal after reload
+                       "storage_exists": storage_exists,
+                       "add_existing_item_error": item_id}
+            print(f"Content store_existing_item: {content}")         
+            storage_page_state = Storage_Page_State.INIT
+            return render(request, "storage/storage.html", content)
 
 def stored_single_item(request, item_id):
     """ /storage/<int:item_id>

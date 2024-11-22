@@ -239,8 +239,10 @@ class Store_Item_Form(forms.ModelForm):
             }),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, item_image_required = True, **kwargs):
         super().__init__(*args, **kwargs)
+        if not item_image_required:
+            self.fields["item_image"].required = False
         # In invalid case the bootstrap clase is-invalid needs to be added
         # to the form elements
         for field_name, field in self.fields.items():

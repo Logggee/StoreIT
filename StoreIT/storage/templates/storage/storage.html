@@ -222,7 +222,7 @@
                         <li class="list-group-item d-flex align-items-center" id="master-data-search-list-item-{{ item.item_id }}">
                             {{ item.item_name }}
                             <img src="{{ item.item_image.url }}" class="ms-2 master-data-search-image" id="master-data-search-image-{{ item.item_id }}" alt="item.item_name">
-                            <input class="form-check-input ms-auto" id="master-data-search-radio-{{ item.item_id }}" type="checkbox" name="master-data-list-checkbox" value="{{ item.item_id }}" onchange="onlyOneSelectable(this)">
+                            <input class="form-check-input ms-auto" id="master-data-search-checkbox-{{ item.item_id }}" type="checkbox" name="master-data-list-checkbox" value="{{ item.item_id }}" onchange="onlyOneSelectable(this)">
                         </li>
                         {% endfor %}
                     </ul>                    
@@ -614,6 +614,16 @@
                     const add_item_modal = new bootstrap.Modal(document.getElementById('add-new-item-modal'));
                     add_item_modal.show(); // Open add item modal to show the validation errors
                     break;
+
+                case "ADD_EXISTING_ITEM_FORM_ERROR":
+                    console.log("{{ add_existing_item_error }}");
+                    const add_existing_item_modal = new bootstrap.Modal(document.getElementById('add-new-item-modal'));
+                    const master_data_item = document.getElementById("master-data-search-checkbox-{{ add_existing_item_error }}");
+                    master_data_item.checked = true;
+                    onlyOneSelectable(master_data_item);
+                    add_existing_item_modal.show(); // Open add item modal to show the validation errors
+                    break;
+
 
                 case "STORE_ITEM_PROCESS":
                     const store_item_in_bin_modal = new bootstrap.Modal(document.getElementById('storage-process-modal'));
