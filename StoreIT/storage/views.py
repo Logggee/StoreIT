@@ -146,6 +146,12 @@ def storage(request):
                 destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
         print(destore_places_and_quantitys)
 
+        all_storage_layouts = list()
+        # Get the layouts of every Storage
+        for storage in Storage.objects.all():
+            all_storage_layouts.append((storage, storage.all_bins_sorted_in_rows()))
+
+
         content = {"total_stored_quantity_per_item": Stored_Item.get_total_stored_quantity_for_all_items(), # Gets a list with the summed up stored quantity of each item that is stored any where
                    "items_list": Item.objects.all(), 
                    "store_item_form": Store_Item_Form(),
@@ -153,7 +159,8 @@ def storage(request):
                    "new_stored_item": new_stored_item,
                    "destore_places_and_quantitys": destore_places_and_quantitys,
                    "storage_page_state": storage_page_state.name,
-                   "storage_exists": storage_exists}
+                   "storage_exists": storage_exists,
+                   "all_storage_layouts": all_storage_layouts}
         storage_page_state = Storage_Page_State.INIT
 
         return render(request, "storage/storage.html", content)

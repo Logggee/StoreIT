@@ -124,5 +124,6 @@ class Stored_Item (models.Model):
         # Check if the item exists in the storage
         if len(cls.objects.filter(item_id = item_id)) == 0:
             return False
+        # If the item is already in storage return the sorted list
         else:
             return cls.objects.filter(item_id=item_id).order_by('-stored_item_storedate')

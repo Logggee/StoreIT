@@ -31,7 +31,7 @@
             </div>
             
             <div class="card-body tab-content">
-                {% for storage, all_pins_one_row in storages_and_bins.items %}
+                {% for storage, all_bins_one_row in storages_and_bins.items %}
                     <!-- {{ storage.storage_name }} tab -->
                     {% if forloop.counter == 1 %}
                         <div class="tab-pane fade show active" id="{{ storage.storage_id }}-tab" role="tabpanel" aria-labelledby="{{ storage.storage_id }}-tab">
@@ -41,7 +41,7 @@
                         <p>Current configuration of {{ storage.storage_name }}</p>
 
                         <div class="container mb-3">
-                            {% for row_number, all_bins_in_row in all_pins_one_row.items %} 
+                            {% for row_number, all_bins_in_row in all_bins_one_row.items %} 
                                 <!-- Row {{ row_number }} -->
                                 <div class="row mb-2 align-items-center">
                                     <span class="col-auto" style="min-width: 80px">Row {{ row_number|add:1}}</span>
@@ -55,7 +55,7 @@
                                         {% endfor %}
                                     </div>
                                 </div>
-                            {% endfor %}  
+                            {% endfor %}
 
                             <div class="container-fluid my-3" style="border-top: solid 1px gray;"></div>
 
