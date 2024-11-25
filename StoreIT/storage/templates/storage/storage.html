@@ -303,6 +303,13 @@
                     <div class="mb-3">
                         <label for="item-purchase-place" class="col-form-label">Purchase place</label>
                         {{ store_item_form.item_purchase_place }}
+                        {% if store_item_form.item_purchase_place.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_purchase_place.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                 </form>
                 <div class="alert alert-warning mt-4 mb-0" role="alert">
