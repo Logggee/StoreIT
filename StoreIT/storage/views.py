@@ -146,6 +146,13 @@ def storage(request):
                 destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
         print(destore_places_and_quantitys)
 
+        # If a existing item was stored via the view store_existing_item the session storage holdes the data of the item to be stored
+        stored_existing_item = request.session.pop("stored_existing_item", False)
+        if stored_existing_item:
+            new_existing_stored_item = get_object_or_404(Stored_Item, pk = stored_existing_item["stored_item_id"])
+            new_stored_existing_item = {"stored_item": new_existing_stored_item,
+                                        "storage_location_layout": new_existing_stored_item.bin_id.storage_id.all_bins_sorted_in_rows()}
+
         all_storage_layouts = list()
         # Get the layouts of every Storage
         for storage in Storage.objects.all():
@@ -190,14 +197,14 @@ def store_existing_item (request, item_id):
         store_item_form = Store_Item_Form(request.POST, item_image_required=False)
         if store_item_form.is_valid():
             # Get all same stored items
-            stored_items = Stored_Item.objects.filter(item_id=item_id)
+            stored_items = Stored_Item.objects.filter(item_id = item_id)
             last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
             print(f"Item quantity: {request.POST["item_quantity"]}")
             # Check if the item already exists in the storage
             if last_in_first_out_list:
                 # TODO here the correct storage place needs to be calculated
                 latest_added_item = last_in_first_out_list[0]
-                latest_added_item.stored_item_quantity += int(request.POST["item_quantity"])
+                latest_added_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
                 latest_added_item.save()
             # Item did not exist in the storage so a new Stored_Item dataset needs to be added
             else:
@@ -210,7 +217,8 @@ def store_existing_item (request, item_id):
 
             #TODO Algo for searching for the last bin where same item was stored to add this item
             print(stored_items)
-
+            request.session["stored_existing_item"] = {"stored_item_id": stored_item.stored_item_id,
+                                                       "stored_item_quantity": store_item_form.cleaned_data["item_quantity"]}
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
             return redirect("storage:storage")
         else:
