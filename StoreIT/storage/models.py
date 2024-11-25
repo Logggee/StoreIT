@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import FileExtensionValidator
 
 # Item max values
 MAX_ITEM_NAME_LENGTH = 30
@@ -18,13 +19,22 @@ class User (AbstractUser):
     pass
 
 class Item (models.Model):
-    item_id = models.BigAutoField("id of a item", primary_key=True) # INTEGER PRIMARY KEY AUTOINCREMENT
-    item_name = models.CharField("name of the item", max_length=MAX_ITEM_NAME_LENGTH)    # TEXT
-    item_image = models.ImageField("a image of the item", upload_to="item_images") # This folder is created in media folder automatically
+    item_id = models.BigAutoField("id of a item",
+                                  primary_key=True) # INTEGER PRIMARY KEY AUTOINCREMENT
+    item_name = models.CharField("name of the item",
+                                 max_length=MAX_ITEM_NAME_LENGTH)    # TEXT
+    item_image = models.ImageField("a image of the item", 
+                                   upload_to="item_images",
+                                   validators=[FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "svg"])]) # This folder is created in media folder automatically
     item_volume = models.FloatField("the volume of the item")
-    item_node = models.CharField("optional item nodes", max_length=MAX_ITEM_NODE_LENGTH, blank=True) # TEXT
-    item_datasheet = models.CharField("url to the datasheet of the item", max_length=MAX_ITEM_DATASHEET_URL_LENGTH, blank=True)   # TEXT
-    item_purchase_place = models.CharField("url to a possible item purchase place", max_length=MAX_ITEM_PURCHASE_PLACE_URL_LENGTH, blank=True) # TEXT
+    item_node = models.CharField("optional item nodes",
+                                 max_length=MAX_ITEM_NODE_LENGTH, blank=True) # TEXT
+    item_datasheet = models.FileField("item pdf datasheet",
+                                      upload_to="item_datasheets",
+                                      validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
+                                      blank=True) # Uploads the pdf files from the user automatically
+    item_purchase_place = models.CharField("url to a possible item purchase place",
+                                           max_length=MAX_ITEM_PURCHASE_PLACE_URL_LENGTH, blank=True) # TEXT
 
     def __str__(self) -> str:
         return self.item_name

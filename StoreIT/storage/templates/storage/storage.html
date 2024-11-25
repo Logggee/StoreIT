@@ -231,7 +231,7 @@
                 <form id="add-new-item-form" action="{% url 'storage:storage' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="item-name" class="col-form-label">Name</label>
+                        <label for="item-name" class="col-form-label">Name *</label>
                         {{ store_item_form.item_name }}
                         {% if store_item_form.item_name.errors %}
                         <div class="invalid-feedback">
@@ -243,7 +243,7 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="item-image" class="form-label" id="item-image-label">Picture</label>
+                        <label for="item-image" class="form-label" id="item-image-label">Picture *</label>
                         {{ store_item_form.item_image }}
                         {% if store_item_form.item_image.errors %}
                         <div class="invalid-feedback">
@@ -255,7 +255,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="item-quantity" class="col-form-label">Quantity:</label>
+                        <label for="item-quantity" class="col-form-label">Quantity *</label>
                         {{ store_item_form.item_quantity }}
                         {% if store_item_form.item_quantity.errors %}
                         <div class="invalid-feedback">
@@ -267,7 +267,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="item-volume" class="col-form-label">Volume:</label>
+                        <label for="item-volume" class="col-form-label">Volume *</label>
                         {{ store_item_form.item_volume }}
                         {% if store_item_form.item_volume.errors %}
                         <div class="invalid-feedback">
@@ -279,12 +279,19 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="item-node" class="col-form-label">Node:</label>
+                        <label for="item-node" class="col-form-label">Node</label>
                         {{ store_item_form.item_node }}
                     </div>
                     <div class="mb-3">
                         <label for="item-datasheet" class="col-form-label">Datasheet</label>
                         {{ store_item_form.item_datasheet }}
+                        {% if store_item_form.item_datasheet.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in store_item_form.item_datasheet.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="mb-3">
@@ -292,6 +299,9 @@
                         {{ store_item_form.item_purchase_place }}
                     </div>
                 </form>
+                <div class="alert alert-warning mt-4 mb-0" role="alert">
+                    All * fields need to be filled out!
+                </div>
             </div>
             
             <div class="modal-footer">

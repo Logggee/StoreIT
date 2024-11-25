@@ -224,13 +224,13 @@ class Store_Item_Form(forms.ModelForm):
             'item_node': forms.Textarea(attrs={
                 'class': 'form-control',
                 'id': 'item-node',
-                'placeholder': 'Optional nodes',
+                'placeholder': 'Notes',
                 'rows': 1
             }),
-            'item_datasheet': forms.TextInput(attrs={
+            'item_datasheet': forms.FileInput(attrs={
                 'class': 'form-control',
                 'id': 'item-datasheet',
-                'placeholder': 'Optional datasheet'
+                'placeholder': 'Datasheet (pdf file)'
             }),
             'item_purchase_place': forms.TextInput(attrs={
                 'class': 'form-control',
