@@ -1,3 +1,4 @@
+import os
 from django import template
 
 register = template.Library()
@@ -23,3 +24,10 @@ def previous(some_list, current_index):
         return some_list[int(current_index) - 1] # access the previous element
     except:
         return '' # return empty string in case of exception
+    
+@register.filter
+def basename(filepath):
+    """
+    Filter that returns only the basename of a filepath.
+    """
+    return os.path.basename(filepath)

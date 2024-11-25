@@ -235,7 +235,7 @@ class Store_Item_Form(forms.ModelForm):
             'item_purchase_place': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id': 'item-purchase-place',
-                'placeholder': 'Optional link to purchase place'
+                'placeholder': 'URL to purchase place'
             }),
         }
 

@@ -8,8 +8,7 @@ from django.core.validators import FileExtensionValidator
 # Item max values
 MAX_ITEM_NAME_LENGTH = 30
 MAX_ITEM_NODE_LENGTH = 255
-MAX_ITEM_DATASHEET_URL_LENGTH = 100
-MAX_ITEM_PURCHASE_PLACE_URL_LENGTH = 100
+MAX_ITEM_PURCHASE_PLACE_URL_LENGTH = 255
 
 # Storage max valus
 MAX_STORAGE_NAME_LENGTH = 30
@@ -33,8 +32,9 @@ class Item (models.Model):
                                       upload_to="item_datasheets",
                                       validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
                                       blank=True) # Uploads the pdf files from the user automatically
-    item_purchase_place = models.CharField("url to a possible item purchase place",
-                                           max_length=MAX_ITEM_PURCHASE_PLACE_URL_LENGTH, blank=True) # TEXT
+    item_purchase_place = models.URLField("url to a possible item purchase place",
+                                           blank=True) # LARGE TEXT
+    
 
     def __str__(self) -> str:
         return self.item_name

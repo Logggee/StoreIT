@@ -101,23 +101,29 @@
                     </div>
                     <div class="mb-3">
                         <label for="item-datasheet-link-{{ item.item_id }}" class="col-form-label">Datasheet:</label>
-                        <a href="{{ item.item_datasheet }}" target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
-                            {% if item.item_datasheet == "" %}
+                        <!-- No datasheet in db -->
+                        {% if item.item_datasheet == "" %}
+                            <a target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
                                 -
-                            {% else %}
-                                {{ item.item_datasheet }}
-                            {% endif %}
-                        </a>
+                            </a>
+                        <!-- Link the datasheet -->
+                        {% else %}
+                            <a href="{{ item.item_datasheet.url }}" target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
+                                {{ item.item_datasheet.name|basename }}
+                            </a>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="item-purchase-place-link-{{ item.item_id }}" class="col-form-label">Bought here:</label>
-                        <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
-                            {% if item.item_purchase_place == "" %}
+                        {% if item.item_purchase_place == "" %}
+                            <a target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
                                 -
-                            {% else %}
+                            </a>
+                        {% else %}
+                            <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
                                 {{ item.item_purchase_place }}
-                            {% endif %}
-                        </a>
+                            </a>
+                        {% endif %}
                     </div>
 
                     <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_fk=item.item_id %}" method="post">
