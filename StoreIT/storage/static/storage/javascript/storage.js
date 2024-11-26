@@ -152,6 +152,7 @@ function addItemToDestoreList(item_id) {
 }
 
 function deleteItemDestoringList() {
+    // TODO deleting of multiple items not working
     destore_list_checkboxes = document.getElementsByName("destore-list-checkbox");
     destore_list_checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
