@@ -1,84 +1,15 @@
-# views.py
-import re
+# storage_view.py
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
-from .models import Stored_Item, Item, Bin, Storage
-from .forms import Store_Item_Form, Destore_Item_Form, Storage_Layout_Form, User_Registration_Form, User_Login_Form
-from .utils import Storage_Page_State
-from . import storageProcesses as storage_processes
-from django.contrib.auth.views import LoginView
+from storage.models import Stored_Item, Item, Bin, Storage
+from storage.forms import Store_Item_Form, Destore_Item_Form
+from storage.utils import Storage_Page_State
+from storage import storageProcesses as storage_processes
 
 # Enum that holds the current state of the /storage template
 # The states define which modals are opend initially
 storage_page_state = Storage_Page_State.INIT
-
-class User_Login(LoginView):
-    """ Class base standart login in view from Django
-
-    This is used because a costum authentication form is used to apply bootstrap styling.
-    Also the current logged in user needs to be set in the context.
-
-    Inherits:
-        LoginView
-    """
-    # Set the costum form with bootstrap sytling
-    authentication_form = User_Login_Form
-    # Check if a user is logged in and set it to the context
-    def get_context_data(self, **kwargs) -> dict[str, object]:
-        # Get the current context
-        context = super().get_context_data(**kwargs)
-        # Set the request.user to the context that gets renderd
-        context["current_user"] = self.request.user
-        return context
-
-def register(request):
-    """ /register/
-
-    Endpoint for new user registration. The form is the UserCreationForm but all
-    field are overwritten to add costum bootstrap styling to all input fields.
-
-    Args:
-        request: HTTP request object
-
-    Returns:
-        Renders the template registration.html or 
-        redirects to login after a successfull registration
-    """
-    # Post request a user wants to register
-    if request.method == "POST":
-        user_registration_form = User_Registration_Form(request.POST)
-        # Check if the form input where all valid
-        if user_registration_form.is_valid():
-            # Safe the new user in the db
-            user_registration_form.save()
-            return redirect("storage:login")
-        
-        # The registration form was not valid
-        else:
-            content = {"user_registration_form": user_registration_form,
-                       "current_user": request.user}
-            return render(request, "registration/registration.html", content)
-        
-    # Get request render the registration template
-    else:
-        content = {"user_registration_form": User_Registration_Form(),
-                   "current_user": request.user}
-        return render(request, "registration/registration.html", content)
-
-
-def index(request):
-    """ /
-    Landingpage
-
-    Args:
-        request: HTTP request object
-
-    Returns:
-        Renders the template index.html
-    """
-    print(f"Current User: {request.user.username}")
-    content = {"current_user": request.user}
-    return render(request, "storage/index.html", content)
 
 def storage(request):
     """ /storage/
@@ -235,32 +166,7 @@ def store_existing_item (request, item_id):
             print(f"Content store_existing_item: {content}")         
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
-
-def stored_single_item(request, item_id):
-    """ /storage/<int:item_id>
-    This url endpoint is used to get a single item via a ajax call. The items
-    attributes are displayed in the add item form to prefill all fields when
-    one in selected via a checkbox.
-
-    Args:
-        request: HTTP request object
-
-    Returns:
-        A JSON object with all item attributes of a single item
-    """
-    item = get_object_or_404(Item, pk=item_id)
-    # Build JSON data for prefilling search master data form 
-    data = {
-        "item_id": item.item_id,
-        "item_name": item.item_name,
-        "item_image": item.item_image.url,
-        "item_volume": item.item_volume,
-        "item_node": item.item_node,
-        "item_datasheet": item.item_datasheet,
-        "item_purchase_place": item.item_purchase_place
-    }
-    return JsonResponse(data)
-
+        
 def destore_item(request, stored_item_fk):
     ''' /storage/destore_itme/<int:stored_item_fk>
     This url endpoint is used to destore a quantity of a stored item.
@@ -304,109 +210,40 @@ def destore_item(request, stored_item_fk):
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
-
-def config(request):
-    ''' /config
-    Config page
-
-    Args:
-        request: HTTP request object
-
-    Returns:
-        Renders the template config.html
-    '''
-    # Post request
-    if request.method == "POST":
-        form_data = request.POST.dict()
-        print(f"Form data: {form_data}")
-        # Build and safe a new storage dataset
-        new_storage = Storage(storage_name = form_data["storage-name-input"],
-                              storage_number_of_rows = int(form_data["storage_rows"]))
-        new_storage.save()
-
-        diffrent_number_of_bin_per_row = list()
-        diffrent_bin_volumes = list()
-        for input_field, field_value in form_data.items():
-            # Regex only filters if just a number is after number-of-bins-row-[any number]
-            if re.match(r'number-of-bins-row-(\d+)$', input_field):
-                # Build a list with all diffrent number of bins per row
-                if not int(field_value) in diffrent_number_of_bin_per_row:
-                    diffrent_number_of_bin_per_row.append(int(field_value))
-            # Regex only matches if the string is 'bin-size-' with Capital letters after the last '-'
-            elif re.match(r'bin-size-([A-Z]*)$', input_field):
-                match = re.match(r'bin-size-([A-Z]*)$', input_field)
-                # TODO this if is probably useless because bin sizes shoud be diffrent for each field
-                # so there is no need to check if it already exist in the list because a bin size shoud always differ
-                # from all other bin sizes
-                if not int(field_value) in diffrent_bin_volumes:
-                    diffrent_bin_volumes.append(int(field_value))
-        # Sort least amount of bins per row to most numbers of bins per row
-        diffrent_number_of_bin_per_row.sort()
-        print(f"Diffrent number of bins per row: {diffrent_number_of_bin_per_row}")
-        # Sort biggest volume to smallest volume
-        diffrent_bin_volumes.sort(reverse=True)
-        print(f"Diffrent bin volumes: {diffrent_bin_volumes}")
-        # Build a dict where the smallest number of bins matches with the biggest volume and so on for all cobinations
-        # Number of bins per row is the key and the coresponding volume is the value
-        bin_volumes = dict(zip(diffrent_number_of_bin_per_row, diffrent_bin_volumes))
-        print(f"Bin volumes: {bin_volumes}")
-        # Build the dataset for all the bins of the new storage
-        bin_number = 0
-        for input_field, field_value in form_data.items():
-             print(f"Input field: {input_field}")
-             print(f"Field value: {field_value}")
-             match = re.match(r'number-of-bins-row-(\d+)$', input_field)
-             # Filter for a row number
-             if match:
-                # Rows numbers are safed from 0 to n
-                row_number = int(match.group(1)) - 1
-                # Build all bin datasets for the row
-                for col_index in range(int(field_value)):
-                    bin_number += 1
-                    new_bin = Bin(storage_id = new_storage,
-                                  bin_number = bin_number,
-                                  bin_row = row_number,
-                                  bin_col = col_index,
-                                  bin_volume = bin_volumes[int(field_value)],
-                                  bin_volume_used = 0)
-                    new_bin.save()
-
-        return redirect("storage:config")
-    
-    # Get request
-    else:
-        # Get all storages and bins
-        # TODO check if list es the better datatype here because the key is maybe not relevant
-        storages_and_bins = dict()
-        for storage in  Storage.objects.all():
-            storages_and_bins[storage] = storage.all_bins_sorted_in_rows()
-        print(f"Storaged and all bin: {storages_and_bins}")
-        content = {"storage_layout_form": Storage_Layout_Form(),
-                   "storages_and_bins": storages_and_bins,
-                   "current_user": request.user}
         
-        return render(request, "storage/configStorage.html", content)
-    
-def all_items_stored_in_bin(request, bin_id):
-    all_items_in_bin = Stored_Item.objects.filter(bin_id = bin_id)
-    data = list()
-    for stored_item in all_items_in_bin:
-        data.append({"item_store_date_in_this_bin" : stored_item.stored_item_storedate.strftime("%d.%m.%Y, %H:%M:%S"),
-                     "item_image": stored_item.item_id.item_image.url,
-                     "item_name": stored_item.item_id.item_name,
-                     "item_quantity_in_this_bin": stored_item.stored_item_quantity
-        })
-    print(f"All items in bin {data}")
-    return JsonResponse(data, safe=False)
-
-def stats(request):
-    ''' /stats
-    Stats page
+def stored_single_item(request, item_id):
+    """ /storage/<int:item_id>
+    This url endpoint is used to get a single item via a ajax call. The items
+    attributes are displayed in the add item form to prefill all fields when
+    one in selected via a checkbox.
 
     Args:
         request: HTTP request object
 
     Returns:
-        Renders the template stats.html
-    '''
-    return render(request, "storage/stats.html")
+        A JSON object with all item attributes of a single item
+    """
+    item = get_object_or_404(Item, pk=item_id)
+    if item.item_node == "":
+        item_node = "-"
+    else:
+        item_node = item.item_node
+    if item.item_datasheet == "":
+        item_datasheet = "-"
+    else:
+        item_datasheet = item.item_datasheet.url
+    if item.item_purchase_place == "":
+        item_purchase_place = "-"
+    else:
+        item_purchase_place = item.item_purchase_place
+    # Build JSON data for prefilling search master data form 
+    data = {
+        "item_id": item.item_id,
+        "item_name": item.item_name,
+        "item_image": item.item_image.url,
+        "item_volume": item.item_volume,
+        "item_node": item_node,
+        "item_datasheet": item_datasheet,
+        "item_purchase_place": item_purchase_place
+    }
+    return JsonResponse(data)

@@ -52,8 +52,11 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-name").setAttribute("readonly", true);
                 document.getElementById("item-node").value = response_data.item_node;
                 document.getElementById("item-node").setAttribute("readonly", true);
-                document.getElementById("item-datasheet").value = response_data.item_datasheet;
-                document.getElementById("item-datasheet").setAttribute("readonly", true);
+                document.getElementById("item-datasheet-label").classList.add("d-none");
+                document.getElementById("item-datasheet").classList.add("d-none");
+                document.getElementById("item-datasheet-selected-master-data-label").classList.remove("d-none");
+                document.getElementById("item-datasheet-selected-master-data").classList.remove("d-none");
+                document.getElementById("item-datasheet-selected-master-data").value = response_data.item_datasheet;
                 document.getElementById("item-purchase-place").value = response_data.item_purchase_place;
                 document.getElementById("item-purchase-place").setAttribute("readonly", true);
                 document.getElementById("item-volume").value = response_data.item_volume;
@@ -71,8 +74,10 @@ function onlyOneSelectable (checkbox) {
         document.getElementById("item-name").removeAttribute("readonly");
         document.getElementById("item-node").value = "";
         document.getElementById("item-node").removeAttribute("readonly");
-        document.getElementById("item-datasheet").value = "";
-        document.getElementById("item-datasheet").removeAttribute("readonly");
+        document.getElementById("item-datasheet-label").classList.remove("d-none");
+        document.getElementById("item-datasheet").classList.remove("d-none");
+        document.getElementById("item-datasheet-selected-master-data-label").classList.add("d-none");
+        document.getElementById("item-datasheet-selected-master-data").classList.add("d-none");
         document.getElementById("item-purchase-place").value = "";
         document.getElementById("item-purchase-place").removeAttribute("readonly");
         document.getElementById("item-volume").value = "";
