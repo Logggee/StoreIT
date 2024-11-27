@@ -130,13 +130,12 @@ def store_existing_item (request, item_id):
             # Get all same stored items
             stored_items = Stored_Item.objects.filter(item_id = item_id)
             last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
-            print(f"Item quantity: {request.POST["item_quantity"]}")
             # Check if the item already exists in the storage
             if last_in_first_out_list:
                 # TODO here the correct storage place needs to be calculated
-                latest_added_item = last_in_first_out_list[0]
-                latest_added_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
-                latest_added_item.save()
+                stored_item = last_in_first_out_list[0]
+                stored_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
+                stored_item.save()
             # Item did not exist in the storage so a new Stored_Item dataset needs to be added
             else:
                 storage_bin = Bin.objects.get(pk = 1)
