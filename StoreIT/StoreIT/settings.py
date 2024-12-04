@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "storage.apps.StorageConfig",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -116,7 +117,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-
+COM5
 # Media files (files that are uploaded by users)
 
 # Path where media is stored
