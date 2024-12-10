@@ -33,8 +33,10 @@ SECRET_KEY = "django-insecure-j6xeldrq^nf&s(7=dt+pt^okvfw@w7m-5jpgu#x596)@@&!+rt
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+# Defiene all allowed host ips
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "[::1]"]
+# Set trusted urls for csfs
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "https://localhost:1338"]
 
 
 # Application definition
@@ -122,7 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# Root path for all static files
+STATIC_ROOT = BASE_DIR / "staticfiles" # If collectstatic is used all static files are bundelt under STATIC_ROOT
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
