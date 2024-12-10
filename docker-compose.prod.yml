@@ -1,0 +1,36 @@
+# docker-compose.prod.yml
+
+# All docker containers
+services:
+  # Python container for running python and the django application
+  django_storeit: # name of the container --name
+    build: ./StoreIT  # builds the image via the Dockerfile docker build
+    # Set the port of the host and the container
+    ports:
+      - 8000:8000 # Port 8000 on the Host and Port 8000 in the container
+    volumes:
+      - static_volume:/app/StoreIT/staticfiles
+    expose:
+      - 8000
+    # Executes a command in the build container
+    # This start the django application with gunicorn
+    command: gunicorn StoreIT.wsgi:application --bind 0.0.0.0:8000
+    #env_file:
+      #- ./.env.prod
+
+  # Nginx to serve static files via gunicorn, also handels https
+  nginx: #name of the container --name
+    build: ./nginx
+    ports:
+      - 1337:80 # HTTP
+      - 1338:443  # HTTPS
+    #restart:
+      #always
+    volumes:
+      - static_volume:/app/StoreIT/staticfiles
+    depends_on:
+      - django_storeit
+
+volumes:
+  # Volume name
+  static_volume:

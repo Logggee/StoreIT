@@ -21,12 +21,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#SECRET_KEY = os.environ.get("SECRET_KEY")
+
+# SECURITY WARNING: don't run with debug turned on in production!
+#DEBUG = bool(os.environ.get("DEBUG", default=0))
+
+#ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-j6xeldrq^nf&s(7=dt+pt^okvfw@w7m-5jpgu#x596)@@&!+rt"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+# Defiene all allowed host ips
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "[::1]"]
+# Set trusted urls for csfs
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337", "https://localhost:1338"]
 
 
 # Application definition
@@ -39,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "storage.apps.StorageConfig",
-    "django_extensions",
+    #"django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -114,12 +124,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+# Root path for all static files
+STATIC_ROOT = BASE_DIR / "staticfiles" # If collectstatic is used all static files are bundelt under STATIC_ROOT
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-COM5
-# Media files (files that are uploaded by users)
 
+# Media files (files that are uploaded by users)
 # Path where media is stored
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Base url to serve media files (the server can serve files via this url)

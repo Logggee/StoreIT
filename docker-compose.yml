@@ -1,0 +1,17 @@
+# docker-compose.yml
+
+# All docker containers
+services:
+  # Python container for running python and the django application
+  django_storeit: # name of the container --name
+    build: ./StoreIT  # builds the image via the Dockerfile docker build
+    # Executes a command in the build container
+    command: python manage.py runserver 0.0.0.0:8000 # Run the django development server on port 8000
+    # Bind a volume into the container
+    volumes:  
+      - ./StoreIT/:/usr/src/StoreIT/
+    # Set the port of the host and the container
+    ports:
+      - 8000:8000 # Port 8000 on the Host and Port 8000 in the container
+    env_file:
+      - ./.env.dev
