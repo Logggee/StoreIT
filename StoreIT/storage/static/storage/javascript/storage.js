@@ -121,34 +121,75 @@ function showOnlySearchHits (input_field) {
 
 function addItemToDestoreList(item_id) {
     const destore_list = document.getElementById("destore-list");
+    // Check if the list was empty till now show all buttons
     if (destore_list.childElementCount == 0) {
         document.getElementById("destore-list-empty-text").classList = "d-none";
         document.getElementById("destore-list-delete-item-button").classList.remove("d-none");
         document.getElementById("destore-list-destore-button").classList.remove("d-none");
     }
-    const list_item = document.createElement("li");
-    list_item.classList = "list-group-item d-flex align-items-center";
 
-    const item_image = document.createElement("img");
-    item_image.classList = "ms-2 destore-list-image";
+    if (document.getElementById("destore_list_item_" + item_id) != null) {
+        let quantity_span = document.getElementById("destore_list_item_" + item_id);
+        quantity_span.innerText = parseInt(quantity_span.innerText, 10) + 1;
+    }
+    else {
+        const list_item = document.createElement("li");
+        list_item.classList = "list-group-item d-flex align-items-center";
 
-    const checkbox = document.createElement("input");
-    checkbox.classList = "form-check-input ms-auto";
-    checkbox.type = "checkbox";
-    checkbox.value = "";
-    checkbox.name = "destore-list-checkbox";
+        const div_quantity = document.createElement("div");
+        div_quantity.classList = "container d-flex align-items-center justify-content-end";
+        div_quantity.innerText = "Quantity: ";
 
-    // Fetch the data of the added item via a ajax call
-    fetch(`/storage/${item_id}`)
-        .then(response => response.json())
-        .then(response_data => {
-            list_item.innerText = response_data.item_name;
-            item_image.src = response_data.item_image;
-            item_image.alt = response_data.item_name;
-            list_item.appendChild(item_image);
-            list_item.appendChild(checkbox);
-            destore_list.appendChild(list_item);
-        })
+        const quantity = document.createElement("span");
+        quantity.id = "destore_list_item_" + item_id;
+        quantity.classList = "align-middle mx-3";
+        quantity.innerText = "1";
+
+        div_quantity.appendChild(quantity);
+
+        /*
+        const label_quantity = document.createElement("label");
+        label_quantity.classList = "form-controll";
+        label_quantity.innerText = "Quantitiy";
+
+        const quantity_field = document.createElement("input");
+        quantity_field.type = "number";
+        quantity_field.classList = "form-control mx-3 w-25";
+        quantity_field.readOnly = true;
+        quantity_field.value = 1;
+        quantity_field.id = item_id;
+        quantity_field.style = "text-align: center"
+
+        div_quantity.appendChild(label_quantity);
+        div_quantity.appendChild(quantity_field);
+        */
+
+        const item_image = document.createElement("img");
+        item_image.classList = "ms-2 destore-list-image";
+
+        const checkbox = document.createElement("input");
+        checkbox.classList = "form-check-input ms-auto";
+        checkbox.type = "checkbox";
+        checkbox.value = "";
+        checkbox.name = "destore-list-checkbox";
+
+        const div_item_name = document.createElement("div");
+        div_item_name.classList = "container";
+
+        // Fetch the data of the added item via a ajax call
+        fetch(`/storage/${item_id}`)
+            .then(response => response.json())
+            .then(response_data => {
+                div_item_name.innerText =  response_data.item_name;
+                list_item.appendChild(div_item_name);
+                item_image.src = response_data.item_image;
+                item_image.alt = response_data.item_name;
+                list_item.appendChild(item_image);
+                list_item.appendChild(div_quantity);
+                list_item.appendChild(checkbox);
+                destore_list.appendChild(list_item);
+            })
+    }
 }
 
 function deleteItemDestoringList() {
