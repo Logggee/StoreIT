@@ -1,4 +1,9 @@
 StoreIT/StoreIT/__pycache__
 StoreIT/storage/__pycache__
 StoreIT/storage/migrations/__pycache__
-StoreIT/StoreIT.sqlite3
+StoreIT/storeIT.sqlite3
+StoreIT/storage/templatetags/__pycache__
+StoreIT/storage/views/__pycache__
+storage/views/__pycache__
+localhost.pem
+localhost-key.pem
