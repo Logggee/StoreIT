@@ -127,26 +127,9 @@ def store_existing_item (request, item_id):
     if request.method == "POST":
         store_item_form = Store_Item_Form(request.POST, item_image_required=False)
         if store_item_form.is_valid():
-            # Get all same stored items
-            stored_items = Stored_Item.objects.filter(item_id = item_id)
-            last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
-            # Check if the item already exists in the storage
-            if last_in_first_out_list:
-                # TODO here the correct storage place needs to be calculated
-                stored_item = last_in_first_out_list[0]
-                stored_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
-                stored_item.save()
-            # Item did not exist in the storage so a new Stored_Item dataset needs to be added
-            else:
-                storage_bin = Bin.objects.get(pk = 1)
-                item = Item.objects.get(pk = item_id)
-                stored_item = Stored_Item(bin_id = storage_bin,
-                                          item_id = item,
-                                          stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
-                stored_item.save()        
 
-            #TODO Algo for searching for the last bin where same item was stored to add this item
-            print(stored_items)
+            stored_item = storage_processes.store_existing_item(store_item_form, item_id)
+            
             request.session["stored_existing_item"] = {"stored_item_id": stored_item.stored_item_id,
                                                        "stored_item_quantity": store_item_form.cleaned_data["item_quantity"]}
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS

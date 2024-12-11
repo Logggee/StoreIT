@@ -56,8 +56,8 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-datasheet").classList.add("d-none");
                 document.getElementById("item-datasheet-selected-master-data-label").classList.remove("d-none");
                 document.getElementById("item-datasheet-selected-master-data").classList.remove("d-none");
-                document.getElementById("item-datasheet-selected-master-data").value = response_data.item_datasheet;
-                document.getElementById("item-purchase-place").value = response_data.item_purchase_place;
+                document.getElementById("item-datasheet-selected-master-data").setAttribute("placeholder", response_data.item_datasheet);
+                document.getElementById("item-purchase-place").setAttribute("placeholder",response_data.item_purchase_place);
                 document.getElementById("item-purchase-place").setAttribute("readonly", true);
                 document.getElementById("item-volume").value = response_data.item_volume;
                 document.getElementById("item-volume").setAttribute("readonly", true);

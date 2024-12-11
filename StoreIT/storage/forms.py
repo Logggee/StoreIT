@@ -235,12 +235,13 @@ class Store_Item_Form(forms.ModelForm):
             'item_purchase_place': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id': 'item-purchase-place',
-                'placeholder': 'URL to purchase place'
+                'placeholder': 'URL to purchase place',
             }),
         }
 
     def __init__(self, *args, item_image_required = True, **kwargs):
         super().__init__(*args, **kwargs)
+        # If this form is used for storing a item that already exists in master data the image is not required
         if not item_image_required:
             self.fields["item_image"].required = False
         # In invalid case the bootstrap clase is-invalid needs to be added
