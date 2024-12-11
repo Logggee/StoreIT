@@ -48,3 +48,6 @@ def destore_item(item_id, destore_quantity) -> list:
             return destore_places_and_quantitys
         
     return destore_places_and_quantitys
+
+def store_existing_item():
+    return

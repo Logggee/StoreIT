@@ -147,23 +147,6 @@ function addItemToDestoreList(item_id) {
 
         div_quantity.appendChild(quantity);
 
-        /*
-        const label_quantity = document.createElement("label");
-        label_quantity.classList = "form-controll";
-        label_quantity.innerText = "Quantitiy";
-
-        const quantity_field = document.createElement("input");
-        quantity_field.type = "number";
-        quantity_field.classList = "form-control mx-3 w-25";
-        quantity_field.readOnly = true;
-        quantity_field.value = 1;
-        quantity_field.id = item_id;
-        quantity_field.style = "text-align: center"
-
-        div_quantity.appendChild(label_quantity);
-        div_quantity.appendChild(quantity_field);
-        */
-
         const item_image = document.createElement("img");
         item_image.classList = "ms-2 destore-list-image";
 

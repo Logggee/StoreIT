@@ -77,8 +77,8 @@ class Bin (models.Model):
 
 class Stored_Item (models.Model):
     stored_item_id = models.BigAutoField("id of a stored item amount", primary_key=True)    # INTEGER PRIMARY KEY AUTOINCREMENT
-    bin_id = models.ForeignKey(Bin, on_delete=models.PROTECT, related_name="bins", db_column="bin_id")    # FOREIGN KEY (bin_id) REFERENCES Bins (bin_id)
-    item_id = models.ForeignKey(Item, on_delete=models.PROTECT, related_name="items", db_column="item_id")  # FOREIGN KEY (item_id) REFERENCES Bins (item_id)
+    bin_id = models.ForeignKey(Bin, on_delete=models.PROTECT, related_name="stored_item", db_column="bin_id")    # FOREIGN KEY (bin_id) REFERENCES Bins (bin_id)
+    item_id = models.ForeignKey(Item, on_delete=models.PROTECT, related_name="stored_item", db_column="item_id")  # FOREIGN KEY (item_id) REFERENCES Bins (item_id)
     stored_item_quantity = models.PositiveIntegerField("the quantity of the item that is stored")   # INTEGER
     stored_item_storedate = models.DateTimeField("the last date of storage at this location", auto_now_add=True)    # TEXT
 
@@ -136,3 +136,12 @@ class Stored_Item (models.Model):
         # If the item is already in storage return the sorted list
         else:
             return cls.objects.filter(item_id=item_id).order_by('-stored_item_storedate')
+        
+class Reservation (models.Model):
+    reservation_id = models.BigAutoField("reservation id", primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name="reservation", db_column="id")
+    timeout = models.DateTimeField("time until the reservation is valid", auto_now_add=True)
+
+class Reservated_Item (models.Model):
+    reservated_stored_item_id = models.BigAutoField("reservated item id", primary_key=True)
+    reservation_id = models.ForeignKey(Reservation, on_delete=models.PROTECT, related_name="reservation_item", db_column="reservation_id")
