@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, Storage, Bin, Stored_Item, User
+from .models import Item, Storage, Bin, Stored_Item, User, Reservation, Reservated_Storing_Item, Reservated_Destoring_Item
 from django.contrib.auth.admin import UserAdmin
 from .forms import User_Registration_Form_Django_Admin, User_Change_Form
 
@@ -23,3 +23,6 @@ admin.site.register(Storage)
 admin.site.register(Bin)
 admin.site.register(Stored_Item)
 admin.site.register(User, User_Admin)
+admin.site.register(Reservation)
+admin.site.register(Reservated_Storing_Item)
+admin.site.register(Reservated_Destoring_Item)
