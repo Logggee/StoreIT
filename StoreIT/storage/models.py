@@ -151,6 +151,5 @@ class Reservated_Destoring_Item (models.Model):
 class Reservated_Storing_Item (models.Model):
     reservated_storing_item_id = models.BigAutoField("reservated storing item id", primary_key=True)
     reservation_id = models.ForeignKey(Reservation, on_delete=models.PROTECT, related_name="reservation_storing_item", db_column="reservation_id")
-    bin_id = models.ForeignKey(Bin, on_delete=models.PROTECT, related_name="reservation_storing_item", db_column="bin_id")    # FOREIGN KEY (bin_id) REFERENCES Bins (bin_id)
-    item_id = models.ForeignKey(Item, on_delete=models.PROTECT, related_name="reservation_storing_item", db_column="item_id")  # FOREIGN KEY (item_id) REFERENCES Bins (item_id)
+    stored_item_id = models.ForeignKey(Stored_Item, on_delete=models.PROTECT, related_name="reservation_storing_item", db_column="stored_item_id")  # FOREIGN KEY (item_id) REFERENCES Bins (item_id)
     reservated_storing_item_quantity = models.PositiveIntegerField("the quantity of the item that is stored")   # INTEGER

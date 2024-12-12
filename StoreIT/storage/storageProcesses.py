@@ -1,8 +1,9 @@
-from .models import Stored_Item, Bin, Item
+from .models import Stored_Item, Bin, Item, Reservation, Reservated_Destoring_Item, Reservated_Storing_Item
 from .forms import Store_Item_Form
+from django.shortcuts import get_object_or_404
 
 def destore_item(item_id, destore_quantity) -> list:
-    ''' Destores a item after the FIFO priciple
+    ''' Destores a item after the LIFO priciple
 
     Args:
         item_id: primary key of a item
@@ -50,16 +51,27 @@ def destore_item(item_id, destore_quantity) -> list:
         
     return destore_places_and_quantitys
 
-def store_existing_item(store_item_form, item_id):
+def store_existing_item(request, store_item_form, item_id):
     # Get all same stored items
     stored_items = Stored_Item.objects.filter(item_id = item_id)
     last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
     # Check if the item already exists in the storage
     if last_in_first_out_list:
         # TODO here the correct storage place needs to be calculated
-        stored_item = last_in_first_out_list[0]
+        """ This is for adding the newly added quantity
         stored_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
         stored_item.save()
+        """
+        stored_item = last_in_first_out_list[0]
+        reservation = Reservation(user_id = request.user)
+        reservation.save()
+
+        reservation_item = Reservated_Storing_Item(reservation_id = reservation,
+                                                   stored_item_id = stored_item,
+                                                   reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
+        reservation_item.save()
+
+        
     # Item did not exist in the storage so a new Stored_Item dataset needs to be added
     # Item was only in the master date from earlyer times
     else:

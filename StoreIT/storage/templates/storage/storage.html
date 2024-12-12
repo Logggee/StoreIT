@@ -341,7 +341,7 @@
     </div>
 
     <!-- Modal for the storage process -->
-    <div class="modal fade" id="storage-process-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="storage-process-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -350,9 +350,37 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
-                    Please store your item into the lith up storage bin.<br>
+                    {% if new_stored_existing_item == False %}
+                        <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
+                    {% else %}
+                        <strong>{{ new_stored_existing_item.stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_existing_item.stored_item.stored_item_quantity }}<br><br></strong>
+                    {% endif %}
+                    Please store your item into the highlighted bin.<br>
                     You can split your item if there is not enough space for it.<br>
+                    <div class="container-fluid my-3">
+                        {% for row_number, all_bins_in_row in new_stored_existing_item.storage_location_layout.items %} 
+                        <!-- Row {{ row_number }} -->
+                        <div class="row mb-2 align-items-center">
+                            <span class="col-auto" style="min-width: 80px">Row {{ row_number|add:1}}</span>
+                            
+                            <div class="col d-flex justify-content-between mx-4">
+                                {% for bin in all_bins_in_row %}
+                                    {% if bin.bin_number == new_stored_existing_item.stored_item.bin_id.bin_number %}
+                                        <input type="radio" class="btn-check" name="btnradio-{{ destored_item.destore_bin_id }}" id="btnradio-{{ bin.storage_id.storage_id}}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled checked>
+                                        <label class="btn btn-outline-success w-100 me-1" for="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
+                                            {{ bin.bin_number }}
+                                        </label>
+                                    {% else %}
+                                        <input type="radio" class="btn-check" name="btnradio-{{ destored_item.destore_bin_id }}" id="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled>
+                                        <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
+                                            {{ bin.bin_number }}
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <div class="accordion" id="accordionExample">

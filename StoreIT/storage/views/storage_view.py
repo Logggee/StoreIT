@@ -83,6 +83,8 @@ def storage(request):
             new_existing_stored_item = get_object_or_404(Stored_Item, pk = stored_existing_item["stored_item_id"])
             new_stored_existing_item = {"stored_item": new_existing_stored_item,
                                         "storage_location_layout": new_existing_stored_item.bin_id.storage_id.all_bins_sorted_in_rows()}
+        else:
+            new_stored_existing_item = False
 
         all_storage_layouts = list()
         # Get the layouts of every Storage
@@ -98,7 +100,8 @@ def storage(request):
                    "destore_places_and_quantitys": destore_places_and_quantitys,
                    "storage_page_state": storage_page_state.name,
                    "storage_exists": storage_exists,
-                   "all_storage_layouts": all_storage_layouts}
+                   "all_storage_layouts": all_storage_layouts,
+                   "new_stored_existing_item": new_stored_existing_item}
         storage_page_state = Storage_Page_State.INIT
 
         return render(request, "storage/storage.html", content)
@@ -125,10 +128,9 @@ def store_existing_item (request, item_id):
         storage_exists = False
 
     if request.method == "POST":
-        store_item_form = Store_Item_Form(request.POST, item_image_required=False)
+        store_item_form = Store_Item_Form(request.POST, item_image_required=False)        
         if store_item_form.is_valid():
-
-            stored_item = storage_processes.store_existing_item(store_item_form, item_id)
+            stored_item = storage_processes.store_existing_item(request, store_item_form, item_id)
             
             request.session["stored_existing_item"] = {"stored_item_id": stored_item.stored_item_id,
                                                        "stored_item_quantity": store_item_form.cleaned_data["item_quantity"]}
