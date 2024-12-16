@@ -16,9 +16,13 @@ urlpatterns = [
     # Caution this is used by the same form as /storage the action url is set in storage.js if the user
     # selected a item from the master data list via a checkbox
     path("storage/store_existing_item/<int:item_id>", views.store_existing_item, name="store_existing_item"),
-    # localhost:8000storage/destore_item/1
+    # localhost:8000/storage/destore_item/1
     # Url is used to destore a specific quantity of a stored item
     path("storage/destore_item/<int:stored_item_fk>", views.destore_item, name="destore_item"),
+    # localhost:8000/storage/confirm_storing/<int:reservation_id>
+    path("storage/confirm_storing/<int:reservation_id>", views.confirm_storing, name="confirm_storing"),
+    # localhost:8000/storage/cancel_storing/<int:reservation_id>
+    path("storage/cancel_storing/<int:reservation_id>", views.cancel_storing, name="cancel_storing"),
     # localhost:8000/config/
     path("config/", views.config, name="config"),
     # localhost:8000/1/12

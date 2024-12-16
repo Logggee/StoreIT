@@ -341,6 +341,7 @@
     </div>
 
     <!-- Modal for the storage process -->
+    <!-- This modal is used ether for storing a new item or for storing a known item from master data -->
     <div class="modal fade" id="storage-process-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -350,13 +351,16 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
+                    <!-- Check if the modal is used for storing a new item or a item from master data -->
+                    <!-- This sets the quantity that needs to be stored -->
                     {% if new_stored_existing_item == False %}
                         <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
                     {% else %}
-                        <strong>{{ new_stored_existing_item.stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_existing_item.stored_item.stored_item_quantity }}<br><br></strong>
+                        <strong>{{ new_stored_existing_item.stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_existing_item.stored_item_quantity }}<br><br></strong>
                     {% endif %}
                     Please store your item into the highlighted bin.<br>
                     You can split your item if there is not enough space for it.<br>
+                    <!-- Here the visualisation of the storage is build -->
                     <div class="container-fluid my-3">
                         {% for row_number, all_bins_in_row in new_stored_existing_item.storage_location_layout.items %} 
                         <!-- Row {{ row_number }} -->
@@ -384,6 +388,7 @@
                 </div>
 
                 <div class="accordion" id="accordionExample">
+                    <!-- Accordion item for spliting item into two bins if it did not fit into this one -->
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
@@ -405,7 +410,8 @@
                           </div>
                         </div>
                     </div>
-
+                    <!-- Accordion item to manually select a storage place -->
+                    <!-- Here all storaged are visiulized in a tab -->
                     <div class="accordion-item">
                       <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -474,11 +480,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal" onclick="storage_process_canceld({{ new_stored_existing_item.reservation_id }})">
                 <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">
                 Cancel
             </button>
-            <button type="button" class="btn btn-success d-flex align-items-center">
+            <button type="button" class="btn btn-success d-flex align-items-center" onclick="storage_process_confirmed({{ new_stored_existing_item.reservation_id }})">
                 <img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">
                 Item is stored
             </button>
@@ -558,6 +564,8 @@
     {% endfor %}
 
     <script>
+        // Make the csfr token globaly availible
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         document.addEventListener('DOMContentLoaded', function () {
             // The page state is a state machine which definces in which state the storage page is currently in
             const storage_page_state = "{{ storage_page_state }}";

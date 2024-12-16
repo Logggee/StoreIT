@@ -193,3 +193,48 @@ function deleteItemDestoringList() {
         document.getElementById("destore-list-destore-button").classList.add("d-none");
     }
 }
+
+async function storage_process_confirmed(reservation_id) {
+    // Confirm the storage process
+
+    try {
+        const response = await fetch(`/storage/confirm_storing/${reservation_id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken, // Parse the csfr token
+            }
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            //alert('Error deleting item.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the item.');
+    }
+}
+
+async function storage_process_canceld(reservation_id) {
+    // Cancel the storage process
+    console.log("Test");
+
+    try {
+        const response = await fetch(`/storage/cancel_storing/${reservation_id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken, // Parse the csfr token
+            }
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            //alert('Error deleting item.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the item.');
+    }
+}

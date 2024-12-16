@@ -70,6 +70,7 @@ def store_existing_item(request, store_item_form, item_id):
                                                    stored_item_id = stored_item,
                                                    reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
         reservation_item.save()
+        return stored_item, reservation.reservation_id
 
         
     # Item did not exist in the storage so a new Stored_Item dataset needs to be added
@@ -82,6 +83,6 @@ def store_existing_item(request, store_item_form, item_id):
                                     stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
         stored_item.save()
 
-    #TODO Algo for searching for the last bin where same item was stored to add this item
-    print(stored_items)
-    return stored_item
+        #TODO Algo for searching for the last bin where same item was stored to add this item
+        print(stored_items)
+        return stored_item
