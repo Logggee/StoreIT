@@ -347,17 +347,28 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="storage-process-modal-heading">Please store your item</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="storage_process_canceld({{ new_stored_existing_item.reservation_id }})"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
                     <!-- Check if the modal is used for storing a new item or a item from master data -->
                     <!-- This sets the quantity that needs to be stored -->
-                    {% if new_stored_existing_item == False %}
-                        <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
-                    {% else %}
-                        <strong>{{ new_stored_existing_item.stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_existing_item.stored_item_quantity }}<br><br></strong>
-                    {% endif %}
+                    <div class="row my-3">
+                        <div class="col d-flex justify-content-center">
+                            {% if new_stored_existing_item == False %}
+                                <img class="" src="{{ new_stored_existing_item.stored_item.item_id.item_image }}" style="max-height: 50px;">
+                            {% else %}
+                                <img class="storing-process-image"  src="{{ new_stored_existing_item.stored_item.item_id.item_image.url }}">
+                            {% endif %}
+                        </div>
+                        <div class="col">
+                            {% if new_stored_existing_item == False %}
+                                <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
+                            {% else %}
+                                <strong>{{ new_stored_existing_item.stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_existing_item.stored_item_quantity }}<br><br></strong>
+                            {% endif %}
+                        </div>
+                    </div>
                     Please store your item into the highlighted bin.<br>
                     You can split your item if there is not enough space for it.<br>
                     <!-- Here the visualisation of the storage is build -->

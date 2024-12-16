@@ -35,6 +35,12 @@
     border-radius: 0.2rem;
 }
 
+/*------------- Storing process modal --------------------*/
+.storing-process-image {
+    border-radius: 0.5rem;
+    max-height: 70px;
+}
+
 /*------------- Navbar Search input field -------------------*/
 #search-input {
     max-width: 250px;
