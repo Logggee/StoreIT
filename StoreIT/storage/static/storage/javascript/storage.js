@@ -56,8 +56,8 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-datasheet").classList.add("d-none");
                 document.getElementById("item-datasheet-selected-master-data-label").classList.remove("d-none");
                 document.getElementById("item-datasheet-selected-master-data").classList.remove("d-none");
-                document.getElementById("item-datasheet-selected-master-data").value = response_data.item_datasheet;
-                document.getElementById("item-purchase-place").value = response_data.item_purchase_place;
+                document.getElementById("item-datasheet-selected-master-data").setAttribute("placeholder", response_data.item_datasheet);
+                document.getElementById("item-purchase-place").setAttribute("placeholder",response_data.item_purchase_place);
                 document.getElementById("item-purchase-place").setAttribute("readonly", true);
                 document.getElementById("item-volume").value = response_data.item_volume;
                 document.getElementById("item-volume").setAttribute("readonly", true);
@@ -121,34 +121,58 @@ function showOnlySearchHits (input_field) {
 
 function addItemToDestoreList(item_id) {
     const destore_list = document.getElementById("destore-list");
+    // Check if the list was empty till now show all buttons
     if (destore_list.childElementCount == 0) {
         document.getElementById("destore-list-empty-text").classList = "d-none";
         document.getElementById("destore-list-delete-item-button").classList.remove("d-none");
         document.getElementById("destore-list-destore-button").classList.remove("d-none");
     }
-    const list_item = document.createElement("li");
-    list_item.classList = "list-group-item d-flex align-items-center";
 
-    const item_image = document.createElement("img");
-    item_image.classList = "ms-2 destore-list-image";
+    if (document.getElementById("destore_list_item_" + item_id) != null) {
+        let quantity_span = document.getElementById("destore_list_item_" + item_id);
+        quantity_span.innerText = parseInt(quantity_span.innerText, 10) + 1;
+    }
+    else {
+        const list_item = document.createElement("li");
+        list_item.classList = "list-group-item d-flex align-items-center";
 
-    const checkbox = document.createElement("input");
-    checkbox.classList = "form-check-input ms-auto";
-    checkbox.type = "checkbox";
-    checkbox.value = "";
-    checkbox.name = "destore-list-checkbox";
+        const div_quantity = document.createElement("div");
+        div_quantity.classList = "container d-flex align-items-center justify-content-end";
+        div_quantity.innerText = "Quantity: ";
 
-    // Fetch the data of the added item via a ajax call
-    fetch(`/storage/${item_id}`)
-        .then(response => response.json())
-        .then(response_data => {
-            list_item.innerText = response_data.item_name;
-            item_image.src = response_data.item_image;
-            item_image.alt = response_data.item_name;
-            list_item.appendChild(item_image);
-            list_item.appendChild(checkbox);
-            destore_list.appendChild(list_item);
-        })
+        const quantity = document.createElement("span");
+        quantity.id = "destore_list_item_" + item_id;
+        quantity.classList = "align-middle mx-3";
+        quantity.innerText = "1";
+
+        div_quantity.appendChild(quantity);
+
+        const item_image = document.createElement("img");
+        item_image.classList = "ms-2 destore-list-image";
+
+        const checkbox = document.createElement("input");
+        checkbox.classList = "form-check-input ms-auto";
+        checkbox.type = "checkbox";
+        checkbox.value = "";
+        checkbox.name = "destore-list-checkbox";
+
+        const div_item_name = document.createElement("div");
+        div_item_name.classList = "container";
+
+        // Fetch the data of the added item via a ajax call
+        fetch(`/storage/${item_id}`)
+            .then(response => response.json())
+            .then(response_data => {
+                div_item_name.innerText =  response_data.item_name;
+                list_item.appendChild(div_item_name);
+                item_image.src = response_data.item_image;
+                item_image.alt = response_data.item_name;
+                list_item.appendChild(item_image);
+                list_item.appendChild(div_quantity);
+                list_item.appendChild(checkbox);
+                destore_list.appendChild(list_item);
+            })
+    }
 }
 
 function deleteItemDestoringList() {
@@ -167,5 +191,50 @@ function deleteItemDestoringList() {
         document.getElementById("destore-list-empty-text").classList = "";
         document.getElementById("destore-list-delete-item-button").classList.add("d-none");
         document.getElementById("destore-list-destore-button").classList.add("d-none");
+    }
+}
+
+async function storage_process_confirmed(reservation_id) {
+    // Confirm the storage process
+
+    try {
+        const response = await fetch(`/storage/confirm_storing/${reservation_id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken, // Parse the csfr token
+            }
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            //alert('Error deleting item.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the item.');
+    }
+}
+
+async function storage_process_canceld(reservation_id) {
+    // Cancel the storage process
+    console.log("Test");
+
+    try {
+        const response = await fetch(`/storage/cancel_storing/${reservation_id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken, // Parse the csfr token
+            }
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            //alert('Error deleting item.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the item.');
     }
 }

@@ -1,8 +1,8 @@
 # storage_view.py
 
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import JsonResponse
-from storage.models import Stored_Item, Item, Bin, Storage
+from django.http import JsonResponse, HttpResponse
+from storage.models import Stored_Item, Item, Bin, Storage, Reservation, Reservated_Storing_Item
 from storage.forms import Store_Item_Form, Destore_Item_Form
 from storage.utils import Storage_Page_State
 from storage import storageProcesses as storage_processes
@@ -36,16 +36,10 @@ def storage(request):
         # Validate the form and parse the POST data
         store_item_form = Store_Item_Form(request.POST, request.FILES)
         if store_item_form.is_valid():
-            new_item = store_item_form.save()
-
-            # Add a new stored item to the database
-            # TODO Storage algorythm goes here
-            new_stored_item = Stored_Item (bin_id = Bin.objects.get(pk = 1),
-                                           item_id = new_item,
-                                           stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
-            new_stored_item.save()
+            storage_processes.store_new_item(request, store_item_form)
+            
             # Safe the name and quantity of the item to display it in the modal after the redirect
-            request.session["new_stored_item"] = (store_item_form.cleaned_data["item_name"], store_item_form.cleaned_data["item_quantity"])
+            request.session["new_stored_item"] = (new_stored_item.stored_item_id, store_item_form.cleaned_data["item_quantity"])
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
 
             return redirect("storage:storage")
@@ -66,7 +60,13 @@ def storage(request):
     # Get request
     else:
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
-        new_stored_item = request.session.pop("new_stored_item", False)
+        new_stored_item_data = request.session.pop("new_stored_item", False)
+        new_stored_item = dict()
+        print(f"New stored item : {new_stored_item_data}")
+        if new_stored_item_data:
+            new_stored_item = dict()
+            new_stored_item["new_stored_item"] = get_object_or_404(Stored_Item, pk=new_stored_item_data[0])
+            new_stored_item["new_stored_item_quantity"] = new_stored_item_data[1]
 
         # If a item was destored the session storage holds the destored item. This is needed to fill the destore modal
         destore_places_and_quantitys = request.session.pop("destore_places_and_quantitys", list())
@@ -82,7 +82,11 @@ def storage(request):
         if stored_existing_item:
             new_existing_stored_item = get_object_or_404(Stored_Item, pk = stored_existing_item["stored_item_id"])
             new_stored_existing_item = {"stored_item": new_existing_stored_item,
-                                        "storage_location_layout": new_existing_stored_item.bin_id.storage_id.all_bins_sorted_in_rows()}
+                                        "storage_location_layout": new_existing_stored_item.bin_id.storage_id.all_bins_sorted_in_rows(),
+                                        "stored_item_quantity": stored_existing_item["stored_item_quantity"],
+                                        "reservation_id": stored_existing_item["reservation_id"]}
+        else:
+            new_stored_existing_item = False
 
         all_storage_layouts = list()
         # Get the layouts of every Storage
@@ -98,7 +102,8 @@ def storage(request):
                    "destore_places_and_quantitys": destore_places_and_quantitys,
                    "storage_page_state": storage_page_state.name,
                    "storage_exists": storage_exists,
-                   "all_storage_layouts": all_storage_layouts}
+                   "all_storage_layouts": all_storage_layouts,
+                   "new_stored_existing_item": new_stored_existing_item}
         storage_page_state = Storage_Page_State.INIT
 
         return render(request, "storage/storage.html", content)
@@ -125,30 +130,13 @@ def store_existing_item (request, item_id):
         storage_exists = False
 
     if request.method == "POST":
-        store_item_form = Store_Item_Form(request.POST, item_image_required=False)
+        store_item_form = Store_Item_Form(request.POST, item_image_required=False)        
         if store_item_form.is_valid():
-            # Get all same stored items
-            stored_items = Stored_Item.objects.filter(item_id = item_id)
-            last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
-            # Check if the item already exists in the storage
-            if last_in_first_out_list:
-                # TODO here the correct storage place needs to be calculated
-                stored_item = last_in_first_out_list[0]
-                stored_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
-                stored_item.save()
-            # Item did not exist in the storage so a new Stored_Item dataset needs to be added
-            else:
-                storage_bin = Bin.objects.get(pk = 1)
-                item = Item.objects.get(pk = item_id)
-                stored_item = Stored_Item(bin_id = storage_bin,
-                                          item_id = item,
-                                          stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
-                stored_item.save()        
-
-            #TODO Algo for searching for the last bin where same item was stored to add this item
-            print(stored_items)
+            stored_item, reservation_id = storage_processes.store_existing_item(request, store_item_form, item_id)
+            
             request.session["stored_existing_item"] = {"stored_item_id": stored_item.stored_item_id,
-                                                       "stored_item_quantity": store_item_form.cleaned_data["item_quantity"]}
+                                                       "stored_item_quantity": store_item_form.cleaned_data["item_quantity"],
+                                                       "reservation_id": reservation_id}
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
             return redirect("storage:storage")
         else:
@@ -246,3 +234,27 @@ def stored_single_item(request, item_id):
         "item_purchase_place": item_purchase_place
     }
     return JsonResponse(data)
+
+def confirm_storing(request, reservation_id):
+    if request.method == "DELETE":
+        # Get the reservation and delete it
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        reservation.delete()
+        print("Confirm storing and delete reservation")
+        print(f"Reservation with id {reservation_id} is deleted!!!")
+        return  HttpResponse("Reservation deleted", status=200)
+     
+def cancel_storing(request, reservation_id):
+    if request.method == "DELETE":
+        # Delete the added quantity
+        reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)
+        reservated_storing_item.stored_item_id.stored_item_quantity -= reservated_storing_item.reservated_storing_item_quantity
+        # If the quantity is 0 the stored item needs to be removed
+        if reservated_storing_item.stored_item_id.stored_item_quantity == 0:
+            reservated_storing_item.stored_item_id.delete()
+        else:    
+            reservated_storing_item.stored_item_id.save()
+        # Get the reservation and delete it
+        reservation = get_object_or_404(Reservation, pk=reservation_id)
+        reservation.delete()
+    return  HttpResponse("Reservation deleted", status=200)
