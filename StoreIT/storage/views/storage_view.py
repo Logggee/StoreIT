@@ -45,7 +45,7 @@ def storage(request):
                                            stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
             new_stored_item.save()
             # Safe the name and quantity of the item to display it in the modal after the redirect
-            request.session["new_stored_item"] = (store_item_form.cleaned_data["item_name"], store_item_form.cleaned_data["item_quantity"])
+            request.session["new_stored_item"] = (new_stored_item.stored_item_id, store_item_form.cleaned_data["item_quantity"])
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
 
             return redirect("storage:storage")
@@ -66,7 +66,12 @@ def storage(request):
     # Get request
     else:
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
-        new_stored_item = request.session.pop("new_stored_item", False)
+        new_stored_item_data = request.session.pop("new_stored_item", False)
+        print(f"New stored item : {new_stored_item_data}")
+        if new_stored_item_data:
+            new_stored_item = dict()
+            new_stored_item["new_stored_item"] = get_object_or_404(Stored_Item, pk=new_stored_item_data[0])
+            new_stored_item["new_stored_item_quantity"] = new_stored_item_data[1]
 
         # If a item was destored the session storage holds the destored item. This is needed to fill the destore modal
         destore_places_and_quantitys = request.session.pop("destore_places_and_quantitys", list())

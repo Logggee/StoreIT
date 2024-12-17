@@ -66,7 +66,7 @@
     </div>
 
     {% if storage_exists%}
-    <!-- Fixed Button to add new items -->
+    <!-- Fixed Button at bottum right to add new items -->
     <div class="position-relative">
         <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#add-new-item-modal">
             <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
@@ -356,14 +356,15 @@
                     <div class="row my-3">
                         <div class="col d-flex justify-content-center">
                             {% if new_stored_existing_item == False %}
-                                <img class="" src="{{ new_stored_existing_item.stored_item.item_id.item_image }}" style="max-height: 50px;">
+                                <!-- TODO this src is not valid the image is not getting parsed when storing a new item -->
+                                <img class="storing-process-image" src="{{ new_stored_item.new_stored_item.item_id.item_image.url }}">
                             {% else %}
                                 <img class="storing-process-image"  src="{{ new_stored_existing_item.stored_item.item_id.item_image.url }}">
                             {% endif %}
                         </div>
                         <div class="col">
                             {% if new_stored_existing_item == False %}
-                                <strong>{{ new_stored_item.0 }}<br>Quantity: {{ new_stored_item.1 }}<br><br></strong>
+                                <strong>{{ new_stored_item.new_stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_item.new_stored_item_quantity }}<br><br></strong>
                             {% else %}
                                 <strong>{{ new_stored_existing_item.stored_item.item_id.item_name }}<br>Quantity: {{ new_stored_existing_item.stored_item_quantity }}<br><br></strong>
                             {% endif %}
