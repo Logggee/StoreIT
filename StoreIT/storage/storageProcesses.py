@@ -32,7 +32,8 @@ def destore_item(item_id, destore_quantity) -> list:
             
         # If the stored amount was not enough delete the stored item and move to the next storage place
         else:
-            # Calculate the delta 
+            # Calculate the delta
+            # Note that the delta can be 0 so that destore complete is done in the next loop
             destore_quantity -= stored_item.stored_item_quantity
             destored_quantity_at_current_location = stored_item.stored_item_quantity
             # Delete the stored item because it was fully destored
