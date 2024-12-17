@@ -36,14 +36,8 @@ def storage(request):
         # Validate the form and parse the POST data
         store_item_form = Store_Item_Form(request.POST, request.FILES)
         if store_item_form.is_valid():
-            new_item = store_item_form.save()
-
-            # Add a new stored item to the database
-            # TODO Storage algorythm goes here
-            new_stored_item = Stored_Item (bin_id = Bin.objects.get(pk = 1),
-                                           item_id = new_item,
-                                           stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
-            new_stored_item.save()
+            storage_processes.store_new_item(request, store_item_form)
+            
             # Safe the name and quantity of the item to display it in the modal after the redirect
             request.session["new_stored_item"] = (new_stored_item.stored_item_id, store_item_form.cleaned_data["item_quantity"])
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
@@ -67,6 +61,7 @@ def storage(request):
     else:
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item_data = request.session.pop("new_stored_item", False)
+        new_stored_item = dict()
         print(f"New stored item : {new_stored_item_data}")
         if new_stored_item_data:
             new_stored_item = dict()
@@ -242,11 +237,6 @@ def stored_single_item(request, item_id):
 
 def confirm_storing(request, reservation_id):
     if request.method == "DELETE":
-        # Add the quantity that was reserved to the Stored Item
-        reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)
-        reservated_storing_item.stored_item_id.stored_item_quantity += reservated_storing_item.reservated_storing_item_quantity
-        reservated_storing_item.stored_item_id.save()
-            
         # Get the reservation and delete it
         reservation = get_object_or_404(Reservation, pk=reservation_id)
         reservation.delete()
@@ -256,6 +246,14 @@ def confirm_storing(request, reservation_id):
      
 def cancel_storing(request, reservation_id):
     if request.method == "DELETE":
+        # Delete the added quantity
+        reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)
+        reservated_storing_item.stored_item_id.stored_item_quantity -= reservated_storing_item.reservated_storing_item_quantity
+        # If the quantity is 0 the stored item needs to be removed
+        if reservated_storing_item.stored_item_id.stored_item_quantity == 0:
+            reservated_storing_item.stored_item_id.delete()
+        else:    
+            reservated_storing_item.stored_item_id.save()
         # Get the reservation and delete it
         reservation = get_object_or_404(Reservation, pk=reservation_id)
         reservation.delete()

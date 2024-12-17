@@ -16,7 +16,7 @@ def destore_item(item_id, destore_quantity) -> list:
     '''
     destore_places_and_quantitys = list()
     destore_complete = False
-    # Get a FIFO list of all stored items of the item
+    # Get a LIFO list of all stored items of the item
     first_in_first_out = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
     print(f"First in first out: {first_in_first_out}")
     # Itterate over all storage bins as long as the required amount is destored
@@ -57,12 +57,12 @@ def store_existing_item(request, store_item_form, item_id):
     last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
     # Check if the item already exists in the storage
     if last_in_first_out_list:
+        stored_item = last_in_first_out_list[0]
+        # Add the quantity to the already stored same item
         # TODO here the correct storage place needs to be calculated
-        """ This is for adding the newly added quantity
         stored_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
         stored_item.save()
-        """
-        stored_item = last_in_first_out_list[0]
+        # Create a reservation for the added quantity
         reservation = Reservation(user_id = request.user)
         reservation.save()
 
@@ -76,13 +76,40 @@ def store_existing_item(request, store_item_form, item_id):
     # Item did not exist in the storage so a new Stored_Item dataset needs to be added
     # Item was only in the master date from earlyer times
     else:
-        storage_bin = Bin.objects.get(pk = 1)
+        storage_bin = Bin.objects.get(pk = 10)
         item = Item.objects.get(pk = item_id)
         stored_item = Stored_Item(bin_id = storage_bin,
                                     item_id = item,
                                     stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
         stored_item.save()
 
+        reservation = Reservation(user_id = request.user)
+        reservation.save()
+
+        reservation_item = Reservated_Storing_Item(reservation_id = reservation,
+                                                    stored_item_id = stored_item,
+                                                    reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
+        reservation_item.save()
+
         #TODO Algo for searching for the last bin where same item was stored to add this item
         print(stored_items)
-        return stored_item
+        return stored_item, reservation.reservation_id
+    
+def store_new_item(request, store_item_form):
+    # Modal form this directly adds a new item to the db
+    new_item = store_item_form.save()
+    # Add a new stored item to the database
+    # TODO Storage algorythm goes here
+    new_stored_item = Stored_Item (bin_id = Bin.objects.get(pk=5),
+                                    item_id = new_item,
+                                    stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
+    new_stored_item.save()
+
+    reservation = Reservation(user_id = request.user)
+    reservation.save()
+
+    reservation_item = Reservated_Storing_Item(reservation_id = reservation,
+                                                   stored_item_id = new_stored_item,
+                                                   reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
+    reservation_item.save()
+    return 
