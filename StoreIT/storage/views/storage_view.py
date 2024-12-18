@@ -258,3 +258,13 @@ def cancel_storing(request, reservation_id):
         reservation = get_object_or_404(Reservation, pk=reservation_id)
         reservation.delete()
     return  HttpResponse("Reservation deleted", status=200)
+
+def confirm_destoring(request, reservation_id):
+    if request.method == "DELETE":
+        print("test")
+    return  HttpResponse("Reservation deleted", status=200)
+
+def cancel_destoring(request, reservation_id):
+    if request.method == "DELETE":
+        print("test")
+    return  HttpResponse("Reservation deleted", status=200)
