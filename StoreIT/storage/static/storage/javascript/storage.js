@@ -248,11 +248,12 @@ async function destoring_process_confirmed(reservation_id, reservated_destoring_
             }
         });
 
-        if (response.ok) {
+        const response_data = await response.json();
 
-        } else {
-            //alert('Error deleting item.');
+        if (response_data.destoring_end == true) {
+            location.reload();
         }
+        
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while deleting the item.');
