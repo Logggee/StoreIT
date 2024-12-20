@@ -245,6 +245,7 @@ def confirm_storing(request, reservation_id):
         return  HttpResponse("Reservation deleted", status=200)
      
 def cancel_storing(request, reservation_id):
+    print("Test")
     if request.method == "DELETE":
         # Delete the added quantity
         reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)

@@ -492,7 +492,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal" onclick="destoring_process_canceld({{ new_stored_existing_item.reservation_id }})">
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal" onclick="storage_process_canceld({{ new_stored_existing_item.reservation_id }})">
                 <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">
                 Cancel
             </button>
@@ -513,7 +513,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="destore-item-modal-heading">Remove the item from the highlighted bin.</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cancel_destoring_process({{ destored_item.reservation_id }})"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="destoring_process_canceld({{ destored_item.reservation_id }})"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container row">
