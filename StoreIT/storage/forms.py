@@ -263,9 +263,9 @@ class Destore_Item_Form(forms.Form):
                                                                                'placeholder': '0'
     }))
 
-    def __init__(self, *args,  stored_item_fk=None, **kwargs):
+    def __init__(self, *args,  stored_item_id=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.stored_item_fk = stored_item_fk
+        self.stored_item_id = stored_item_id
         # In invalid case the bootstrap clase is-invalid needs to be added
         # to the form elements
         for field_name, field in self.fields.items():
@@ -278,9 +278,9 @@ class Destore_Item_Form(forms.Form):
     def clean_item_destore_quantity(self):
         input_quantity = self.cleaned_data.get("item_destore_quantity")
 
-        if self.stored_item_fk:
+        if self.stored_item_id:
             # Check if the user wants to destore more as exists
-            if input_quantity > Stored_Item.get_total_stored_quantity_of_one_item(self.stored_item_fk):
+            if input_quantity > Stored_Item.get_total_stored_quantity_of_one_item(self.stored_item_id):
                 raise forms.ValidationError(
                     "You can only destore what's there!"
                 )

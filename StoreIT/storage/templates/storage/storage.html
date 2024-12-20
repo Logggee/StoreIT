@@ -126,7 +126,7 @@
                         {% endif %}
                     </div>
 
-                    <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_fk=item.item_id %}" method="post">
+                    <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_id=item.item_id %}" method="post">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="item-destore-quantity-{{ item.item_id }}" class="col-form-label">Remove from stock:</label>
@@ -492,7 +492,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal" onclick="storage_process_canceld({{ new_stored_existing_item.reservation_id }})">
+            <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal" onclick="destoring_process_canceld({{ new_stored_existing_item.reservation_id }})">
                 <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">
                 Cancel
             </button>
@@ -513,7 +513,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="destore-item-modal-heading">Remove the item from the highlighted bin.</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cancel_destoring_process(1)"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cancel_destoring_process({{ destored_item.reservation_id }})"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container row">
@@ -554,7 +554,7 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancel_destoring_process(1)">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="destoring_process_canceld({{ destored_item.reservation_id }})">
                         <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}">
                         Cancel
                     </button>
@@ -562,13 +562,13 @@
                     {% if not forloop.last %}
                         <!-- Get the next destore item to set the data-bs-target -->
                         {% with next_destore_item=destore_places_and_quantitys|next:forloop.counter0 %}
-                            <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#destore-item-modal-{{ next_destore_item.destore_bin_id }}" onclick="confirm_destoring_process()">
+                            <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#destore-item-modal-{{ next_destore_item.destore_bin_id }}" onclick="destoring_process_confirmed({{ destored_item.reservation_id }}, {{ reservated_destoring_item_id }})">
                                 <img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">Item is destored
                             </button>
                         {% endwith %}
                     <!-- This destore_item was the last one so set the button to close the modal after destoring the item-->
                     {% else %}
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="confirm_destoring_process(1)">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="destoring_process_confirmed({{ destored_item.reservation_id }}, {{ destored_item.reservated_destoring_item_id }})">
                             <img class="me-2" src="{% static 'storage/images/icons/check2-all.svg'%}">
                             Item is destored
                         </button>

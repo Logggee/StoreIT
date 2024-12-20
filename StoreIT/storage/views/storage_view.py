@@ -154,13 +154,13 @@ def store_existing_item (request, item_id):
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
         
-def destore_item(request, stored_item_fk):
-    ''' /storage/destore_itme/<int:stored_item_fk>
+def destore_item(request, stored_item_id):
+    ''' /storage/destore_itme/<int:stored_item_id>
     This url endpoint is used to destore a quantity of a stored item.
 
     Args:
         request: HTTP request object
-        stored_item_fk: The item foregin key of a Stored_Item
+        stored_item_id: The item foregin key of a Stored_Item
 
     Returns:
         Ether a render if there was a error in the form or
@@ -168,7 +168,7 @@ def destore_item(request, stored_item_fk):
     '''
     global storage_page_state
     if request.method == "POST":
-        destore_item_form = Destore_Item_Form(request.POST, stored_item_fk=stored_item_fk)
+        destore_item_form = Destore_Item_Form(request.POST, stored_item_id=stored_item_id)
         # Form was valid
         if destore_item_form.is_valid():
             # Prevents the user from adding items if no storage exists yet
@@ -178,7 +178,7 @@ def destore_item(request, stored_item_fk):
             destore_quantity = destore_item_form.cleaned_data["item_destore_quantity"]
             # Function that destores the item after the FIFO principle
             # Return holds all the stored items that whare destored and the coresponding quantitys
-            destore_places_and_quantitys = storage_processes.destore_item(stored_item_fk, destore_quantity)
+            destore_places_and_quantitys = storage_processes.destore_item(request, stored_item_id, destore_quantity)
             print(f"Destore Places and quantitys: {destore_places_and_quantitys}")
             storage_page_state = Storage_Page_State.DESTORE_ITEM_PROCESS
             # Safe the data in the session storage to show it in the modal/modals after the redirect
@@ -193,7 +193,7 @@ def destore_item(request, stored_item_fk):
                        "store_item_form": Store_Item_Form(),
                        "destore_item_form": Destore_Item_Form(),
                        "destore_item_form_error": destore_item_form,
-                       "item_with_destore_error": get_object_or_404(Item, pk=stored_item_fk), # Used to open the correct modal where the error happend
+                       "item_with_destore_error": get_object_or_404(Item, pk=stored_item_id), # Used to open the correct modal where the error happend
                        "storage_page_state": storage_page_state.name} # Variable that declares to open the modal after reload
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
@@ -259,12 +259,12 @@ def cancel_storing(request, reservation_id):
         reservation.delete()
     return  HttpResponse("Reservation deleted", status=200)
 
-def confirm_destoring(request, reservation_id):
+def confirm_destoring(request, reservation_id, reservated_destoring_item_id):
     if request.method == "DELETE":
-        print("test")
+        print("Confirm Destoring")
     return  HttpResponse("Reservation deleted", status=200)
 
 def cancel_destoring(request, reservation_id):
     if request.method == "DELETE":
-        print("test")
+        print("Cancel Destoring")
     return  HttpResponse("Reservation deleted", status=200)

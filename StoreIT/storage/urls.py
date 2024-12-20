@@ -18,13 +18,13 @@ urlpatterns = [
     path("storage/store_existing_item/<int:item_id>", views.store_existing_item, name="store_existing_item"),
     # localhost:8000/storage/destore_item/1
     # Url is used to destore a specific quantity of a stored item
-    path("storage/destore_item/<int:stored_item_fk>", views.destore_item, name="destore_item"),
+    path("storage/destore_item/<int:stored_item_id>", views.destore_item, name="destore_item"),
     # localhost:8000/storage/confirm_storing/<int:reservation_id>
     path("storage/confirm_storing/<int:reservation_id>", views.confirm_storing, name="confirm_storing"),
     # localhost:8000/storage/cancel_storing/<int:reservation_id>
     path("storage/cancel_storing/<int:reservation_id>", views.cancel_storing, name="cancel_storing"),
-    # localhost:8000/storage/confirm_destoring/<int:reservation_id>
-    path("storage/confirm_destoring/<int:reservation_id>", views.confirm_destoring, name="confirm_destoring"),
+    # localhost:8000/storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>
+    path("storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>", views.confirm_destoring, name="confirm_destoring"),
     # localhost:8000/storage/cancel_destoring/<int:reservation_id>
     path("storage/cancel_destoring/<int:reservation_id>", views.cancel_destoring, name="cancel_destoring"),
     # localhost:8000/config/
