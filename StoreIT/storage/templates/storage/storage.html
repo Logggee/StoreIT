@@ -508,7 +508,7 @@
     <!-- If the destoring accures in multiple bins multiple modals need to be shown-->
     {% for destored_item in destore_places_and_quantitys %}
         <!-- Modal destore item -->
-        <div class="modal fade modal-lg" id="destore-item-modal-{{ destored_item.destore_bin_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade modal-lg" id="destore-item-modal-{{ destored_item.destore_bin_id }}" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
