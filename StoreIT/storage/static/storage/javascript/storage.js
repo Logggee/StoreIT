@@ -237,28 +237,30 @@ async function storage_process_canceld(reservation_id) {
     }
 }
 
-async function destoring_process_confirmed(reservation_id)  {
+async function destoring_process_confirmed(reservation_id, reservated_destoring_item)  {
+
     // Confirm the destoring process
     try {
-        const response = await fetch(`/storage/cancel_destoring/${reservation_id}`, {
+        const response = await fetch(`/storage/confirm_destoring/${reservation_id}/${reservated_destoring_item}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRFToken': csrftoken, // Parse the csfr token
             }
         });
 
-        if (response.ok) {
+        const response_data = await response.json();
+
+        if (response_data.destoring_end == true) {
             location.reload();
-        } else {
-            //alert('Error deleting item.');
         }
+        
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while deleting the item.');
     }
 }
 
-async function destoring_process_cancled(reservation_id) {
+async function destoring_process_canceld(reservation_id) {
     // Cancel the destoring process
     console.log("Test");
 
