@@ -2,6 +2,7 @@ StoreIT/StoreIT/__pycache__
 StoreIT/storage/__pycache__
 StoreIT/storage/migrations/__pycache__
 StoreIT/StoreIT.sqlite3
+StoreIT/storeIT.sqlite3
 StoreIT/storage/templates/__pycache__
 StoreIT/storage/templatetags/__pycache__
 StoreIT/storage/views/__pycache__
