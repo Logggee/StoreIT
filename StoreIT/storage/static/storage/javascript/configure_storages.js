@@ -26,7 +26,9 @@ function generateCollumnInputFields(input) {
         inputField.className = "form-control";
         inputField.placeholder = "n bins";
         inputField.min = "1";
-        inputField.name = "number-of-bins-row-" + (i + 1);
+        inputField.name = "number-of-bins-row";
+        inputField.required = true;
+        inputField.id = (i + 1);
         inputField.oninput = function() {
             generateStorageLayout(this, i+1);
         };
@@ -35,9 +37,14 @@ function generateCollumnInputFields(input) {
             old_input_field = rows_inputs[i].querySelector("input");
             inputField.value = old_input_field.value;
         }
+
+        const validationField = document.createElement("div");
+        validationField.classList = "invalid-feedback";
+        validationField.id = "invalid-feedback-number-of-bins-row-" + (i + 1);
         
         colDiv.appendChild(label);
         colDiv.appendChild(inputField);
+        colDiv.appendChild(validationField);
         
         container_row.appendChild(colDiv);
     }
@@ -248,8 +255,23 @@ function validate_add_new_storage_form() {
     }
     else if (storage_rows.value > 30) {
         storage_rows.classList += " " + "is-invalid";
-        invalid_feedback_storage_rows.innerText = "Your storage can have more then 30 rows"
+        invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows"
     }
+
+    // Validation of bins per row
+    all_bins_per_row = document.getElementsByName("number-of-bins-row");
+    all_bins_per_row.forEach((number_of_bins_row) => {
+        number_of_bins_row.classList.remove("is-invalid");
+        invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + number_of_bins_row.id);
+        if (number_of_bins_row.value <= 0) {
+            number_of_bins_row.classList += " " + "is-invalid";
+            invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0"
+        }
+        else if (number_of_bins_row.value > 30) {
+            number_of_bins_row.classList += " " + "is-invalid";
+            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 30 bins"
+        }
+    });
 }
 
 // Function for axaj call to get all items that are stored in a specific bin
