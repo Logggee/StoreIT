@@ -237,6 +237,19 @@ function validate_add_new_storage_form() {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters"
     }
+
+    // Validate storage rows
+    storage_rows = document.getElementById("storage-rows");
+    storage_rows.classList.remove("is-invalid");
+    invalid_feedback_storage_rows = document.getElementById("invalid-feedback-storage-rows");
+    if (storage_rows.value <= 0) {
+        storage_rows.classList += " " + "is-invalid";
+        invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0"
+    }
+    else if (storage_rows.value > 30) {
+        storage_rows.classList += " " + "is-invalid";
+        invalid_feedback_storage_rows.innerText = "Your storage can have more then 30 rows"
+    }
 }
 
 // Function for axaj call to get all items that are stored in a specific bin

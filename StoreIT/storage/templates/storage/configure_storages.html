@@ -91,12 +91,13 @@
                                 <!-- <input type="number" class="form-control" id="storage-rows" name="storage-row-input" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)"> -->
                                  {{ storage_layout_form.storage_rows }}
                                  {% if storage_layout_form.storage_rows.errors %}
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" id="invalid-feedback-storage-rows">
                                     {% for error in storage_layout_form.storage_rows.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
                                 {% endif %}
+                                <div class="invalid-feedback" id="invalid-feedback-storage-rows"></div>
                             </div>
                         </div>
 
