@@ -211,10 +211,10 @@ def stored_single_item(request, item_id):
         A JSON object with all item attributes of a single item
     """
     item = get_object_or_404(Item, pk=item_id)
-    if item.item_node == "":
-        item_node = "-"
+    if item.item_note == "":
+        item_note = "-"
     else:
-        item_node = item.item_node
+        item_note = item.item_note
     if item.item_datasheet == "":
         item_datasheet = "-"
     else:
@@ -229,7 +229,7 @@ def stored_single_item(request, item_id):
         "item_name": item.item_name,
         "item_image": item.item_image.url,
         "item_volume": item.item_volume,
-        "item_node": item_node,
+        "item_note": item_note,
         "item_datasheet": item_datasheet,
         "item_purchase_place": item_purchase_place
     }
@@ -245,7 +245,6 @@ def confirm_storing(request, reservation_id):
         return  HttpResponse("Reservation deleted", status=200)
      
 def cancel_storing(request, reservation_id):
-    print("Test")
     if request.method == "DELETE":
         # Delete the added quantity
         reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)

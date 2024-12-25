@@ -1,6 +1,6 @@
 {% extends 'storage/main.html' %}
 {% load static %}
-{% block  scripts %} <script src="{% static 'storage/javascript/config.js'%}"></script> {% endblock %}
+{% block  scripts %} <script src="{% static 'storage/javascript/configure_storages.js'%}"></script> {% endblock %}
 {% block title %} Storage configuration {% endblock %}
 {% block body_content %}
     <div class="container my-5">
@@ -80,6 +80,7 @@
                             <div class="mb-3 text-start">
                                 <label for="storage-name" class="col-form-label">Name of the new storage:</label>
                                 <input type="text" class="form-control" id="storage-name" name="storage-name-input" placeholder="Enter a name" min="1" max="255">
+                                <div class="invalid-feedback" id="invalid-feedback-storage-name"></div>
                             </div>
                         </div>
 

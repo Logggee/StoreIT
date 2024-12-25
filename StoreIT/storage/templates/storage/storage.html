@@ -96,8 +96,8 @@
                         <input type="text" class="form-control" id="item-stored-quantity-{{ item.item_id }}" value="{{ stored_item_total_quantity }}" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="item-node-text-{{ item.item_id }}" class="col-form-label">Node:</label>
-                        <textarea class="form-control" id="item-node-text-{{ item.item_id }}" readonly>{% if item.item_node == "" %}-{% else %}{{ item.item_node }}{% endif %}</textarea>
+                        <label for="item-note-text-{{ item.item_id }}" class="col-form-label">Note:</label>
+                        <textarea class="form-control" id="item-note-text-{{ item.item_id }}" readonly>{% if item.item_note == "" %}-{% else %}{{ item.item_note }}{% endif %}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="item-datasheet-link-{{ item.item_id }}" class="col-form-label">Datasheet:</label>
@@ -285,8 +285,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="item-node" class="col-form-label">Node</label>
-                        {{ store_item_form.item_node }}
+                        <label for="item-note" class="col-form-label">Note</label>
+                        {{ store_item_form.item_note }}
                     </div>
                     <div class="mb-3">
                         <label for="item-datasheet" id="item-datasheet-label" class="col-form-label">Datasheet</label>

@@ -97,7 +97,8 @@ function generateStorageLayout(input, row_number) {
         const safe_config_button_image = document.getElementById("safe-config-button-image");
         safe_config_button_image.style = "";
         safe_config_button.onclick = () => {
-            document.getElementById("storage-layout-form").submit();
+            validate_add_new_storage_form();
+            //document.getElementById("storage-layout-form").submit();
         };
         // Append the button before adding the text of the button
         safe_config_button.appendChild(safe_config_button_image);
@@ -221,6 +222,21 @@ function createGrayLine() {
     grayLine.classList = "container-fluid my-3";
     grayLine.style.borderTop = "solid 1px gray";
     return grayLine;
+}
+
+function validate_add_new_storage_form() {
+    // Validate storage name field
+    storage_name = document.getElementById("storage-name");
+    storage_name.classList.remove("is-invalid");
+    invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
+    if (storage_name.value.length <= 0) {
+        storage_name.classList += " " + "is-invalid";
+        invalid_feedback_storage_name.innerText = "You need to name your storage"
+    }
+    else if (storage_name.value.length > 30) {
+        storage_name.classList += " " + "is-invalid";
+        invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters"
+    }
 }
 
 // Function for axaj call to get all items that are stored in a specific bin

@@ -202,7 +202,7 @@ class Store_Item_Form(forms.ModelForm):
     class Meta:
         model = Item
         fields = [
-            'item_name', 'item_image', 'item_volume', 'item_node', 'item_datasheet', 'item_purchase_place'
+            'item_name', 'item_image', 'item_volume', 'item_note', 'item_datasheet', 'item_purchase_place'
         ]
 
         widgets = {
@@ -221,9 +221,9 @@ class Store_Item_Form(forms.ModelForm):
                 'id': 'item-volume',
                 'placeholder': 'Volume of the item/s'
             }),
-            'item_node': forms.Textarea(attrs={
+            'item_note': forms.Textarea(attrs={
                 'class': 'form-control',
-                'id': 'item-node',
+                'id': 'item-note',
                 'placeholder': 'Notes',
                 'rows': 1
             }),
@@ -317,7 +317,7 @@ class Storage_Layout_Form(forms.Form):
 
         if len(args) != 0:
             form_data = args[0]
-            
+            print(f"Form data {form_data}")
             for field, value in form_data.items():
                 if "number-of-bins-row-" in field:
                     match = re.search(r'-(\d+)$', field)

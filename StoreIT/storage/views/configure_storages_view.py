@@ -18,6 +18,12 @@ def config(request):
     '''
     # Post request
     if request.method == "POST":
+        storage_layout_form = Storage_Layout_Form(request.POST)
+        if storage_layout_form.is_valid():
+            print(f"Form was valid")
+        else:
+            print(f"Form was not valid")
+        """
         form_data = request.POST.dict()
         print(f"Form data: {form_data}")
         # Build and safe a new storage dataset
@@ -71,7 +77,7 @@ def config(request):
                                   bin_volume = bin_volumes[int(field_value)],
                                   bin_volume_used = 0)
                     new_bin.save()
-
+        """
         return redirect("storage:config")
     
     # Get request

@@ -26,7 +26,7 @@ class Item (models.Model):
                                    upload_to="item_images",
                                    validators=[FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "svg"])]) # This folder is created in media folder automatically
     item_volume = models.FloatField("the volume of the item")
-    item_node = models.CharField("optional item nodes",
+    item_note = models.CharField("optional item notes",
                                  max_length=MAX_ITEM_NODE_LENGTH, blank=True) # TEXT
     item_datasheet = models.FileField("item pdf datasheet",
                                       upload_to="item_datasheets",
