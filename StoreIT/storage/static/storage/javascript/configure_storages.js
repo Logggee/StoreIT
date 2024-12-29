@@ -29,6 +29,8 @@ function generateCollumnInputFields(input) {
         inputField.name = "number-of-bins-row";
         inputField.required = true;
         inputField.id = (i + 1);
+        inputField.max = 20;
+        inputField.min = 1;
         inputField.oninput = function() {
             generateStorageLayout(this, i+1);
         };
@@ -213,11 +215,17 @@ function generateStorageLayout(input, row_number) {
         input_bin_size = document.createElement("input");
         input_bin_size.type = "number";
         input_bin_size.classList = "form-control";
-        input_bin_size.id = "bin-size-" + sizes[i];
-        input_bin_size.name = "bin-size-" + sizes[i];
+        input_bin_size.id = sizes[i];
+        input_bin_size.name = "bin-size";
         input_bin_size.placeholder = "Volume in ccm";
         input_bin_size.min = "1";
+        input_bin_size.max = "1000000";
         div_bin_size.appendChild(input_bin_size);
+
+        const validationField = document.createElement("div");
+        validationField.classList = "invalid-feedback";
+        validationField.id = "invalid-feedback-bin-size-" + sizes[i];
+        div_bin_size.appendChild(validationField);
 
         div_bin_size_col.appendChild(div_bin_size);
         container_bin_sizes_row.appendChild(div_bin_size_col);
@@ -238,11 +246,11 @@ function validate_add_new_storage_form() {
     invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
     if (storage_name.value.length <= 0) {
         storage_name.classList += " " + "is-invalid";
-        invalid_feedback_storage_name.innerText = "You need to name your storage"
+        invalid_feedback_storage_name.innerText = "You need to name your storage";
     }
     else if (storage_name.value.length > 30) {
         storage_name.classList += " " + "is-invalid";
-        invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters"
+        invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters";
     }
 
     // Validate storage rows
@@ -251,11 +259,11 @@ function validate_add_new_storage_form() {
     invalid_feedback_storage_rows = document.getElementById("invalid-feedback-storage-rows");
     if (storage_rows.value <= 0) {
         storage_rows.classList += " " + "is-invalid";
-        invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0"
+        invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0";
     }
     else if (storage_rows.value > 30) {
         storage_rows.classList += " " + "is-invalid";
-        invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows"
+        invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows";
     }
 
     // Validation of bins per row
@@ -265,12 +273,52 @@ function validate_add_new_storage_form() {
         invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + number_of_bins_row.id);
         if (number_of_bins_row.value <= 0) {
             number_of_bins_row.classList += " " + "is-invalid";
-            invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0"
+            invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0";
         }
-        else if (number_of_bins_row.value > 30) {
+        else if (number_of_bins_row.value > 20) {
             number_of_bins_row.classList += " " + "is-invalid";
-            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 30 bins"
+            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins";
         }
+    });
+
+    // Validation of bin volumes
+    const all_bin_sizes = document.getElementsByName("bin-size");
+    let lastVolume = null;
+    let fieldInvlalid = false;
+    all_bin_sizes.forEach((bin_size) => {
+        // Remove old validation Error Message
+        bin_size.classList.remove("is-invalid");
+        volume = parseFloat(bin_size.value);
+        invalid_feedback_bin_size = document.getElementById("invalid-feedback-bin-size-" + bin_size.id);
+        if (bin_size.value <= 0) {
+            bin_size.classList += " " + "is-invalid";
+            invalid_feedback_bin_size.innerText = "This field cant be empty";
+            fieldInvlalid = true;
+        }
+        else if (volume <= 0) {
+            bin_size.classList += " " + "is-invalid";
+            invalid_feedback_bin_size.innerText = "Volume must be bigger then 0";
+            fieldInvlalid = true;
+        }
+        else if (volume > 1000000) {
+            bin_size.classList += " " + "is-invalid";
+            invalid_feedback_bin_size.innerText = "Volume cant be bigger then 10 dm^3";
+            fieldInvlalid = true;
+        }
+        
+        if (lastVolume == null) {
+            lastVolume = volume
+        }
+        else {
+            if (volume <= lastVolume &&  !fieldInvlalid) {
+                bin_size.classList += " " + "is-invalid";
+                invalid_feedback_bin_size.innerText = "Volume must be bigger than the volume of the next smaller bin";
+                fieldInvlalid = true;
+            }
+            else {
+                lastVolume = volume;
+            }
+        } 
     });
 }
 
