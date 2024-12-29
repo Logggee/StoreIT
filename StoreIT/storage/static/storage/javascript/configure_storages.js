@@ -106,8 +106,11 @@ function generateStorageLayout(input, row_number) {
         const safe_config_button_image = document.getElementById("safe-config-button-image");
         safe_config_button_image.style = "";
         safe_config_button.onclick = () => {
-            validate_add_new_storage_form();
-            //document.getElementById("storage-layout-form").submit();
+            // Validate the form
+            if (!validate_add_new_storage_form()) {
+                // If form was valid submit it
+                document.getElementById("storage-layout-form").submit();
+            }
         };
         // Append the button before adding the text of the button
         safe_config_button.appendChild(safe_config_button_image);
@@ -240,44 +243,51 @@ function createGrayLine() {
 }
 
 function validate_add_new_storage_form() {
+    let form_invalid = false;
     // Validate storage name field
-    storage_name = document.getElementById("storage-name");
+    const storage_name = document.getElementById("storage-name");
     storage_name.classList.remove("is-invalid");
-    invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
+    const invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
     if (storage_name.value.length <= 0) {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "You need to name your storage";
+        form_invalid = true;
     }
     else if (storage_name.value.length > 30) {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters";
+        form_invalid = true;
     }
 
     // Validate storage rows
-    storage_rows = document.getElementById("storage-rows");
+    const storage_rows = document.getElementById("storage-rows");
     storage_rows.classList.remove("is-invalid");
-    invalid_feedback_storage_rows = document.getElementById("invalid-feedback-storage-rows");
+    const invalid_feedback_storage_rows = document.getElementById("invalid-feedback-storage-rows");
     if (storage_rows.value <= 0) {
         storage_rows.classList += " " + "is-invalid";
         invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0";
+        form_invalid = true;
     }
     else if (storage_rows.value > 30) {
         storage_rows.classList += " " + "is-invalid";
         invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows";
+        form_invalid = true;
     }
 
     // Validation of bins per row
-    all_bins_per_row = document.getElementsByName("number-of-bins-row");
+    const all_bins_per_row = document.getElementsByName("number-of-bins-row");
     all_bins_per_row.forEach((number_of_bins_row) => {
         number_of_bins_row.classList.remove("is-invalid");
-        invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + number_of_bins_row.id);
+        const invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + number_of_bins_row.id);
         if (number_of_bins_row.value <= 0) {
             number_of_bins_row.classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0";
+            form_invalid = true;
         }
         else if (number_of_bins_row.value > 20) {
             number_of_bins_row.classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins";
+            form_invalid = true;
         }
     });
 
@@ -289,21 +299,24 @@ function validate_add_new_storage_form() {
         // Remove old validation Error Message
         bin_size.classList.remove("is-invalid");
         volume = parseFloat(bin_size.value);
-        invalid_feedback_bin_size = document.getElementById("invalid-feedback-bin-size-" + bin_size.id);
+        const invalid_feedback_bin_size = document.getElementById("invalid-feedback-bin-size-" + bin_size.id);
         if (bin_size.value <= 0) {
             bin_size.classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "This field cant be empty";
             fieldInvlalid = true;
+            form_invalid = true;
         }
         else if (volume <= 0) {
             bin_size.classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "Volume must be bigger then 0";
             fieldInvlalid = true;
+            form_invalid = true;
         }
         else if (volume > 1000000) {
             bin_size.classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "Volume cant be bigger then 10 dm^3";
             fieldInvlalid = true;
+            form_invalid = true;
         }
         
         if (lastVolume == null) {
@@ -314,12 +327,15 @@ function validate_add_new_storage_form() {
                 bin_size.classList += " " + "is-invalid";
                 invalid_feedback_bin_size.innerText = "Volume must be bigger than the volume of the next smaller bin";
                 fieldInvlalid = true;
+                form_invalid = true;
             }
             else {
                 lastVolume = volume;
             }
         } 
     });
+
+    return form_invalid;
 }
 
 // Function for axaj call to get all items that are stored in a specific bin
