@@ -23,10 +23,10 @@ function generateCollumnInputFields(input) {
         
         const inputField = document.createElement("input");
         inputField.type = "number";
-        inputField.className = "form-control";
+        inputField.className = "form-control number-of-bins-row";
         inputField.placeholder = "n bins";
         inputField.min = "1";
-        inputField.name = "number-of-bins-row";
+        inputField.name = "number-of-bins-row-" + (i + 1);
         inputField.required = true;
         inputField.id = (i + 1);
         inputField.max = 20;
@@ -217,9 +217,9 @@ function generateStorageLayout(input, row_number) {
 
         input_bin_size = document.createElement("input");
         input_bin_size.type = "number";
-        input_bin_size.classList = "form-control";
+        input_bin_size.classList = "form-control volume";
         input_bin_size.id = sizes[i];
-        input_bin_size.name = "bin-size";
+        input_bin_size.name = "bin-size-" + sizes[i];
         input_bin_size.placeholder = "Volume in ccm";
         input_bin_size.min = "1";
         input_bin_size.max = "1000000";
@@ -275,45 +275,47 @@ function validate_add_new_storage_form() {
     }
 
     // Validation of bins per row
-    const all_bins_per_row = document.getElementsByName("number-of-bins-row");
-    all_bins_per_row.forEach((number_of_bins_row) => {
-        number_of_bins_row.classList.remove("is-invalid");
-        const invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + number_of_bins_row.id);
-        if (number_of_bins_row.value <= 0) {
-            number_of_bins_row.classList += " " + "is-invalid";
+    const all_bins_per_row = document.getElementsByClassName("form-control number-of-bins-row");
+    for (let i=0; i<all_bins_per_row.length; i++)
+    {
+        all_bins_per_row[i].classList.remove("is-invalid");
+        const invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + all_bins_per_row[i].id);
+        if (all_bins_per_row[i].value <= 0) {
+            all_bins_per_row[i].classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0";
             form_invalid = true;
         }
-        else if (number_of_bins_row.value > 20) {
-            number_of_bins_row.classList += " " + "is-invalid";
+        else if (all_bins_per_row[i].value > 20) {
+            all_bins_per_row[i].classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins";
             form_invalid = true;
         }
-    });
+    }
 
     // Validation of bin volumes
-    const all_bin_sizes = document.getElementsByName("bin-size");
+    const all_bin_sizes = document.getElementsByClassName("form-control volume");
     let lastVolume = null;
     let fieldInvlalid = false;
-    all_bin_sizes.forEach((bin_size) => {
+    for (let i=0; i<all_bin_sizes.length; i++)
+    {
         // Remove old validation Error Message
-        bin_size.classList.remove("is-invalid");
-        volume = parseFloat(bin_size.value);
-        const invalid_feedback_bin_size = document.getElementById("invalid-feedback-bin-size-" + bin_size.id);
-        if (bin_size.value <= 0) {
-            bin_size.classList += " " + "is-invalid";
+        all_bin_sizes[i].classList.remove("is-invalid");
+        volume = parseFloat(all_bin_sizes[i].value);
+        const invalid_feedback_bin_size = document.getElementById("invalid-feedback-bin-size-" + all_bin_sizes[i].id);
+        if (all_bin_sizes[i].value <= 0) {
+            all_bin_sizes[i].classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "This field cant be empty";
             fieldInvlalid = true;
             form_invalid = true;
         }
         else if (volume <= 0) {
-            bin_size.classList += " " + "is-invalid";
+            all_bin_sizes[i].classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "Volume must be bigger then 0";
             fieldInvlalid = true;
             form_invalid = true;
         }
         else if (volume > 1000000) {
-            bin_size.classList += " " + "is-invalid";
+            all_bin_sizes[i].classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "Volume cant be bigger then 10 dm^3";
             fieldInvlalid = true;
             form_invalid = true;
@@ -324,7 +326,7 @@ function validate_add_new_storage_form() {
         }
         else {
             if (volume <= lastVolume &&  !fieldInvlalid) {
-                bin_size.classList += " " + "is-invalid";
+                all_bin_sizes[i].classList += " " + "is-invalid";
                 invalid_feedback_bin_size.innerText = "Volume must be bigger than the volume of the next smaller bin";
                 fieldInvlalid = true;
                 form_invalid = true;
@@ -333,7 +335,7 @@ function validate_add_new_storage_form() {
                 lastVolume = volume;
             }
         } 
-    });
+    }
 
     return form_invalid;
 }

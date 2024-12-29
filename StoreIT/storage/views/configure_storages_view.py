@@ -17,13 +17,7 @@ def config(request):
         Renders the template config.html
     '''
     # Post request
-    if request.method == "POST":
-        storage_layout_form = Storage_Layout_Form(request.POST)
-        if storage_layout_form.is_valid():
-            print(f"Form was valid")
-        else:
-            print(f"Form was not valid")
-        """
+    if request.method == "POST": 
         form_data = request.POST.dict()
         print(f"Form data: {form_data}")
         # Build and safe a new storage dataset
@@ -45,8 +39,8 @@ def config(request):
                 # TODO this if is probably useless because bin sizes shoud be diffrent for each field
                 # so there is no need to check if it already exist in the list because a bin size shoud always differ
                 # from all other bin sizes
-                if not int(field_value) in diffrent_bin_volumes:
-                    diffrent_bin_volumes.append(int(field_value))
+                if not float(field_value) in diffrent_bin_volumes:
+                    diffrent_bin_volumes.append(float(field_value))
         # Sort least amount of bins per row to most numbers of bins per row
         diffrent_number_of_bin_per_row.sort()
         print(f"Diffrent number of bins per row: {diffrent_number_of_bin_per_row}")
@@ -74,10 +68,10 @@ def config(request):
                                   bin_number = bin_number,
                                   bin_row = row_number,
                                   bin_col = col_index,
-                                  bin_volume = bin_volumes[int(field_value)],
+                                  bin_volume = bin_volumes[float(field_value)],
                                   bin_volume_used = 0)
                     new_bin.save()
-        """
+
         return redirect("storage:config")
     
     # Get request
