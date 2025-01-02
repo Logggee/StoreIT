@@ -108,7 +108,7 @@ def storage(request):
 
         return render(request, "storage/storage.html", content)
     
-def store_existing_item (request, item_id):
+def store_existing_item(request, item_id):
     """ storage/store_existing_item/<int:item_id>
     This url endpoint is used to store a item where the same item is already stored somewhere.
     So only the quantity in the storage space needs to be updated. The function pics the same

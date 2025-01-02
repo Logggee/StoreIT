@@ -50,8 +50,8 @@ function onlyOneSelectable (checkbox) {
                 document.getElementById("item-image").classList.add("d-none");
                 document.getElementById("item-name").value = response_data.item_name;
                 document.getElementById("item-name").setAttribute("readonly", true);
-                document.getElementById("item-node").value = response_data.item_node;
-                document.getElementById("item-node").setAttribute("readonly", true);
+                document.getElementById("item-note").value = response_data.item_note;
+                document.getElementById("item-note").setAttribute("readonly", true);
                 document.getElementById("item-datasheet-label").classList.add("d-none");
                 document.getElementById("item-datasheet").classList.add("d-none");
                 document.getElementById("item-datasheet-selected-master-data-label").classList.remove("d-none");
@@ -72,8 +72,8 @@ function onlyOneSelectable (checkbox) {
         document.getElementById("item-image").classList.remove("d-none");
         document.getElementById("item-name").value = "";
         document.getElementById("item-name").removeAttribute("readonly");
-        document.getElementById("item-node").value = "";
-        document.getElementById("item-node").removeAttribute("readonly");
+        document.getElementById("item-note").value = "";
+        document.getElementById("item-note").removeAttribute("readonly");
         document.getElementById("item-datasheet-label").classList.remove("d-none");
         document.getElementById("item-datasheet").classList.remove("d-none");
         document.getElementById("item-datasheet-selected-master-data-label").classList.add("d-none");
@@ -119,7 +119,7 @@ function showOnlySearchHits (input_field) {
     });
 }
 
-function addItemToDestoreList(item_id) {
+function addItemToDestoreList (item_id) {
     const destore_list = document.getElementById("destore-list");
     // Check if the list was empty till now show all buttons
     if (destore_list.childElementCount == 0) {
@@ -175,7 +175,7 @@ function addItemToDestoreList(item_id) {
     }
 }
 
-function deleteItemDestoringList() {
+function deleteItemDestoringList () {
     // TODO deleting of multiple items not working
     destore_list_checkboxes = document.getElementsByName("destore-list-checkbox");
     destore_list_checkboxes.forEach((checkbox) => {
@@ -194,7 +194,7 @@ function deleteItemDestoringList() {
     }
 }
 
-async function storage_process_confirmed(reservation_id) {
+async function storage_process_confirmed (reservation_id) {
     // Confirm the storage process
 
     try {
@@ -216,7 +216,7 @@ async function storage_process_confirmed(reservation_id) {
     }
 }
 
-async function storage_process_canceld(reservation_id) {
+async function storage_process_canceld (reservation_id) {
     // Cancel the storage process
     try {
         const response = await fetch(`/storage/cancel_storing/${reservation_id}`, {
@@ -237,7 +237,7 @@ async function storage_process_canceld(reservation_id) {
     }
 }
 
-async function destoring_process_confirmed(reservation_id, reservated_destoring_item)  {
+async function destoring_process_confirmed (reservation_id, reservated_destoring_item)  {
 
     // Confirm the destoring process
     try {
@@ -260,7 +260,7 @@ async function destoring_process_confirmed(reservation_id, reservated_destoring_
     }
 }
 
-async function destoring_process_canceld(reservation_id) {
+async function destoring_process_canceld (reservation_id) {
     // Cancel the destoring process
     console.log("Test");
 
@@ -281,4 +281,15 @@ async function destoring_process_canceld(reservation_id) {
         console.error('Error:', error);
         alert('An error occurred while deleting the item.');
     }
+}
+
+function bin_manually_selected (bin_id, reservation_id) {
+    const stored_item_manually_button = document.getElementById("stored-item-manually");
+    stored_item_manually_button.onclick = function() {
+        stored_item_manually(bin_id, reservation_id);
+    };
+}
+
+function stored_item_manually (bin_id, reservation_id) {
+
 }

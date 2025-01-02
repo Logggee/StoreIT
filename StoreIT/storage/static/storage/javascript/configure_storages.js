@@ -29,6 +29,8 @@ function generateCollumnInputFields(input) {
         inputField.name = "number-of-bins-row";
         inputField.required = true;
         inputField.id = (i + 1);
+        inputField.max = 20;
+        inputField.min = 1;
         inputField.oninput = function() {
             generateStorageLayout(this, i+1);
         };
@@ -267,9 +269,9 @@ function validate_add_new_storage_form() {
             number_of_bins_row.classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0"
         }
-        else if (number_of_bins_row.value > 30) {
+        else if (number_of_bins_row.value > 20) {
             number_of_bins_row.classList += " " + "is-invalid";
-            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 30 bins"
+            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins"
         }
     });
 }
