@@ -1,5 +1,6 @@
 # storage_view.py
 
+import json
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from storage.models import Stored_Item, Item, Bin, Storage, Reservation, Reservated_Storing_Item, Reservated_Destoring_Item
@@ -259,10 +260,29 @@ def cancel_storing(request, reservation_id):
         reservation.delete()
     return  HttpResponse("Reservation deleted", status=200)
 
-def manually_selected_bin(request, bin_id, reservation_id):
-    if request.method == "PATCH":
-        print("Test")
-    return  HttpResponse("Manuall selcted bin confirmed", status=200)
+def manual_storage(request):
+    if request.method == 'PATCH':
+        # JSON-Daten aus dem Request-Body extrahieren
+        try:
+            json_data = json.loads(request.body)  # request.body enthält die gesendeten JSON-Daten
+            print(json_data)  # Zum Debuggen, die JSON-Daten ausgeben
+
+            # Verarbeite die JSON-Daten, zum Beispiel das Durchlaufen der Bin-IDs und Mengen
+            for item in json_data:
+                bin_id = item.get('bin_id')
+                quantity = item.get('quantity')
+                print(f"Bin id {bin_id}")
+                print(f"Quantity {quantity}")
+                # Führe hier deine Logik aus, z. B. Daten in der DB speichern oder weiter verarbeiten
+
+            # Erfolgreiche Antwort zurückgeben
+            return JsonResponse({'status': 'success', 'message': 'Data processed successfully'})
+        
+        except json.JSONDecodeError:
+            # Fehlerbehandlung für ungültige JSON-Daten
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Only POST method allowed'}, status=405)
 
 def confirm_destoring(request, reservation_id, reservated_destoring_item_id):
     """storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>

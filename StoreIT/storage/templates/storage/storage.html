@@ -480,7 +480,7 @@
 
                                         <div class="container" id="bin-manual-quantity-{{ storage.storage_id }}"></div>
 
-                                        <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually()">
+                                        <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually('{{ new_stored_existing_item.reservation_id }}')">
                                             <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
                                             Stored item manually
                                         </button>

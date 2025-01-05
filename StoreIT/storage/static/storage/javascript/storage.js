@@ -336,8 +336,8 @@ function bin_manually_selected (bin_id, reservation_id) {
 }
 */
 
-function stored_item_manually (bin_id, reservation_id) {
-    let json_data = []
+async function stored_item_manually (reservation_id) {
+    let json_data = [{"reservation_id": reservation_id}];
     let all_manual_quantity_inputs = document.getElementsByName("manual-quantity-input");
 
     all_manual_quantity_inputs.forEach((manual_quantity_input) => {
@@ -346,4 +346,14 @@ function stored_item_manually (bin_id, reservation_id) {
         quantity = manual_quantity_input.value;
         json_data.push({ bin_id: bin_id, quantity: quantity });
     });
+
+    const response = await fetch('/storage/manual_storage', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken, // Falls erforderlich
+        },
+        body: JSON.stringify(json_data)
+    });
+    
 }
