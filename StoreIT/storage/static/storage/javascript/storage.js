@@ -283,13 +283,67 @@ async function destoring_process_canceld (reservation_id) {
     }
 }
 
+function add_inputs_manual_quantity (checkbox, storage_id, storage_name, bin_id, bin_number) {
+    const div = document.getElementById("bin-manual-quantity-" + storage_id);
+
+    if (checkbox.checked) {
+        if (div.childNodes.length === 0) {
+            const grayLine = document.createElement("div");
+            grayLine.classList = "container-fluid my-3";
+            grayLine.id = "gray-line-manual-storage"
+            grayLine.style.borderTop = "solid 1px gray";
+            div.appendChild(grayLine);
+        }
+
+        const input_div = document.createElement("div");
+        input_div.classList = "mb-3";
+        input_div.id = "manual-quantity-div-" + bin_id + "-" + bin_number;
+
+        const input = document.createElement("input");
+        input.type = "number";
+        input.classList = "form-control";
+        input.id = "manual-quantity-input-" + bin_id + "-" + bin_number;
+        input.name = "manual-quantity-input";
+        input.placeholder = "Enter quantity for bin " + bin_number + " in storage " + storage_name;
+        input.min = 1;
+
+        input_div.appendChild(input);
+        div.appendChild(input_div);
+    }
+    else {
+        document.getElementById("manual-quantity-input-" + bin_id + "-" + bin_number).remove();
+
+        if (div.children.length === 1) {
+            document.getElementById("gray-line-manual-storage").remove();
+        }
+    }
+}
+
+/* Function is called when a bin for manually storing a item was selected
+
+Function changes the parametes of the stored item manually.
+The corresponding bin_id is set as parameter of the on click function.
+
+Args:
+    bin_id: The bin_id of the bin that the user selected for manually storing the item
+    reservation_id: The reservation_id of the current storing process
+
 function bin_manually_selected (bin_id, reservation_id) {
     const stored_item_manually_button = document.getElementById("stored-item-manually");
     stored_item_manually_button.onclick = function() {
         stored_item_manually(bin_id, reservation_id);
     };
 }
+*/
 
 function stored_item_manually (bin_id, reservation_id) {
+    let json_data = []
+    let all_manual_quantity_inputs = document.getElementsByName("manual-quantity-input");
 
+    all_manual_quantity_inputs.forEach((manual_quantity_input) => {
+        split_string = manual_quantity_input.id.split("-");
+        bin_id = split_string[split_string.length - 1];
+        quantity = manual_quantity_input.value;
+        json_data.push({ bin_id: bin_id, quantity: quantity });
+    });
 }

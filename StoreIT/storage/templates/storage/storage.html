@@ -342,7 +342,7 @@
 
     <!-- Modal for the storage process -->
     <!-- This modal is used ether for storing a new item or for storing a known item from master data -->
-    <div class="modal fade" id="storage-process-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade modal-lg" id="storage-process-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -468,7 +468,7 @@
                                                     
                                                     <div class="col d-flex justify-content-between mx-4">
                                                         {% for bin in all_bins_in_row %}
-                                                            <input type="radio" class="btn-check" name="btnradio-{{ storage.storage_id }}-storage-process" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process" autocomplete="off" onclick="bin_manually_selected('{{ bin.bin_id }}', '{{ new_stored_existing_item.reservation_id }}')">
+                                                            <input type="checkbox" class="btn-check" name="btnradio-{{ storage.storage_id }}-storage-process" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process" autocomplete="off" onchange="add_inputs_manual_quantity(this, '{{ storage.storage_id }}', '{{ storage.storage_name }}', '{{ bin.bin_id }}', '{{ bin.bin_number }}')">
                                                             <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process">
                                                                 {{ bin.bin_number }}
                                                             </label>
@@ -477,7 +477,10 @@
                                                 </div>
                                             {% endfor %}
                                         </div>
-                                        <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually">
+
+                                        <div class="container" id="bin-manual-quantity-{{ storage.storage_id }}"></div>
+
+                                        <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually()">
                                             <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
                                             Stored item manually
                                         </button>

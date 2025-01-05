@@ -23,6 +23,8 @@ urlpatterns = [
     path("storage/confirm_storing/<int:reservation_id>", views.confirm_storing, name="confirm_storing"),
     # localhost:8000/storage/cancel_storing/<int:reservation_id>
     path("storage/cancel_storing/<int:reservation_id>", views.cancel_storing, name="cancel_storing"),
+    # localhost:8000/storage/cancel_storing/<int:reservation_id>
+    path("storage/manually_selected_bin/<int:bin_id>/<int:reservation_id>", views.manually_selected_bin, name="manually_selected_bin"),
     # localhost:8000/storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>
     path("storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>", views.confirm_destoring, name="confirm_destoring"),
     # localhost:8000/storage/cancel_destoring/<int:reservation_id>

@@ -259,29 +259,66 @@ def cancel_storing(request, reservation_id):
         reservation.delete()
     return  HttpResponse("Reservation deleted", status=200)
 
+def manually_selected_bin(request, bin_id, reservation_id):
+    if request.method == "PATCH":
+        print("Test")
+    return  HttpResponse("Manuall selcted bin confirmed", status=200)
+
 def confirm_destoring(request, reservation_id, reservated_destoring_item_id):
+    """storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>
+
+    This url endpoint is used to confirm a destoring process. The user clicked the item is destored button
+    in the destoring dialog. In some cases the destoring process is held amoung multiple bins in this case
+    this view triggerd for every bin with the coresponding reservation_destoring_item. If all Coresponding
+    Reservation Items where destored and deleted the Reservation can be deleted.
+
+    Args:
+        reservation_id: the id of the reservation where a destoring was confirmed
+        reservation_destoring_item_id
+
+    Returns:
+        JsonResponse: destoring_end False or True tells the Clientside Function if the
+            destoring process is finished or not
+    """
     if request.method == "DELETE":
         reservated_destoring_item = get_object_or_404(Reservated_Destoring_Item, pk=reservated_destoring_item_id)
         stored_item = get_object_or_404(Stored_Item, pk=reservated_destoring_item.stored_item_id.stored_item_id)
         # Check if all items of this location is getting destored or only a part of them
+        # 
         if stored_item.stored_item_quantity >= reservated_destoring_item.reservated_destoring_item_quantity:
             stored_item.stored_item_quantity -= reservated_destoring_item.reservated_destoring_item_quantity
             stored_item.save()
+        # All items of this storage location are destored so they can be deleted
         else:
             stored_item.delete()
+        # Delete the Reservated_Destoring_Item
         reservated_destoring_item.delete()
-        # Check if all items are destored
+        # Check if all Reservated_Destoring_Item are destored
+        # If all are destored the reservation can be deleted
         if len(Reservated_Destoring_Item.objects.filter(reservation_id = reservation_id)) == 0:
             reservation = get_object_or_404(Reservation, pk=reservation_id)
             reservation.delete()
             data = {"destoring_end": True}
             return JsonResponse(data)
+        # There are more Reservated_Destoring_Item so go to the next destoring dialog
         else:
             data = {"destoring_end": False}
             return JsonResponse(data)
     return  HttpResponse("Reservation deleted", status=200)
 
 def cancel_destoring(request, reservation_id):
+    """storage/cancel_destoring/<int:reservation_id>
+
+    This url endpiont is used for canceling the current destoring process.
+    When the user closes the modal or if he pressed the cancel button.
+    When the process is canceld the Reservation with all its Reservated_Destoring_Items is deleted.
+
+    Args:
+        reservation_id: The id of the reservation that was canceld
+
+    Returns:
+        HttpResponse: 200
+    """
     if request.method == "DELETE":
         # Get the reservation and delete it with all it's reservated items
         reservation = get_object_or_404(Reservation, pk=reservation_id)

@@ -1,3 +1,4 @@
+import math
 from .models import Stored_Item, Bin, Item, Reservation, Reservated_Destoring_Item, Reservated_Storing_Item
 from .forms import Store_Item_Form
 from django.shortcuts import get_object_or_404
@@ -113,6 +114,7 @@ def store_new_item(request, store_item_form):
     new_item = store_item_form.save()
     # Add a new stored item to the database
     # TODO Storage algorythm goes here
+    __find_storage_place(new_item.item_id, store_item_form.cleaned_data["item_quantity"])
     new_stored_item = Stored_Item (bin_id = Bin.objects.get(pk=5),
                                     item_id = new_item,
                                     stored_item_quantity = store_item_form.cleaned_data["item_quantity"])
@@ -125,4 +127,26 @@ def store_new_item(request, store_item_form):
                                                    stored_item_id = new_stored_item,
                                                    reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
     reservation_item.save()
-    return 
+    return
+
+def __find_storage_place(item_id, quantity):
+    storing_location_and_quantitys = dict()
+    item_last_in_first_out_list = Stored_Item.get_stored_item_last_in_first_out_list(item_id)
+    # Item is not stored anywhere
+    if item_last_in_first_out_list == False:
+        return      
+    # Item is stored in at least one location
+    else:
+        # Check if in the last added location is enough volume left to add the item
+        # If in the last added location is enough space return the bin_id
+        if item_last_in_first_out_list[0].bin_id.bin_volume_unused >= item_id.item_volume:
+            storing_location_and_quantitys[item_last_in_first_out_list[0].bin_id] = quantity
+            return storing_location_and_quantitys
+        # In the last added location is not enough space to store every thing in it
+        else:
+            # Calculate how much quantity would fit into the last location
+            quantity_that_fits = math.floor(item_last_in_first_out_list[0].bin_id.bin_volume_unused / item_id.item_quantity)
+            storing_location_and_quantitys[item_last_in_first_out_list[0].bin_id] = quantity_that_fits
+            # Find biggest availibly volume anywhere
+            
+    return

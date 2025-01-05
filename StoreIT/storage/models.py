@@ -69,7 +69,7 @@ class Bin (models.Model):
     bin_row = models.PositiveIntegerField("row number of the bin")  # INTEGER
     bin_col = models.PositiveIntegerField("collumn number of the bin")  # INTEGER
     bin_volume = models.FloatField("total usable volume of the bin")    # REAL
-    bin_volume_used = models.PositiveIntegerField("bin volume used in percent") # INTEGER
+    bin_volume_unused = models.PositiveIntegerField("bin volume used in percent") # INTEGER
 
     def __str__(self) -> str:
         string = "Bin number " + str(self.bin_number) + " inside " + str(self.storage_id)
