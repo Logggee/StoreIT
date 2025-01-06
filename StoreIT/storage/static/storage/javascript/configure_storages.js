@@ -23,10 +23,10 @@ function generateCollumnInputFields(input) {
         
         const inputField = document.createElement("input");
         inputField.type = "number";
-        inputField.className = "form-control";
+        inputField.className = "form-control number-of-bins-row";
         inputField.placeholder = "n bins";
         inputField.min = "1";
-        inputField.name = "number-of-bins-row";
+        inputField.name = "number-of-bins-row-" + (i + 1);
         inputField.required = true;
         inputField.id = (i + 1);
         inputField.max = 20;
@@ -106,7 +106,9 @@ function generateStorageLayout(input, row_number) {
         const safe_config_button_image = document.getElementById("safe-config-button-image");
         safe_config_button_image.style = "";
         safe_config_button.onclick = () => {
-            if (validate_add_new_storage_form()) {
+            // Validate the form
+            if (!validate_add_new_storage_form()) {
+                // If form was valid submit it
                 document.getElementById("storage-layout-form").submit();
             }
         };
@@ -215,12 +217,18 @@ function generateStorageLayout(input, row_number) {
 
         input_bin_size = document.createElement("input");
         input_bin_size.type = "number";
-        input_bin_size.classList = "form-control";
-        input_bin_size.id = "bin-size-" + sizes[i];
+        input_bin_size.classList = "form-control volume";
+        input_bin_size.id = sizes[i];
         input_bin_size.name = "bin-size-" + sizes[i];
         input_bin_size.placeholder = "Volume in ccm";
         input_bin_size.min = "1";
+        input_bin_size.max = "1000000";
         div_bin_size.appendChild(input_bin_size);
+
+        const validationField = document.createElement("div");
+        validationField.classList = "invalid-feedback";
+        validationField.id = "invalid-feedback-bin-size-" + sizes[i];
+        div_bin_size.appendChild(validationField);
 
         div_bin_size_col.appendChild(div_bin_size);
         container_bin_sizes_row.appendChild(div_bin_size_col);
@@ -235,56 +243,101 @@ function createGrayLine() {
 }
 
 function validate_add_new_storage_form() {
+    let form_invalid = false;
     // Validate storage name field
-    validation_succes = true;
-
-    storage_name = document.getElementById("storage-name");
+    const storage_name = document.getElementById("storage-name");
     storage_name.classList.remove("is-invalid");
-    invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
+    const invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
     if (storage_name.value.length <= 0) {
         storage_name.classList += " " + "is-invalid";
-        invalid_feedback_storage_name.innerText = "You need to name your storage"
-        validation_failed = false;
+        invalid_feedback_storage_name.innerText = "You need to name your storage";
+        form_invalid = true;
     }
     else if (storage_name.value.length > 30) {
         storage_name.classList += " " + "is-invalid";
-        invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters"
-        validation_failed = false;
+        invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters";
+        form_invalid = true;
     }
 
     // Validate storage rows
-    storage_rows = document.getElementById("storage-rows");
+    const storage_rows = document.getElementById("storage-rows");
     storage_rows.classList.remove("is-invalid");
-    invalid_feedback_storage_rows = document.getElementById("invalid-feedback-storage-rows");
+    const invalid_feedback_storage_rows = document.getElementById("invalid-feedback-storage-rows");
     if (storage_rows.value <= 0) {
         storage_rows.classList += " " + "is-invalid";
-        invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0"
-        validation_failed = false;
+        invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0";
+        form_invalid = true;
     }
     else if (storage_rows.value > 30) {
         storage_rows.classList += " " + "is-invalid";
-        invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows"
-        validation_failed = false;
+        invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows";
+        form_invalid = true;
     }
 
     // Validation of bins per row
-    all_bins_per_row = document.getElementsByName("number-of-bins-row");
-    all_bins_per_row.forEach((number_of_bins_row) => {
-        number_of_bins_row.classList.remove("is-invalid");
-        invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + number_of_bins_row.id);
-        if (number_of_bins_row.value <= 0) {
-            number_of_bins_row.classList += " " + "is-invalid";
-            invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0"
-            validation_failed = false;
+    const all_bins_per_row = document.getElementsByClassName("form-control number-of-bins-row");
+    for (let i=0; i<all_bins_per_row.length; i++)
+    {
+        all_bins_per_row[i].classList.remove("is-invalid");
+        const invalid_feedback_number_of_bins_row = document.getElementById("invalid-feedback-number-of-bins-row-" + all_bins_per_row[i].id);
+        if (all_bins_per_row[i].value <= 0) {
+            all_bins_per_row[i].classList += " " + "is-invalid";
+            invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0";
+            form_invalid = true;
         }
-        else if (number_of_bins_row.value > 20) {
-            number_of_bins_row.classList += " " + "is-invalid";
-            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins"
-            validation_failed = false;
+        else if (all_bins_per_row[i].value > 20) {
+            all_bins_per_row[i].classList += " " + "is-invalid";
+            invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins";
+            form_invalid = true;
         }
-    });
+    }
 
-    return validation_failed;
+    // Validation of bin volumes
+    const all_bin_sizes = document.getElementsByClassName("form-control volume");
+    let lastVolume = null;
+    let fieldInvlalid = false;
+    for (let i=0; i<all_bin_sizes.length; i++)
+    {
+        // Remove old validation Error Message
+        all_bin_sizes[i].classList.remove("is-invalid");
+        volume = parseFloat(all_bin_sizes[i].value);
+        const invalid_feedback_bin_size = document.getElementById("invalid-feedback-bin-size-" + all_bin_sizes[i].id);
+        if (all_bin_sizes[i].value <= 0) {
+            all_bin_sizes[i].classList += " " + "is-invalid";
+            invalid_feedback_bin_size.innerText = "This field cant be empty";
+            fieldInvlalid = true;
+            form_invalid = true;
+        }
+        else if (volume <= 0) {
+            all_bin_sizes[i].classList += " " + "is-invalid";
+            invalid_feedback_bin_size.innerText = "Volume must be bigger then 0";
+            fieldInvlalid = true;
+            form_invalid = true;
+        }
+        else if (volume > 1000000) {
+            all_bin_sizes[i].classList += " " + "is-invalid";
+            invalid_feedback_bin_size.innerText = "Volume cant be bigger then 10 dm^3";
+            fieldInvlalid = true;
+            form_invalid = true;
+        }
+        
+        if (lastVolume == null) {
+            lastVolume = volume
+        }
+        else {
+            if (volume <= lastVolume &&  !fieldInvlalid) {
+                all_bin_sizes[i].classList += " " + "is-invalid";
+                invalid_feedback_bin_size.innerText = "Volume must be bigger than the volume of the next smaller bin";
+                fieldInvlalid = true;
+                form_invalid = true;
+            }
+            else {
+                lastVolume = volume;
+            }
+        } 
+    }
+
+    return form_invalid;
 }
 
 // Function for fetch call to get all items that are stored in a specific bin
