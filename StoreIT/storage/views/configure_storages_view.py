@@ -69,7 +69,7 @@ def config(request):
                                   bin_row = row_number,
                                   bin_col = col_index,
                                   bin_volume = bin_volumes[float(field_value)],
-                                  bin_volume_used = 0)
+                                  bin_volume_unused = 100)
                     new_bin.save()
 
         return redirect("storage:config")

@@ -107,7 +107,7 @@ function generateStorageLayout(input, row_number) {
         safe_config_button_image.style = "";
         safe_config_button.onclick = () => {
             // Validate the form
-            if (!validate_add_new_storage_form()) {
+            if (validate_add_new_storage_form()) {
                 // If form was valid submit it
                 document.getElementById("storage-layout-form").submit();
             }
@@ -243,7 +243,7 @@ function createGrayLine() {
 }
 
 function validate_add_new_storage_form() {
-    let form_invalid = false;
+    let form_valid = true;
     // Validate storage name field
     const storage_name = document.getElementById("storage-name");
     storage_name.classList.remove("is-invalid");
@@ -251,12 +251,12 @@ function validate_add_new_storage_form() {
     if (storage_name.value.length <= 0) {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "You need to name your storage";
-        form_invalid = true;
+        form_valid = false;
     }
     else if (storage_name.value.length > 30) {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters";
-        form_invalid = true;
+        form_valid = false;
     }
 
     // Validate storage rows
@@ -266,12 +266,12 @@ function validate_add_new_storage_form() {
     if (storage_rows.value <= 0) {
         storage_rows.classList += " " + "is-invalid";
         invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0";
-        form_invalid = true;
+        form_valid = false;
     }
     else if (storage_rows.value > 30) {
         storage_rows.classList += " " + "is-invalid";
         invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows";
-        form_invalid = true;
+        form_valid = false;
     }
 
     // Validation of bins per row
@@ -283,12 +283,12 @@ function validate_add_new_storage_form() {
         if (all_bins_per_row[i].value <= 0) {
             all_bins_per_row[i].classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0";
-            form_invalid = true;
+            form_valid = false;
         }
         else if (all_bins_per_row[i].value > 20) {
             all_bins_per_row[i].classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins";
-            form_invalid = true;
+            form_valid = false;
         }
     }
 
@@ -306,19 +306,19 @@ function validate_add_new_storage_form() {
             all_bin_sizes[i].classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "This field cant be empty";
             fieldInvlalid = true;
-            form_invalid = true;
+            form_valid = false;
         }
         else if (volume <= 0) {
             all_bin_sizes[i].classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "Volume must be bigger then 0";
             fieldInvlalid = true;
-            form_invalid = true;
+            form_valid = false;
         }
         else if (volume > 1000000) {
             all_bin_sizes[i].classList += " " + "is-invalid";
             invalid_feedback_bin_size.innerText = "Volume cant be bigger then 10 dm^3";
             fieldInvlalid = true;
-            form_invalid = true;
+            form_valid = false;
         }
         
         if (lastVolume == null) {
@@ -329,7 +329,7 @@ function validate_add_new_storage_form() {
                 all_bin_sizes[i].classList += " " + "is-invalid";
                 invalid_feedback_bin_size.innerText = "Volume must be bigger than the volume of the next smaller bin";
                 fieldInvlalid = true;
-                form_invalid = true;
+                form_valid = false;
             }
             else {
                 lastVolume = volume;
@@ -337,7 +337,7 @@ function validate_add_new_storage_form() {
         } 
     }
 
-    return form_invalid;
+    return form_valid;
 }
 
 // Function for fetch call to get all items that are stored in a specific bin
