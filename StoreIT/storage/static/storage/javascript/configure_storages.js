@@ -106,8 +106,9 @@ function generateStorageLayout(input, row_number) {
         const safe_config_button_image = document.getElementById("safe-config-button-image");
         safe_config_button_image.style = "";
         safe_config_button.onclick = () => {
-            validate_add_new_storage_form();
-            //document.getElementById("storage-layout-form").submit();
+            if (validate_add_new_storage_form()) {
+                document.getElementById("storage-layout-form").submit();
+            }
         };
         // Append the button before adding the text of the button
         safe_config_button.appendChild(safe_config_button_image);
@@ -235,16 +236,20 @@ function createGrayLine() {
 
 function validate_add_new_storage_form() {
     // Validate storage name field
+    validation_succes = true;
+
     storage_name = document.getElementById("storage-name");
     storage_name.classList.remove("is-invalid");
     invalid_feedback_storage_name = document.getElementById("invalid-feedback-storage-name");
     if (storage_name.value.length <= 0) {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "You need to name your storage"
+        validation_failed = false;
     }
     else if (storage_name.value.length > 30) {
         storage_name.classList += " " + "is-invalid";
         invalid_feedback_storage_name.innerText = "Your storage name cant be longer then 30 characters"
+        validation_failed = false;
     }
 
     // Validate storage rows
@@ -254,10 +259,12 @@ function validate_add_new_storage_form() {
     if (storage_rows.value <= 0) {
         storage_rows.classList += " " + "is-invalid";
         invalid_feedback_storage_rows.innerText = "Number of rows needs to be bigger then 0"
+        validation_failed = false;
     }
     else if (storage_rows.value > 30) {
         storage_rows.classList += " " + "is-invalid";
         invalid_feedback_storage_rows.innerText = "Your storage cant have more then 30 rows"
+        validation_failed = false;
     }
 
     // Validation of bins per row
@@ -268,15 +275,19 @@ function validate_add_new_storage_form() {
         if (number_of_bins_row.value <= 0) {
             number_of_bins_row.classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Number of bins needs to be bigger then 0"
+            validation_failed = false;
         }
         else if (number_of_bins_row.value > 20) {
             number_of_bins_row.classList += " " + "is-invalid";
             invalid_feedback_number_of_bins_row.innerText = "Your row cant have more then 20 bins"
+            validation_failed = false;
         }
     });
+
+    return validation_failed;
 }
 
-// Function for axaj call to get all items that are stored in a specific bin
+// Function for fetch call to get all items that are stored in a specific bin
 function get_all_items_of_bin(bin_id) {
     // Make the table visible
     table_container = document.getElementById("container-table");

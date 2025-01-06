@@ -2,6 +2,21 @@ import math
 from .models import Stored_Item, Bin, Item, Reservation, Reservated_Destoring_Item, Reservated_Storing_Item
 from .forms import Store_Item_Form
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+
+def cancel_storing(reservation_id):
+     # Delete the added quantity
+    reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)
+    reservated_storing_item.stored_item_id.stored_item_quantity -= reservated_storing_item.reservated_storing_item_quantity
+    # If the quantity is 0 the stored item needs to be removed
+    if reservated_storing_item.stored_item_id.stored_item_quantity == 0:
+        reservated_storing_item.stored_item_id.delete()
+    else:    
+        reservated_storing_item.stored_item_id.save()
+    # Get the reservation and delete it
+    reservation = get_object_or_404(Reservation, pk=reservation_id)
+    reservation.delete()
+    return HttpResponse("Reservation deleted", status=200)
 
 def destore_item(request, item_id, destore_quantity) -> list:
     ''' Destores a item after the LIFO priciple
@@ -124,10 +139,31 @@ def store_new_item(request, store_item_form):
     reservation.save()
 
     reservation_item = Reservated_Storing_Item(reservation_id = reservation,
-                                                   stored_item_id = new_stored_item,
-                                                   reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
+                                               stored_item_id = new_stored_item,
+                                               reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
     reservation_item.save()
     return
+
+def store_item_manually(json_data):
+    reservation_id = json_data.get("reservation_id")
+    # Get all reservated item
+    reservated_item = Reservated_Storing_Item.objects.filter(reservation_id=reservation_id)
+    item = reservated_item[0].stored_item_id.item_id
+    # Get the reservation
+    reservation = get_object_or_404(Reservation, pk=reservation_id)
+    bins_and_quantitys = json_data.get("bins_and_quantitys")
+
+    # Itterate through all bins and quantitys
+    for manual_storing_item in bins_and_quantitys:
+        bin_id = manual_storing_item.get('bin_id')
+        quantity = manual_storing_item.get('quantity')
+        # Create a new stored item
+        stored_item = Stored_Item(item_id = item,
+                                  bin_id=get_object_or_404(Bin, pk=bin_id),
+                                  stored_item_quantity=quantity)
+        stored_item.save()
+    # Cancel the original reservation because the user selected a other storage location
+    cancel_storing(reservation_id)
 
 def __find_storage_place(item_id, quantity):
     storing_location_and_quantitys = dict()

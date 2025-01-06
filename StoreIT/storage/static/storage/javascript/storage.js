@@ -302,7 +302,7 @@ function add_inputs_manual_quantity (checkbox, storage_id, storage_name, bin_id,
         const input = document.createElement("input");
         input.type = "number";
         input.classList = "form-control";
-        input.id = "manual-quantity-input-" + bin_id + "-" + bin_number;
+        input.id = "manual-quantity-input-" + bin_id;
         input.name = "manual-quantity-input";
         input.placeholder = "Enter quantity for bin " + bin_number + " in storage " + storage_name;
         input.min = 1;
@@ -318,42 +318,39 @@ function add_inputs_manual_quantity (checkbox, storage_id, storage_name, bin_id,
         }
     }
 }
+/* User wants to select a storage location manually
 
-/* Function is called when a bin for manually storing a item was selected
-
-Function changes the parametes of the stored item manually.
-The corresponding bin_id is set as parameter of the on click function.
-
-Args:
-    bin_id: The bin_id of the bin that the user selected for manually storing the item
-    reservation_id: The reservation_id of the current storing process
-
-function bin_manually_selected (bin_id, reservation_id) {
-    const stored_item_manually_button = document.getElementById("stored-item-manually");
-    stored_item_manually_button.onclick = function() {
-        stored_item_manually(bin_id, reservation_id);
-    };
-}
 */
-
 async function stored_item_manually (reservation_id) {
-    let json_data = [{"reservation_id": reservation_id}];
+    let json_data = {"reservation_id": reservation_id, "bins_and_quantitys": []};
     let all_manual_quantity_inputs = document.getElementsByName("manual-quantity-input");
 
     all_manual_quantity_inputs.forEach((manual_quantity_input) => {
         split_string = manual_quantity_input.id.split("-");
         bin_id = split_string[split_string.length - 1];
         quantity = manual_quantity_input.value;
-        json_data.push({ bin_id: bin_id, quantity: quantity });
+        json_data["bins_and_quantitys"].push({ bin_id: bin_id, quantity: quantity });
     });
 
-    const response = await fetch('/storage/manual_storage', {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken, // Falls erforderlich
-        },
-        body: JSON.stringify(json_data)
-    });
+    try {
+        const response = await fetch('/storage/manual_storage', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify(json_data)
+        });
     
+        if (response.ok) {
+            window.location.href = "/storage/"
+        } 
+        else {
+            alert('Error accured while trying to store the items manualy!');
+        }
+    }
+    catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the item.');
+    }
 }

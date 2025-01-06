@@ -247,18 +247,10 @@ def confirm_storing(request, reservation_id):
      
 def cancel_storing(request, reservation_id):
     if request.method == "DELETE":
-        # Delete the added quantity
-        reservated_storing_item = Reservated_Storing_Item.objects.get(reservation_id=reservation_id)
-        reservated_storing_item.stored_item_id.stored_item_quantity -= reservated_storing_item.reservated_storing_item_quantity
-        # If the quantity is 0 the stored item needs to be removed
-        if reservated_storing_item.stored_item_id.stored_item_quantity == 0:
-            reservated_storing_item.stored_item_id.delete()
-        else:    
-            reservated_storing_item.stored_item_id.save()
-        # Get the reservation and delete it
-        reservation = get_object_or_404(Reservation, pk=reservation_id)
-        reservation.delete()
-    return  HttpResponse("Reservation deleted", status=200)
+       http_response = storage_processes.cancel_storing(reservation_id)
+    else:
+        http_response = HttpResponse("Only HTTP DELETE method allowed!", status=405)
+    return  http_response
 
 def manual_storage(request):
     if request.method == 'PATCH':
@@ -267,22 +259,16 @@ def manual_storage(request):
             json_data = json.loads(request.body)  # request.body enthält die gesendeten JSON-Daten
             print(json_data)  # Zum Debuggen, die JSON-Daten ausgeben
 
-            # Verarbeite die JSON-Daten, zum Beispiel das Durchlaufen der Bin-IDs und Mengen
-            for item in json_data:
-                bin_id = item.get('bin_id')
-                quantity = item.get('quantity')
-                print(f"Bin id {bin_id}")
-                print(f"Quantity {quantity}")
-                # Führe hier deine Logik aus, z. B. Daten in der DB speichern oder weiter verarbeiten
+            storage_processes.store_item_manually(json_data)
 
-            # Erfolgreiche Antwort zurückgeben
-            return JsonResponse({'status': 'success', 'message': 'Data processed successfully'})
+            # Success
+            return JsonResponse({'success': True, 'message': 'Data processed successfully'})
         
         except json.JSONDecodeError:
             # Fehlerbehandlung für ungültige JSON-Daten
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
     else:
-        return JsonResponse({'status': 'error', 'message': 'Only POST method allowed'}, status=405)
+        return JsonResponse({'status': 'error', 'message': 'Only PATCH method allowed'}, status=405)
 
 def confirm_destoring(request, reservation_id, reservated_destoring_item_id):
     """storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>
