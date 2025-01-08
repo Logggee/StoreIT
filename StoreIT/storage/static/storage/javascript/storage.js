@@ -304,13 +304,13 @@ function add_inputs_manual_quantity (checkbox, storage_id, bin_id, bin_number) {
         row.id = "manual-quantity-input-row-" + bin_id;
 
         const col_1 = document.createElement("div");
-        col_1.classList = "col-3";
+        col_1.classList = "col-3 d-flex justify-content-center align-items-center";
 
         const col_2 = document.createElement("div");
         col_2.classList = "col-9";
 
         const label = document.createElement("label");
-        label.classList = "form-label";
+        label.classList = "form-label text-center my-0";
         label.for = "manual-quantity-input-" + bin_id;
         label.innerText = "Bin number " + bin_number;
 
