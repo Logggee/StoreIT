@@ -283,7 +283,7 @@ async function destoring_process_canceld (reservation_id) {
     }
 }
 
-function add_inputs_manual_quantity (checkbox, storage_id, storage_name, bin_id, bin_number) {
+function add_inputs_manual_quantity (checkbox, storage_id, bin_id, bin_number) {
     const div = document.getElementById("bin-manual-quantity-" + storage_id);
 
     if (checkbox.checked) {
@@ -299,19 +299,38 @@ function add_inputs_manual_quantity (checkbox, storage_id, storage_name, bin_id,
         input_div.classList = "mb-3";
         input_div.id = "manual-quantity-div-" + bin_id + "-" + bin_number;
 
+        const row = document.createElement("row");
+        row.classList = "row";
+        row.id = "manual-quantity-input-row-" + bin_id;
+
+        const col_1 = document.createElement("div");
+        col_1.classList = "col-3";
+
+        const col_2 = document.createElement("div");
+        col_2.classList = "col-9";
+
+        const label = document.createElement("label");
+        label.classList = "form-label";
+        label.for = "manual-quantity-input-" + bin_id;
+        label.innerText = "Bin number " + bin_number;
+
         const input = document.createElement("input");
         input.type = "number";
         input.classList = "form-control";
         input.id = "manual-quantity-input-" + bin_id;
         input.name = "manual-quantity-input";
-        input.placeholder = "Enter quantity for bin " + bin_number + " in storage " + storage_name;
+        input.placeholder = "Enter quantity for bin " + bin_number;
         input.min = 1;
 
-        input_div.appendChild(input);
+        col_1.appendChild(label);
+        col_2.appendChild(input);
+        row.appendChild(col_1);
+        row.appendChild(col_2);
+        input_div.appendChild(row);
         div.appendChild(input_div);
     }
     else {
-        document.getElementById("manual-quantity-input-" + bin_id + "-" + bin_number).remove();
+        document.getElementById("manual-quantity-input-row-" + bin_id).remove();
 
         if (div.children.length === 1) {
             document.getElementById("gray-line-manual-storage").remove();
