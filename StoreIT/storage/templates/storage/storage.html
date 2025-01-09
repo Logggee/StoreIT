@@ -479,11 +479,18 @@
                                         </div>
 
                                         <div class="container" id="bin-manual-quantity-{{ storage.storage_id }}"></div>
-
-                                        <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually('{{ new_stored_existing_item.reservation_id }}')">
-                                            <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
-                                            Stored item manually
-                                        </button>
+                                        
+                                        {% if new_stored_existing_item == False %}
+                                            <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually('{{ new_stored_existing_item.reservation_id }}', '{{ new_stored_item.new_stored_item_quantity }}')">
+                                                <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
+                                                Stored item manually
+                                            </button>
+                                        {% else %}
+                                            <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually('{{ new_stored_existing_item.reservation_id }}', '{{ new_stored_existing_item.stored_item_quantity }}')">
+                                                <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
+                                                Stored item manually
+                                            </button>
+                                        {% endif %}
                                     </div>
                                     {% endfor %}
                                 </div>

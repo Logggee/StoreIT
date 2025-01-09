@@ -274,7 +274,9 @@ async function destoring_process_canceld (reservation_id) {
 
         if (response.ok) {
             location.reload();
-        } else {
+        } 
+
+        else {
             //alert('Error deleting item.');
         }
     } catch (error) {
@@ -321,14 +323,21 @@ function add_inputs_manual_quantity (checkbox, storage_id, bin_id, bin_number) {
         input.name = "manual-quantity-input";
         input.placeholder = "Enter quantity for bin " + bin_number;
         input.min = 1;
+        input.required = true;
+
+        const validation_div = document.createElement("div");
+        validation_div.classList = "invalid-feedback";
+        validation_div.id = "manual-quantity-input-" + bin_id + "-validation";
 
         col_1.appendChild(label);
         col_2.appendChild(input);
+        col_2.appendChild(validation_div);
         row.appendChild(col_1);
         row.appendChild(col_2);
         input_div.appendChild(row);
         div.appendChild(input_div);
     }
+
     else {
         document.getElementById("manual-quantity-input-row-" + bin_id).remove();
 
@@ -337,39 +346,94 @@ function add_inputs_manual_quantity (checkbox, storage_id, bin_id, bin_number) {
         }
     }
 }
+
 /* User wants to select a storage location manually
 
 */
-async function stored_item_manually (reservation_id) {
+async function stored_item_manually (reservation_id, quantity) {
     let json_data = {"reservation_id": reservation_id, "bins_and_quantitys": []};
     let all_manual_quantity_inputs = document.getElementsByName("manual-quantity-input");
 
-    all_manual_quantity_inputs.forEach((manual_quantity_input) => {
-        split_string = manual_quantity_input.id.split("-");
-        bin_id = split_string[split_string.length - 1];
-        quantity = manual_quantity_input.value;
-        json_data["bins_and_quantitys"].push({ bin_id: bin_id, quantity: quantity });
-    });
-
-    try {
-        const response = await fetch('/storage/manual_storage', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify(json_data)
+    if (validate_manual_input (all_manual_quantity_inputs, quantity)) {
+        all_manual_quantity_inputs.forEach((manual_quantity_input) => {
+            split_string = manual_quantity_input.id.split("-");
+            bin_id = split_string[split_string.length - 1];
+            quantity = manual_quantity_input.value;
+            json_data["bins_and_quantitys"].push({ bin_id: bin_id, quantity: quantity });
         });
     
-        if (response.ok) {
-            window.location.href = "/storage/"
-        } 
-        else {
-            alert('Error accured while trying to store the items manualy!');
+        try {
+            const response = await fetch('/storage/manual_storage', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(json_data)
+            });
+        
+            if (response.ok) {
+                window.location.href = "/storage/"
+            } 
+            else {
+                alert('Error accured while trying to store the items manualy!');
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the item.');
         }
     }
-    catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while deleting the item.');
+
+    else {
+        
     }
+}
+
+function validate_manual_input (all_manual_quantity_inputs, quantity) {
+    valid = true;
+    total_input_quantity = 0;
+
+    all_manual_quantity_inputs.forEach((manual_quantity_input) => {
+        const validation_div = document.getElementById(manual_quantity_input.id + "-validation");
+        manual_quantity_input.classList.remove("is-invalid");
+        input_quantity = manual_quantity_input.value;
+        // Validate if the field is empty
+        if (input_quantity === "") {
+            manual_quantity_input.classList.add("is-invalid");
+            validation_div.innerText = "Input field can not be empty";
+            valid = false;
+        }
+        input_quantity = Number(input_quantity);
+        // Validate if the field is empty or the value is smaller then 1
+        if (input_quantity <= 0  && valid) {
+            manual_quantity_input.classList.add("is-invalid");
+            validation_div.innerText = "Quantity needs to be bigger then 0";
+            valid = false;
+        }
+        else {
+            total_input_quantity += input_quantity;
+        }                                                                                                                
+    });
+
+    // Check if summed up input quantity matches the total quantity
+    if (valid) {
+        if (total_input_quantity < quantity) {
+            alert("The total quantity that was entered is smaller then the quantity that needs to be stored!\n" +
+                "Total quantity entered: " + total_input_quantity + "\n" +
+                "Quantity that needs to be stored: " + quantity
+            );
+            valid = false;
+        }
+
+        else if (total_input_quantity > quantity) {
+            alert("The total quantity that was entered is bigger then the quantity that needs to be stored!\n" +
+                "Total quantity entered: " + total_input_quantity + "\n" +
+                "Quantity that needs to be stored: " + quantity
+            );
+            valid = false;
+        }
+    }
+
+    return valid;
 }
