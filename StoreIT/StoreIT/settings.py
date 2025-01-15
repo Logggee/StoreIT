@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "storage.apps.StorageConfig",
+    "django_celery_beat",
     #"django_extensions",
 ]
 
