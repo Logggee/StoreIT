@@ -14,6 +14,7 @@
 </head>
 
 <body class="h-100 position-relative">
+    <!-- Navbar -->
     <div class="container-fluid px-5">
         <nav class="navbar navbar-expand-md navbar-light navbar-transparent  d-flex justify-content-center" style="border-bottom: 1px solid black;">
             <div class="container-fluid">
@@ -44,6 +45,29 @@
         </nav>
     </div>
 
+    <!-- Show warnings if user is not logged in or no storage is added -->
+    <div class="container mt-5">
+        {% if not storage_exists and not user.is_authenticated %}
+            <div class="alert alert-danger" role="alert">
+                Not all features are available!!!    
+                Please register and login first.    
+                Also there is no storage added so you cant store anything :(
+            </div>
+        {% elif not storage_exists %}
+            <div class="alert alert-danger text-center" role="alert">
+                Not all features are available!!!    
+                You need to add a storage under config first!    
+                Until there is no storage added you cant store anything.
+            </div>
+        {% elif not user.is_authenticated %}
+            <div class="alert alert-danger text-center" role="alert">
+                Not all features are available!!!     
+                You need to login to store or destore items.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Grid and card of stored item -->
     <div class="container mt-5 d-flex justify-content-center">
 
         <div class="container row d-flex justify-content-center">
@@ -65,109 +89,109 @@
         </div>
     </div>
 
-    {% if storage_exists%}
-    <!-- Fixed Button at bottum right to add new items -->
-    <div class="position-relative">
-        <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#add-new-item-modal">
-            <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
-        </a>
-    </div>
-    {% else %}
-    <div class="container text-center">
-        <h1 class="text-dark">You need to add a storage under config first!</h1>
-    </div>
+    <!-- Don't show the button if no storage exists yet or no user is logged in -->        
+    {% if storage_exists and user.is_authenticated %}
+        <!-- Fixed Button at bottom right to add new items -->
+        <div class="position-relative">
+            <a href="#" class="btn rounded-circle position-fixed bottom-0 end-0 mb-3 me-5" id="storeItemButton" data-bs-toggle="modal" data-bs-target="#add-new-item-modal">
+                <img src="{% static 'storage/images/icons/plus-square.svg' %}" alt="plus icon">
+            </a>
+        </div>
     {% endif %}
 
+    <!-- Modal that opens when a stored item was selected -->
     {% for item, stored_item_total_quantity in total_stored_quantity_per_item %}
         <!-- Modal stored item {{ item.item_name }}-->
         <div class="modal fade" id="stored-item-modal-{{ item.item_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="border-bottom: none;">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <img src="{{ item.item_image.url }}" class="stored-item-modal-image" id="imgStoredItemModal-{{ item.item_id }}" alt="{{ item.item_name }}">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5">{{ item.item_name }}</h1>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="item-stored-quantity-{{ item.item_id }}" class="col-form-label">Amount Stored:</label>
-                        <input type="text" class="form-control" id="item-stored-quantity-{{ item.item_id }}" value="{{ stored_item_total_quantity }}" readonly>
+                <div class="modal-content">
+                    <div class="modal-header" style="border-bottom: none;">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="item-note-text-{{ item.item_id }}" class="col-form-label">Note:</label>
-                        <textarea class="form-control" id="item-note-text-{{ item.item_id }}" readonly>{% if item.item_note == "" %}-{% else %}{{ item.item_note }}{% endif %}</textarea>
+                    <img src="{{ item.item_image.url }}" class="stored-item-modal-image" id="imgStoredItemModal-{{ item.item_id }}" alt="{{ item.item_name }}">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">{{ item.item_name }}</h1>
                     </div>
-                    <div class="mb-3">
-                        <label for="item-datasheet-link-{{ item.item_id }}" class="col-form-label">Datasheet:</label>
-                        <!-- No datasheet in db -->
-                        {% if item.item_datasheet == "" %}
-                            <a target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
-                                -
-                            </a>
-                        <!-- Link the datasheet -->
-                        {% else %}
-                            <a href="{{ item.item_datasheet.url }}" target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
-                                {{ item.item_datasheet.name|basename }}
-                            </a>
-                        {% endif %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="item-purchase-place-link-{{ item.item_id }}" class="col-form-label">Bought here:</label>
-                        {% if item.item_purchase_place == "" %}
-                            <a target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
-                                -
-                            </a>
-                        {% else %}
-                            <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
-                                {{ item.item_purchase_place }}
-                            </a>
-                        {% endif %}
-                    </div>
-
-                    <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_id=item.item_id %}" method="post">
-                        {% csrf_token %}
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label for="item-destore-quantity-{{ item.item_id }}" class="col-form-label">Remove from stock:</label>
-                            {% if item_with_destore_error.item_id == item.item_id %}
-                                {{ destore_item_form_error.item_destore_quantity }}
+                            <label for="item-stored-quantity-{{ item.item_id }}" class="col-form-label">Amount Stored:</label>
+                            <input type="text" class="form-control" id="item-stored-quantity-{{ item.item_id }}" value="{{ stored_item_total_quantity }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="item-note-text-{{ item.item_id }}" class="col-form-label">Note:</label>
+                            <textarea class="form-control" id="item-note-text-{{ item.item_id }}" readonly>{% if item.item_note == "" %}-{% else %}{{ item.item_note }}{% endif %}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="item-datasheet-link-{{ item.item_id }}" class="col-form-label">Datasheet:</label>
+                            <!-- No datasheet in db -->
+                            {% if item.item_datasheet == "" %}
+                                <a target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
+                                    -
+                                </a>
+                            <!-- Link the datasheet -->
                             {% else %}
-                                <!-- TODO: id of this field is not unique -->
-                                {{ destore_item_form.item_destore_quantity }}
-                            {% endif %}
-                            {% if item_with_destore_error.item_id == item.item_id %}
-                            <div class="invalid-feedback">
-                                {% for error in destore_item_form_error.item_destore_quantity.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                                <a href="{{ item.item_datasheet.url }}" target="_blank" class="form-control" id="item-datasheet-link-{{ item.item_id }}" style="text-decoration: none;">
+                                    {{ item.item_datasheet.name|basename }}
+                                </a>
                             {% endif %}
                         </div>
-                    </form>
+                        <div class="mb-3">
+                            <label for="item-purchase-place-link-{{ item.item_id }}" class="col-form-label">Bought here:</label>
+                            {% if item.item_purchase_place == "" %}
+                                <a target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
+                                    -
+                                </a>
+                            {% else %}
+                                <a href="{{ item.item_purchase_place }}" target="_blank" class="form-control" id="item-purchase-place-link-{{ item.item_id }}" style="text-decoration: none;">
+                                    {{ item.item_purchase_place }}
+                                </a>
+                            {% endif %}
+                        </div>
 
-                    <div class="container d-flex justify-content-end">
-                        <button type="button" class="btn btn-success d-flex align-items-center" data-bs-dismiss="modal">
-                            <img class="me-2" src="{% static 'storage/images/icons/inboxes.svg'%}" style="height: 20px;">
-                            Show all Bins
+                        <form id="destore-item-form-{{ item.item_id }}" action="{% url 'storage:destore_item' stored_item_id=item.item_id %}" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="item-destore-quantity-{{ item.item_id }}" class="col-form-label">Remove from stock:</label>
+                                {% if item_with_destore_error.item_id == item.item_id %}
+                                    {{ destore_item_form_error.item_destore_quantity }}
+                                {% else %}
+                                    <!-- TODO: id of this field is not unique -->
+                                    {{ destore_item_form.item_destore_quantity }}
+                                {% endif %}
+                                {% if item_with_destore_error.item_id == item.item_id %}
+                                <div class="invalid-feedback">
+                                    {% for error in destore_item_form_error.item_destore_quantity.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </form>
+
+                        <div class="container d-flex justify-content-end">
+                            <button type="button" class="btn btn-success d-flex align-items-center" data-bs-dismiss="modal">
+                                <img class="me-2" src="{% static 'storage/images/icons/inboxes.svg'%}" style="height: 20px;">
+                                Show all Bins
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
+                        <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}" style="height: 20px;">
+                        Cancel
+                    </button>
+                    {% if user.is_authenticated %}
+                        <button type="button" class="btn btn-warning d-flex align-items-center" onclick="addItemToDestoreList('{{ item.item_id }}')" data-bs-dismiss="modal">
+                            <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 20px;">
+                            Add to Destore List
                         </button>
+                        <button type="button" class="btn btn-danger d-flex align-items-center" onclick="document.getElementById('destore-item-form-{{ item.item_id }}').submit();">
+                            <img class="me-2" src="{% static 'storage/images/icons/box-arrow-down.svg'%}" style="height: 20px;">
+                            Destore
+                        </button>
+                    {% endif %}
                     </div>
                 </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
-                    <img class="me-2" src="{% static 'storage/images/icons/x-lg.svg'%}" style="height: 20px;">
-                    Cancel
-                </button>
-                <button type="button" class="btn btn-warning d-flex align-items-center" onclick="addItemToDestoreList('{{ item.item_id }}')" data-bs-dismiss="modal">
-                    <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 20px;">
-                    Add to Destore List
-                </button>
-                <button type="button" class="btn btn-danger d-flex align-items-center" onclick="document.getElementById('destore-item-form-{{ item.item_id }}').submit();">
-                    <img class="me-2" src="{% static 'storage/images/icons/box-arrow-down.svg'%}" style="height: 20px;">
-                    Destore
-                </button>
-                </div>
-            </div>
             </div>
         </div>
     {% endfor %}
