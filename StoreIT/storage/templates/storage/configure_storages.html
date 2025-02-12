@@ -20,13 +20,15 @@
                             {% endif %}
                         </li>
                     {% endfor %}
-
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link d-flex align-items-center" id="add-storage-tab-heading" data-bs-toggle="tab" data-bs-target="#add-storage-tab" type="button" role="tab" aria-controls="profile" aria-selected="false" onclick="tabSelected('{{ storage.storage_id }}')">
-                            <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 16px; filter: invert(1);">
-                            Add New Storage
-                        </button>
-                    </li>
+                    
+                    {% if user.is_authenticated %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link d-flex align-items-center" id="add-storage-tab-heading" data-bs-toggle="tab" data-bs-target="#add-storage-tab" type="button" role="tab" aria-controls="profile" aria-selected="false" onclick="tabSelected('{{ storage.storage_id }}')">
+                                <img class="me-2" src="{% static 'storage/images/icons/plus-square.svg'%}" style="height: 16px; filter: invert(1);">
+                                Add New Storage
+                            </button>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             
@@ -71,67 +73,69 @@
                 
 
                 <!-- Add new storage tab -->
-                <div class="tab-pane fade" id="add-storage-tab" role="tabpanel" aria-labelledby="link-tab">
-                    <h5 class="card-title">Configure your new storage</h5>
-                    <form id="storage-layout-form" action="{% url 'storage:config' %}" method="post">
-                        {% csrf_token %}
+                {% if user.is_authenticated %}
+                    <div class="tab-pane fade" id="add-storage-tab" role="tabpanel" aria-labelledby="link-tab">
+                        <h5 class="card-title">Configure your new storage</h5>
+                        <form id="storage-layout-form" action="{% url 'storage:config' %}" method="post">
+                            {% csrf_token %}
 
-                        <div class="container row">
-                            <div class="mb-3 text-start">
-                                <label for="storage-name" class="col-form-label">Name of the new storage:</label>
-                                <input type="text" class="form-control" id="storage-name" name="storage-name-input" placeholder="Enter a name" min="1" max="255">
-                                <div class="invalid-feedback" id="invalid-feedback-storage-name"></div>
-                            </div>
-                        </div>
-
-                        <!-- Input for the number of rows -->
-                        <div class="container row">
-                            <div class="mb-3 text-start">
-                                <label for="storage-rows" class="col-form-label">Number of Storage rows:</label>
-                                <!-- <input type="number" class="form-control" id="storage-rows" name="storage-row-input" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)"> -->
-                                 {{ storage_layout_form.storage_rows }}
-                                 {% if storage_layout_form.storage_rows.errors %}
-                                <div class="invalid-feedback" id="invalid-feedback-storage-rows">
-                                    {% for error in storage_layout_form.storage_rows.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                                <div class="invalid-feedback" id="invalid-feedback-storage-rows"></div>
-                            </div>
-                        </div>
-
-                        <!-- Row for the n input filds for the number of bin per row -->
-                        <div class="container row" id="container-columns">
-                            
-                        </div>
-
-                        <!-- Row where the configured layout of the storage is displayed -->
-                        <div class="container row" id="row-storage-layout">
-                            <div class="container col" id="storage-layout-heading-container">
-            
-                                <div class="container" id="storage-layout-container">
-
+                            <div class="container row">
+                                <div class="mb-3 text-start">
+                                    <label for="storage-name" class="col-form-label">Name of the new storage:</label>
+                                    <input type="text" class="form-control" id="storage-name" name="storage-name-input" placeholder="Enter a name" min="1" max="255">
+                                    <div class="invalid-feedback" id="invalid-feedback-storage-name"></div>
                                 </div>
                             </div>
-                        </div>            
 
-                        <!-- Row where the inputs for the diffrent bin sizes is displayed -->
-                        <div class="container row" id="container-bin-sizes-heading">
-
-                            <div class="container row" id="container-bin-sizes-row">
-
+                            <!-- Input for the number of rows -->
+                            <div class="container row">
+                                <div class="mb-3 text-start">
+                                    <label for="storage-rows" class="col-form-label">Number of Storage rows:</label>
+                                    <!-- <input type="number" class="form-control" id="storage-rows" name="storage-row-input" placeholder="n rows" min="1" oninput="generateCollumnInputFields(this)"> -->
+                                    {{ storage_layout_form.storage_rows }}
+                                    {% if storage_layout_form.storage_rows.errors %}
+                                    <div class="invalid-feedback" id="invalid-feedback-storage-rows">
+                                        {% for error in storage_layout_form.storage_rows.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <div class="invalid-feedback" id="invalid-feedback-storage-rows"></div>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Row where the button for saving the configuration is displayed -->
-                        <div class="container row" id="row-safe-config">
-                            <div class="container col d-flex justify-content-end" id="container-safe-config-button">
+                            <!-- Row for the n input filds for the number of bin per row -->
+                            <div class="container row" id="container-columns">
                                 
                             </div>
-                        </div>
-                    </form>
-                </div>
+
+                            <!-- Row where the configured layout of the storage is displayed -->
+                            <div class="container row" id="row-storage-layout">
+                                <div class="container col" id="storage-layout-heading-container">
+                
+                                    <div class="container" id="storage-layout-container">
+
+                                    </div>
+                                </div>
+                            </div>            
+
+                            <!-- Row where the inputs for the diffrent bin sizes is displayed -->
+                            <div class="container row" id="container-bin-sizes-heading">
+
+                                <div class="container row" id="container-bin-sizes-row">
+
+                                </div>
+                            </div>
+
+                            <!-- Row where the button for saving the configuration is displayed -->
+                            <div class="container row" id="row-safe-config">
+                                <div class="container col d-flex justify-content-end" id="container-safe-config-button">
+                                    
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
 
             </div>
         </div>

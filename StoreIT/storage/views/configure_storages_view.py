@@ -5,6 +5,7 @@ from django.shortcuts import  render, redirect
 from django.http import JsonResponse
 from storage.models import Stored_Item, Bin, Storage
 from storage.forms import Storage_Layout_Form
+from django.contrib.auth.decorators import login_required
 
 def config(request):
     ''' /config
@@ -17,7 +18,7 @@ def config(request):
         Renders the template config.html
     '''
     # Post request
-    if request.method == "POST": 
+    if request.method == "POST" and request.user.is_authenticated: 
         form_data = request.POST.dict()
         print(f"Form data: {form_data}")
         # Build and safe a new storage dataset
@@ -75,20 +76,32 @@ def config(request):
         return redirect("storage:config")
     
     # Get request
-    else:
+    elif request.method == "GET":
         # Get all storages and bins
         # TODO check if list es the better datatype here because the key is maybe not relevant
         storages_and_bins = dict()
         for storage in  Storage.objects.all():
             storages_and_bins[storage] = storage.all_bins_sorted_in_rows()
-        print(f"Storaged and all bin: {storages_and_bins}")
+        print(f"Storage and all bins: {storages_and_bins}")
         content = {"storage_layout_form": Storage_Layout_Form(),
                    "storages_and_bins": storages_and_bins,
                    "current_user": request.user}
         
         return render(request, "storage/configure_storages.html", content)
     
+@login_required     
 def all_items_stored_in_bin(request, bin_id):
+    ''' /config/<int.bin_id>
+    This endpoint gets all items that are stored in a specific bin.
+
+    Args:
+        request: HTTP request object
+        bin_id: The id of the bin where the user wants to see all items stored in it
+
+    Returns:
+        Returns a JSON Object with all items that are stored in that bin
+    '''
+    # Get all items of the bin 
     all_items_in_bin = Stored_Item.objects.filter(bin_id = bin_id)
     data = list()
     for stored_item in all_items_in_bin:

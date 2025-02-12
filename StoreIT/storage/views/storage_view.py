@@ -7,9 +7,10 @@ from storage.models import Stored_Item, Item, Bin, Storage, Reservation, Reserva
 from storage.forms import Store_Item_Form, Destore_Item_Form
 from storage.utils import Storage_Page_State
 from storage import storageProcesses as storage_processes
+from django.contrib.auth.decorators import login_required
 
 # Enum that holds the current state of the /storage template
-# The states define which modals are opend initially
+# The states define which modals are opened initially
 storage_page_state = Storage_Page_State.INIT
 
 def storage(request):
@@ -32,8 +33,8 @@ def storage(request):
     else:
         storage_exists = False
 
-    # Post request
-    if request.method == "POST":
+    # Post request only allowed if the user is logged in
+    if request.method == "POST" and request.user.is_authenticated:
         # Validate the form and parse the POST data
         store_item_form = Store_Item_Form(request.POST, request.FILES)
         if store_item_form.is_valid():
@@ -59,7 +60,7 @@ def storage(request):
             return render(request, "storage/storage.html", content)
         
     # Get request
-    else:
+    elif request.method == "GET":
         # If there was a redirect from storage POST then get the data which item and quantity was added via the session storage
         new_stored_item_data = request.session.pop("new_stored_item", False)
         new_stored_item = dict()
@@ -108,7 +109,8 @@ def storage(request):
         storage_page_state = Storage_Page_State.INIT
 
         return render(request, "storage/storage.html", content)
-    
+
+@login_required   
 def store_existing_item(request, item_id):
     """ storage/store_existing_item/<int:item_id>
     This url endpoint is used to store a item where the same item is already stored somewhere.
@@ -154,7 +156,8 @@ def store_existing_item(request, item_id):
             print(f"Content store_existing_item: {content}")         
             storage_page_state = Storage_Page_State.INIT
             return render(request, "storage/storage.html", content)
-        
+
+@login_required    
 def destore_item(request, stored_item_id):
     ''' /storage/destore_itme/<int:stored_item_id>
     This url endpoint is used to destore a quantity of a stored item.
@@ -201,7 +204,7 @@ def destore_item(request, stored_item_id):
         
 def stored_single_item(request, item_id):
     """ /storage/<int:item_id>
-    This url endpoint is used to get a single item via a ajax call. The items
+    This url endpoint is used to get a single item via a fetch API call. The items
     attributes are displayed in the add item form to prefill all fields when
     one in selected via a checkbox.
 
@@ -236,6 +239,7 @@ def stored_single_item(request, item_id):
     }
     return JsonResponse(data)
 
+@login_required
 def confirm_storing(request, reservation_id):
     if request.method == "DELETE":
         # Get the reservation and delete it
@@ -245,6 +249,7 @@ def confirm_storing(request, reservation_id):
         print(f"Reservation with id {reservation_id} is deleted!!!")
         return  HttpResponse("Reservation deleted", status=200)
      
+@login_required
 def cancel_storing(request, reservation_id):
     if request.method == "DELETE":
        http_response = storage_processes.cancel_storing(reservation_id)
@@ -252,6 +257,7 @@ def cancel_storing(request, reservation_id):
         http_response = HttpResponse("Only HTTP DELETE method allowed!", status=405)
     return  http_response
 
+@login_required
 def manual_storage(request):
     if request.method == 'PATCH':
         # JSON-Daten aus dem Request-Body extrahieren
@@ -270,6 +276,7 @@ def manual_storage(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Only PATCH method allowed'}, status=405)
 
+@login_required
 def confirm_destoring(request, reservation_id, reservated_destoring_item_id):
     """storage/confirm_destoring/<int:reservation_id>/<int:reservated_destoring_item_id>
 
@@ -312,6 +319,7 @@ def confirm_destoring(request, reservation_id, reservated_destoring_item_id):
             return JsonResponse(data)
     return  HttpResponse("Reservation deleted", status=200)
 
+@login_required
 def cancel_destoring(request, reservation_id):
     """storage/cancel_destoring/<int:reservation_id>
 
