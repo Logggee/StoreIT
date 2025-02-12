@@ -234,7 +234,7 @@ function generateStorageLayout(input, row_number) {
         container_bin_sizes_row.appendChild(div_bin_size_col);
     }
 }
-// Helper function for creating a gray seperator line element
+// Helper function for creating a gray separator line element
 function createGrayLine() {
     const grayLine = document.createElement("div");
     grayLine.classList = "container-fluid my-3";
@@ -344,12 +344,12 @@ function validate_add_new_storage_form() {
 function get_all_items_of_bin(bin_id) {
     // Make the table visible
     table_container = document.getElementById("container-table");
-    table_container.classList = "container";
+    table_container.classList = "container pb-5";
     // Fetch all items that are stored in the selected bin
     fetch(`/config/${bin_id}`)
         .then(response => response.json())
         .then(response_data => {
-            // Clear the previos table content
+            // Clear the previous table content
             const table = document.getElementById("table");
             table.innerHTML = "";
 
@@ -359,14 +359,14 @@ function get_all_items_of_bin(bin_id) {
                 stored_item = response_data[i];
     
                 const table_row = document.createElement("tr");
-                // First collumn is a header collumn
+                // First column is a header collumn
                 const table_col_header = document.createElement("th");
                 table_col_header.scope = "row";
                 table_col_header.classList = "align-middle ps-3";
                 table_col_header.innerText = stored_item["item_store_date_in_this_bin"];
                 // Append the header col to the row
                 table_row.appendChild(table_col_header);
-                // Build all other collumns
+                // Build all other columns
                 for (let j = 1; j < Object.keys(stored_item).length; j++) {
                     const table_col = document.createElement("td");
                     table_row.classList = "align-middle";
@@ -404,7 +404,7 @@ function tabSelected(storage_id) {
     for (let radio of radio_group) {
         // If a radio is check show the table and reload the table content
         if (radio.checked) {
-            // Trigger the oncklick function to show all items in the table again
+            // Trigger the onclick function to show all items in the table again
             radio.onclick()
             return;
         }
