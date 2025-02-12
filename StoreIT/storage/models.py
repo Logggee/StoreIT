@@ -1,9 +1,12 @@
 # models.py
+
+from datetime import timedelta
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
+from django.utils.timezone import now
 
 # Item max values
 MAX_ITEM_NAME_LENGTH = 30
@@ -140,7 +143,7 @@ class Stored_Item (models.Model):
 class Reservation (models.Model):
     reservation_id = models.BigAutoField("reservation id", primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservation", db_column="id")
-    timeout = models.DateTimeField("time until the reservation is valid", auto_now_add=True)
+    timeout = models.DateTimeField("time until the reservation is valid", default=lambda: now() + timedelta(minutes=1))    # A reservation is 10 minutes valid
 
 class Reservated_Destoring_Item (models.Model):
     reservated_destoring_item_id = models.BigAutoField("reservated destoring item id", primary_key=True)

@@ -5,6 +5,7 @@ services:
   # Python container for running python and the django application
   django_storeit: # name of the container --name
     build: ./StoreIT  # builds the image via the Dockerfile docker build
+    container_name: StoreIT_container
     # Executes a command in the build container
     command: python manage.py runserver 0.0.0.0:8000 # Run the django development server on port 8000
     # Bind a volume into the container
@@ -13,5 +14,31 @@ services:
     # Set the port of the host and the container
     ports:
       - 8000:8000 # Port 8000 on the Host and Port 8000 in the container
+    depends_on:
+      - redis
     env_file:
       - ./.env.dev
+
+  redis:
+    image: redis:latest  # Verwende das offizielle Redis-Image
+    container_name: redis_container  # Optional: Name des Redis-Containers
+    ports:
+      - 6379:6379  # Leite den Redis-Port weiter
+
+  celery_worker:
+    build: ./StoreIT
+    container_name: celery_worker
+    command: celery -A StoreIT worker --loglevel=info
+    volumes:
+      - ./StoreIT/:/usr/src/StoreIT/
+    depends_on:
+      - redis
+    env_file:
+      - ./.env.dev
+
+  celery_beat:
+      build: ./StoreIT
+      command: celery -A StoreIT beat --loglevel=info
+      depends_on:
+        - django_storeit
+        - redis
