@@ -186,8 +186,7 @@ function addItemToDestoreList (item_id) {
 
 // Function is used to delete items from the destoring list
 function deleteItemDestoringList () {
-    // TODO deleting of multiple items not working
-    destore_list_checkboxes = document.getElementsByName("destore-list-checkbox");
+    destore_list_checkboxes = Array.from(document.getElementsByName("destore-list-checkbox")); // Parse into array so the deletion has no effect
     destore_list_checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {
             // Remove the li element where the checkbox was set

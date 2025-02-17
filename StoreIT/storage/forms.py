@@ -254,7 +254,6 @@ class Store_Item_Form(forms.ModelForm):
                 field.widget.attrs['class'] = f'{css_classes} is-invalid'
 
 class Destore_Item_Form(forms.Form):
-    # TODO: id if this field is not unique
     item_destore_quantity = forms.IntegerField(label='Item destore quantity',
                                                min_value=1,
                                                required=True,
