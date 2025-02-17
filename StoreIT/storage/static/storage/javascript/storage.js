@@ -86,6 +86,8 @@ function onlyOneSelectable (checkbox) {
     }
 }
 
+// Function that only displays items on the storage page that match a search term that the user
+// entered into the search field
 function showOnlySearchHits (input_field) {
     // Get the value from the input field and split it by spaces into an array of search terms
     let input = input_field.value.toLowerCase().trim();
@@ -119,7 +121,13 @@ function showOnlySearchHits (input_field) {
     });
 }
 
+// Function for adding stored items into the destore list with a specific quantity
 function addItemToDestoreList (item_id) {
+    // Get the quantity that the user wants to add to the destore list
+    const form = document.getElementById("destore-item-form-" + item_id);
+    // Get the destore quantity input field value
+    destore_quantity = parseInt(form.querySelector('[name="item_destore_quantity"]').value);
+    
     const destore_list = document.getElementById("destore-list");
     // Check if the list was empty till now show all buttons
     if (destore_list.childElementCount == 0) {
@@ -127,11 +135,12 @@ function addItemToDestoreList (item_id) {
         document.getElementById("destore-list-delete-item-button").classList.remove("d-none");
         document.getElementById("destore-list-destore-button").classList.remove("d-none");
     }
-
+    // Check if the newly added item is already in the destore list or if it a new one
     if (document.getElementById("destore_list_item_" + item_id) != null) {
         let quantity_span = document.getElementById("destore_list_item_" + item_id);
-        quantity_span.innerText = parseInt(quantity_span.innerText, 10) + 1;
+        quantity_span.innerText = parseInt(quantity_span.innerText, 10) + destore_quantity;
     }
+    // New item not existing in the destore list by now
     else {
         const list_item = document.createElement("li");
         list_item.classList = "list-group-item d-flex align-items-center";
@@ -143,7 +152,7 @@ function addItemToDestoreList (item_id) {
         const quantity = document.createElement("span");
         quantity.id = "destore_list_item_" + item_id;
         quantity.classList = "align-middle mx-3";
-        quantity.innerText = "1";
+        quantity.innerText = destore_quantity;
 
         div_quantity.appendChild(quantity);
 
@@ -175,6 +184,7 @@ function addItemToDestoreList (item_id) {
     }
 }
 
+// Function is used to delete items from the destoring list
 function deleteItemDestoringList () {
     // TODO deleting of multiple items not working
     destore_list_checkboxes = document.getElementsByName("destore-list-checkbox");
@@ -194,9 +204,9 @@ function deleteItemDestoringList () {
     }
 }
 
+// Confirms the storing of the item this is triggerd when the user confirm the storing dialog
 async function storage_process_confirmed (reservation_id) {
     // Confirm the storage process
-
     try {
         const response = await fetch(`/storage/confirm_storing/${reservation_id}`, {
             method: 'DELETE',
@@ -216,6 +226,8 @@ async function storage_process_confirmed (reservation_id) {
     }
 }
 
+// Function is used to cancel a active storage process this is triggerd if the user
+// closes the storing process via the cancel button or the x closing button of the modal
 async function storage_process_canceld (reservation_id) {
     // Cancel the storage process
     try {
@@ -237,8 +249,9 @@ async function storage_process_canceld (reservation_id) {
     }
 }
 
+// This function confirms the current destoring process this is triggerd if the user clicks
+// the destoring confirm button of the modal dialog
 async function destoring_process_confirmed (reservation_id, reservated_destoring_item)  {
-
     // Confirm the destoring process
     try {
         const response = await fetch(`/storage/confirm_destoring/${reservation_id}/${reservated_destoring_item}`, {
@@ -260,10 +273,10 @@ async function destoring_process_confirmed (reservation_id, reservated_destoring
     }
 }
 
+// Function cancels the current destoring process this is triggerd if the user clicks on the 
+// cancel button or on the x button of the destoring modal
 async function destoring_process_canceld (reservation_id) {
     // Cancel the destoring process
-    console.log("Test");
-
     try {
         const response = await fetch(`/storage/cancel_destoring/${reservation_id}`, {
             method: 'DELETE',
@@ -285,9 +298,11 @@ async function destoring_process_canceld (reservation_id) {
     }
 }
 
+// Function is used for the storage process when the user wants to select the bins and the 
+// storing quantity of the bins manually 
 function add_inputs_manual_quantity (checkbox, storage_id, bin_id, bin_number) {
     const div = document.getElementById("bin-manual-quantity-" + storage_id);
-
+    // Get all bins that the user selected
     if (checkbox.checked) {
         if (div.childNodes.length === 0) {
             const grayLine = document.createElement("div");
@@ -347,9 +362,7 @@ function add_inputs_manual_quantity (checkbox, storage_id, bin_id, bin_number) {
     }
 }
 
-/* User wants to select a storage location manually
-
-*/
+// User wants to select a storage location manually tell the server which bins and quantitys where defined
 async function stored_item_manually (reservation_id, quantity) {
     let json_data = {"reservation_id": reservation_id, "bins_and_quantitys": []};
     let all_manual_quantity_inputs = document.getElementsByName("manual-quantity-input");
@@ -390,6 +403,8 @@ async function stored_item_manually (reservation_id, quantity) {
     }
 }
 
+// Validate the manual bin and quantitys input for manual storage 
+// Check for wrong total quantity or not possible values
 function validate_manual_input (all_manual_quantity_inputs, quantity) {
     valid = true;
     total_input_quantity = 0;

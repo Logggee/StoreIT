@@ -259,13 +259,13 @@ class Destore_Item_Form(forms.Form):
                                                min_value=1,
                                                required=True,
                                                widget=forms.NumberInput(attrs={'class': 'form-control',
-                                                                               'id': 'item-destore-quantity',
                                                                                'placeholder': '0'
     }))
 
     def __init__(self, *args,  stored_item_id=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.stored_item_id = stored_item_id
+
         # In invalid case the bootstrap clase is-invalid needs to be added
         # to the form elements
         for field_name, field in self.fields.items():
