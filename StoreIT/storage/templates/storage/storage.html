@@ -396,29 +396,75 @@
                     Please store your item into the highlighted bin.<br>
                     You can split your item if there is not enough space for it.<br>
                     <!-- Here the visualisation of the storage is build -->
-                    <div class="container-fluid my-3">
-                        {% for row_number, all_bins_in_row in new_stored_existing_item.storage_location_layout.items %} 
-                        <!-- Row {{ row_number }} -->
-                        <div class="row mb-2 align-items-center">
-                            <span class="col-auto" style="min-width: 80px">Row {{ row_number|add:1}}</span>
-                            
-                            <div class="col d-flex justify-content-between mx-4">
-                                {% for bin in all_bins_in_row %}
-                                    {% if bin.bin_number == new_stored_existing_item.stored_item.bin_id.bin_number %}
-                                        <input type="radio" class="btn-check" name="btnradio-{{ destored_item.destore_bin_id }}" id="btnradio-{{ bin.storage_id.storage_id}}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled checked>
-                                        <label class="btn btn-outline-success w-100 me-1" for="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
-                                            {{ bin.bin_number }}
-                                        </label>
+                    <div class="card text-center my-3">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                                {% for storage, storage_layout in all_storage_layouts %}
+                                <li class="nav-item" role="presentation">
+                                    {% if forloop.counter == 1 %}
+                                    <button class="nav-link d-flex align-items-center active" id="{{ storage.storage_id }}-tab-heading-storage-process" data-bs-toggle="tab" data-bs-target="#{{ storage.storage_id }}-tab-storage-process" type="button" role="tab" aria-controls="profile" aria-selected="true">
+                                        {{ storage.storage_name }}
+                                    </button>
                                     {% else %}
-                                        <input type="radio" class="btn-check" name="btnradio-{{ destored_item.destore_bin_id }}" id="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" autocomplete="off" disabled>
-                                        <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ bin.storage_id.storage_id }}-{{ row_number }}-{{ bin.bin_col }}" style="opacity: 1;">
-                                            {{ bin.bin_number }}
-                                        </label>
+                                    <button class="nav-link d-flex align-items-center" id="{{ storage.storage_id }}-tab-heading-storage-process" data-bs-toggle="tab" data-bs-target="#{{ storage.storage_id }}-tab-storage-process" type="button" role="tab" aria-controls="profile" aria-selected="false">
+                                        {{ storage.storage_name }}
+                                    </button>
                                     {% endif %}
+                                </li>
                                 {% endfor %}
-                            </div>
+                            </ul>
                         </div>
-                        {% endfor %}
+                        
+                        <div class="card-body tab-content">
+                            {% for storage, storage_layout in all_storage_layouts %}
+                             <!-- {{ storage.storage_name }} tab -->
+                                {% if forloop.counter == 1 %}
+                                    <div class="tab-pane fade show active" id="{{ storage.storage_id }}-tab-storage-process" role="tabpanel" aria-labelledby="{{ storage.storage_id }}-tab">
+                                {% else %}
+                                    <div class="tab-pane fade" id="{{ storage.storage_id }}-tab-storage-process" role="tabpanel" aria-labelledby="{{ storage.storage_id }}-tab">
+                                {% endif %}
+                                <p>Select a bin from {{ storage.storage_name }} in which you want to store your item.</p>
+                                <div class="container">
+                                    {% for row_number, all_bins_in_row in storage_layout.items %} 
+                                        <!-- Row {{ row_number }} -->
+                                        <div class="row mb-2 align-items-center">
+                                            <span class="col-auto" style="min-width: 80px">Row {{ row_number|add:1}}</span>
+                                            
+                                            <div class="col d-flex justify-content-between mx-4">
+                                                {% for bin in all_bins_in_row %}
+                                                    {% if bin in new_stored_existing_item.possible_storing_locations %}
+                                                        <input type="checkbox" class="btn-check" name="btnradio-{{ storage.storage_id }}-storage-process" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process" autocomplete="off" onchange="add_inputs_manual_quantity(this, '{{ storage.storage_id }}', '{{ bin.bin_id }}', '{{ bin.bin_number }}')">
+                                                        <label class="btn btn-outline-primary w-100 me-1 " for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process">
+                                                            {{ bin.bin_number }}
+                                                        </label>
+                                                    {% else %}
+                                                        <input type="checkbox" class="btn-check" name="btnradio-{{ storage.storage_id }}-storage-process" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process" autocomplete="off" onchange="add_inputs_manual_quantity(this, '{{ storage.storage_id }}', '{{ bin.bin_id }}', '{{ bin.bin_number }}')">
+                                                        <label class="btn btn-outline-primary w-100 me-1" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process">
+                                                            {{ bin.bin_number }}
+                                                        </label>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="container" id="bin-manual-quantity-{{ storage.storage_id }}"></div>
+                                
+                                {% if new_stored_existing_item == False %}
+                                    <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually('{{ new_stored_existing_item.reservation_id }}', '{{ new_stored_item.new_stored_item_quantity }}')">
+                                        <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
+                                        Stored item manually
+                                    </button>
+                                {% else %}
+                                    <button type="button" class="btn btn-danger d-flex align-items-center ms-auto mt-4" id="stored-item-manually" onclick="stored_item_manually('{{ new_stored_existing_item.reservation_id }}', '{{ new_stored_existing_item.stored_item_quantity }}')">
+                                        <img class="me-2" src="{% static 'storage/images/icons/box-arrow-in-down.svg'%}" style="height: 20px;">
+                                        Stored item manually
+                                    </button>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
 

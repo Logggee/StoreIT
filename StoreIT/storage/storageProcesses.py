@@ -87,6 +87,9 @@ def store_existing_item(request, store_item_form, item_id):
     # Check if the item already exists in the storage
     if last_in_first_out_list:
         stored_item = last_in_first_out_list[0]
+        # Get all the different possible storing location that would make sense
+        possible_storing_locations = {"green": last_in_first_out_list[0], "orange": last_in_first_out_list[1:]}
+        print(f"Possible storing locations: {possible_storing_locations}")
         # Add the quantity to the already stored same item
         # TODO here the correct storage place needs to be calculated
         stored_item.stored_item_quantity += store_item_form.cleaned_data["item_quantity"]
@@ -99,7 +102,7 @@ def store_existing_item(request, store_item_form, item_id):
                                                    stored_item_id = stored_item,
                                                    reservated_storing_item_quantity = store_item_form.cleaned_data["item_quantity"])
         reservation_item.save()
-        return stored_item, reservation.reservation_id
+        return stored_item, reservation.reservation_id, possible_storing_locations
 
         
     # Item did not exist in the storage so a new Stored_Item dataset needs to be added

@@ -79,14 +79,16 @@ def storage(request):
                 destore_place_and_quantity["destored_storage_layout"] = storage.all_bins_sorted_in_rows()
         print(destore_places_and_quantitys)
 
-        # If a existing item was stored via the view store_existing_item the session storage holdes the data of the item to be stored
+        # If a existing item was stored via the view store_existing_item the session storage holds the data of the item to be stored
+        # TODO maybe its better the use the page state here to get the correct case
         stored_existing_item = request.session.pop("stored_existing_item", False)
         if stored_existing_item:
             new_existing_stored_item = get_object_or_404(Stored_Item, pk = stored_existing_item["stored_item_id"])
             new_stored_existing_item = {"stored_item": new_existing_stored_item,
                                         "storage_location_layout": new_existing_stored_item.bin_id.storage_id.all_bins_sorted_in_rows(),
                                         "stored_item_quantity": stored_existing_item["stored_item_quantity"],
-                                        "reservation_id": stored_existing_item["reservation_id"]}
+                                        "reservation_id": stored_existing_item["reservation_id"],
+                                        "possible_storing_locations": stored_existing_item["possible_storing_locations"]}
         else:
             new_stored_existing_item = False
 
@@ -126,7 +128,7 @@ def store_existing_item(request, item_id):
         A redirect to the url /storage/storage
     """
     global storage_page_state
-    # Check if a storage even exists if not the add new item button shoud not be displayed
+    # Check if a storage even exists if not the add new item button shout not be displayed
     if len(Storage.objects.all()) > 0:
         storage_exists = True
     else:
@@ -135,13 +137,16 @@ def store_existing_item(request, item_id):
     if request.method == "POST":
         store_item_form = Store_Item_Form(request.POST, item_image_required=False)        
         if store_item_form.is_valid():
-            stored_item, reservation_id = storage_processes.store_existing_item(request, store_item_form, item_id)
-            
+            stored_item, reservation_id, possible_storing_locations = storage_processes.store_existing_item(request, store_item_form, item_id)
+            # Safe all the needed data of the storing process in the session storage to get it after the redirect 
             request.session["stored_existing_item"] = {"stored_item_id": stored_item.stored_item_id,
                                                        "stored_item_quantity": store_item_form.cleaned_data["item_quantity"],
-                                                       "reservation_id": reservation_id}
+                                                       "reservation_id": reservation_id,
+                                                       "possible_storing_locations": possible_storing_locations}
+            # Set the new page state
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
             return redirect("storage:storage")
+        # The form was not valid
         else:
             storage_page_state = Storage_Page_State.ADD_EXISTING_ITEM_FORM_ERROR
             print(f"Error item item id: {item_id}")
