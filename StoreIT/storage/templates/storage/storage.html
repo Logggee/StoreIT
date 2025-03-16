@@ -154,7 +154,7 @@
                                 <label for="item-destore-quantity-{{ item.item_id }}" class="col-form-label">Remove from stock:</label>
                                 {% if item_with_destore_error.item_id == item.item_id %}
                                     {{ destore_item_form_error.item_destore_quantity }}
-                                {% else %}>
+                                {% else %}
                                     {{ destore_item_form.item_destore_quantity }}
                                 {% endif %}
                                 {% if item_with_destore_error.item_id == item.item_id %}
