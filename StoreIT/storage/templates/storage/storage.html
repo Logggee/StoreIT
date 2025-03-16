@@ -432,9 +432,14 @@
                                             
                                             <div class="col d-flex justify-content-between mx-4">
                                                 {% for bin in all_bins_in_row %}
-                                                    {% if bin in new_stored_existing_item.possible_storing_locations %}
+                                                    {% if bin.bin_id == new_stored_existing_item.possible_storing_locations.green %}
                                                         <input type="checkbox" class="btn-check" name="btnradio-{{ storage.storage_id }}-storage-process" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process" autocomplete="off" onchange="add_inputs_manual_quantity(this, '{{ storage.storage_id }}', '{{ bin.bin_id }}', '{{ bin.bin_number }}')">
-                                                        <label class="btn btn-outline-primary w-100 me-1 " for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process">
+                                                        <label class="btn btn-outline-primary w-100 me-1  btn-outline-success" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process">
+                                                            {{ bin.bin_number }}
+                                                        </label>
+                                                    {% elif bin.bin_id in new_stored_existing_item.possible_storing_locations.orange %}
+                                                        <input type="checkbox" class="btn-check" name="btnradio-{{ storage.storage_id }}-storage-process" id="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process" autocomplete="off" onchange="add_inputs_manual_quantity(this, '{{ storage.storage_id }}', '{{ bin.bin_id }}', '{{ bin.bin_number }}')">
+                                                        <label class="btn btn-outline-primary w-100 me-1  btn-outline-warning" for="btnradio-{{ storage.storage_id }}-{{ row_number }}-{{ bin.bin_col }}-storage-process">
                                                             {{ bin.bin_number }}
                                                         </label>
                                                     {% else %}

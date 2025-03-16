@@ -88,7 +88,8 @@ def storage(request):
                                         "storage_location_layout": new_existing_stored_item.bin_id.storage_id.all_bins_sorted_in_rows(),
                                         "stored_item_quantity": stored_existing_item["stored_item_quantity"],
                                         "reservation_id": stored_existing_item["reservation_id"],
-                                        "possible_storing_locations": stored_existing_item["possible_storing_locations"]}
+                                        "possible_storing_locations": storage_processes.possible_storage_locations(new_existing_stored_item.item_id)}
+            print(f"new stored existing item {new_stored_existing_item}")
         else:
             new_stored_existing_item = False
 
@@ -137,12 +138,11 @@ def store_existing_item(request, item_id):
     if request.method == "POST":
         store_item_form = Store_Item_Form(request.POST, item_image_required=False)        
         if store_item_form.is_valid():
-            stored_item, reservation_id, possible_storing_locations = storage_processes.store_existing_item(request, store_item_form, item_id)
+            stored_item, reservation_id = storage_processes.store_existing_item(request, store_item_form, item_id)
             # Safe all the needed data of the storing process in the session storage to get it after the redirect 
             request.session["stored_existing_item"] = {"stored_item_id": stored_item.stored_item_id,
                                                        "stored_item_quantity": store_item_form.cleaned_data["item_quantity"],
-                                                       "reservation_id": reservation_id,
-                                                       "possible_storing_locations": possible_storing_locations}
+                                                       "reservation_id": reservation_id}
             # Set the new page state
             storage_page_state = Storage_Page_State.STORE_ITEM_PROCESS
             return redirect("storage:storage")
